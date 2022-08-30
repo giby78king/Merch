@@ -24,6 +24,7 @@ import com.giby78king.merch.Model.Channel.Companion.ChannelList
 import com.giby78king.merch.Model.Channel.Companion.ddlChannelList
 import com.giby78king.merch.Model.ChannelDetail.Companion.ChannelDetailList
 import com.giby78king.merch.Model.ChannelDetail.Companion.ddlChannelDetailList
+import com.giby78king.merch.Model.Member.Companion.MemberList
 import com.giby78king.merch.Model.Product.Companion.ProductList
 import com.giby78king.merch.Model.Product.Companion.copyProductDetailList
 import com.giby78king.merch.Model.Product.Companion.nowEditProductId
@@ -150,9 +151,6 @@ class ProductEditPage : AppCompatActivity() {
                             } else {
                                 spinnerChannelDetail.setSelection(0)
                             }
-                            switchOnSell.isChecked = false
-                            switchPreOrder.isChecked = false
-
                         }
 
                         override fun onNothingSelected(parent: AdapterView<*>) {}
@@ -253,7 +251,6 @@ class ProductEditPage : AppCompatActivity() {
             productDetailList.add(
                 ProductDetail(
                     count = 1,
-                    group = "",
                     limit = 0,
                     member = "",
                     price = 0
@@ -264,7 +261,6 @@ class ProductEditPage : AppCompatActivity() {
                 productDetailList.add(
                     ProductDetail(
                         count = it.count + 1,
-                        group = it.group,
                         limit = it.limit,
                         member = it.member,
                         price = it.price
@@ -278,7 +274,6 @@ class ProductEditPage : AppCompatActivity() {
                 copyProductDetailList.add(
                     ProductDetail(
                         count = it.count,
-                        group = it.group,
                         limit = it.limit,
                         member = it.member,
                         price = it.price
@@ -432,25 +427,53 @@ class ProductEditPage : AppCompatActivity() {
                     formatId = txtId.text.toString()
                 }
 
-                var group = arrayOfNulls<String>(size = copyProductDetailList.size)
                 val limit = arrayOfNulls<Int>(size = copyProductDetailList.size)
                 val member = arrayOfNulls<String>(size = copyProductDetailList.size)
                 val price = arrayOfNulls<Int>(size = copyProductDetailList.size)
 
-                var index = 0
-                copyProductDetailList.sortedBy { it.member }.forEach {
+                var orderList = mutableListOf<OrderProductDetail>()
+                MemberList.forEach { mem ->
+                    copyProductDetailList.forEach { pro ->
+                        if (mem.id == pro.member) {
+                            orderList.add(
+                                OrderProductDetail(
+                                    count = pro.count,
+                                    limit = pro.limit,
+                                    member = pro.member,
+                                    price = pro.price,
+                                    number = mem.number,
+                                    group = mem.group,
+                                )
+                            )
+                        }
+                        else
+                        {
+                            if (mem.id == pro.member.split(",")[0]) {
+                                orderList.add(
+                                    OrderProductDetail(
+                                        count = pro.count,
+                                        limit = pro.limit,
+                                        member = pro.member,
+                                        price = pro.price,
+                                        number = mem.number,
+                                        group = mem.group,
+                                    )
+                                )
+                            }
+                        }
+                    }
+                }
 
-                    group[index] = it.group
+                var index = 0
+                orderList.sortedBy { it.group }.sortedBy { it.number }.forEach {
                     limit[index] = it.limit
                     member[index] = it.member
                     price[index] = it.price
-
                     index++
                 }
 
                 val productData = ProductEn(
                     channelDetail = ddlChannelDetailList[ddlChannelDetailPosition].id,
-                    group = group,
                     id = formatId,
                     limit = limit,
                     member = member,
@@ -554,13 +577,13 @@ class ProductEditPage : AppCompatActivity() {
             copyProductDetailList.add(
                 ProductDetail(
                     count = i + 1,
-                    group = productInfo.group[i],
                     limit = productInfo.limit[i]!!.toInt(),
                     member = productInfo.member[i],
                     price = productInfo.price[i]!!.toInt()
                 )
             )
         }
+
         setProductDetailRecyclerView(copyProductDetailList)
     }
 }

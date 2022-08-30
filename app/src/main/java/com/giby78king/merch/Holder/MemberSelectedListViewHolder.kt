@@ -53,11 +53,9 @@ class MemberSelectedListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
 
         itemView.setOnClickListener {
-            selectedMemberList.clear()
+
             MemberList.filter {
-                productDetail.member.contains(it.number) && productDetail.group.contains(
-                    it.group[0]
-                )
+                productDetail.member.contains(it.id)
             }.toMutableList().forEach { member ->
                 if (selectedMemberList.none { it.id == member.id }) {
                     selectedMemberList.add(
@@ -67,23 +65,17 @@ class MemberSelectedListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
             }
 
 
-            if (productDetail.member.contains(data.number))            //排除重複點選
+            if (productDetail.member.contains(data.id))            //排除重複點選
             {
                 selectedMemberList.remove(selectedMemberList.find {
-                    it.id == data.id && copyProductDetailList[indexCopy].group.contains(
-                        it.group[0]
-                    )
+                    it.id == data.id
                 })
 
-                copyProductDetailList[indexCopy].group = ""
                 copyProductDetailList[indexCopy].member = ""
                 if (selectedMemberList.size > 0) {
                     selectedMemberList.forEach {
-                        copyProductDetailList[indexCopy].group += "," + it.group[0]
-                        copyProductDetailList[indexCopy].member += "," + it.number
+                        copyProductDetailList[indexCopy].member += "," + it.id
                     }
-                    copyProductDetailList[indexCopy].group =
-                        copyProductDetailList[indexCopy].group.substring(1)
                     copyProductDetailList[indexCopy].member =
                         copyProductDetailList[indexCopy].member.substring(1)
                 }

@@ -276,18 +276,32 @@ class ProductSelectPage : AppCompatActivity() {
         }
 
         if (ddlGroupPosition != 0) {
-            list =
-                list.filter { it.group.contains(ddlGroupList[ddlGroupPosition].id) }
+            var memberGroupList =
+                MemberList.filter { it.group == ddlGroupList[ddlGroupPosition].id }
                     .toMutableList()
+
+            var groupList = mutableListOf<Product>()
+            memberGroupList.forEach { member->
+                list.forEach {pro->
+                    if(pro.member.contains(member.id))
+                    {
+                        if(groupList.filter { it.id == pro.id }.isEmpty())
+                        {
+                            groupList.add(pro)
+                        }
+                    }
+                }
+            }
+            list = groupList
         }
 
         if (ddlGroupPosition != 0 && ddlMemberPosition != 0) {
-            var number =
+            var id =
                 MemberList.filter { it.id == ddlMemberList[ddlMemberPosition].id && it.group == ddlGroupList[ddlGroupPosition].id }
-                    .toMutableList()[0].number
+                    .toMutableList()[0].id
 
             list =
-                list.filter { product -> product.member.contains(number) }
+                list.filter { product -> product.member.contains(id) }
                     .toMutableList()
         }
 

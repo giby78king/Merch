@@ -2,6 +2,7 @@ package com.giby78king.merch.Holder
 
 import android.annotation.SuppressLint
 import android.content.res.Resources
+import android.graphics.Color
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -45,22 +46,33 @@ class ProductSaveListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         val index = data.count - 1
 
         var iconId = ""
-        if (data.group.isNotEmpty()) {
-            val groupFirst = data.group.split(" ")
 
-            groupFirst.forEach {
-                iconId += it.substring(0, 1)
+        if (data.member.isNotEmpty()) {
+            val memberArr = data.member.split(",")
+            var productImg = ""
+            if (memberArr.size > 2) {
+
+            } else {
+                val memberInfo = MemberList.filter { it.id == data.member }[0]
+
+                val groupFirst = memberInfo.group.split(" ")
+
+                groupFirst.forEach {
+                    iconId += it.substring(0, 1)
+                }
+
+                productImg =
+                    nowEditProductId.toLowerCase() + "_" + iconId.toLowerCase() + memberInfo.number
+
             }
-
-            val productImg =
-                nowEditProductId.toLowerCase() + "_" + iconId.toLowerCase() + data.member
-
+            Log.d("", ":::" + productImg)
             //Img相關
             var img = "img_product_$productImg"
             val resourceId: Int = res.getIdentifier(
                 img, "drawable",
                 "com.giby78king.merch"
             )
+            imgProductDetail.setBackgroundColor(Color.parseColor("#00ff0000"))
             imgProductDetail.setImageResource(resourceId)
         }
 
@@ -213,15 +225,15 @@ class ProductSaveListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
-        selectedMemberList.clear()
+
 
         if (data.member.isNotEmpty()) {
 
+            selectedMemberList.clear()
+
             MemberList.filter {
-                copyProductDetailList[index].member.contains(it.number) && copyProductDetailList[index].group.contains(
-                    it.group[0]
-                )
-            }.toMutableList().forEach { member ->
+                copyProductDetailList[index].member.contains(it.id)
+            }.sortedBy { it.group }.sortedBy { it.number }.toMutableList().forEach { member ->
                 if (selectedMemberList.none { it.id == member.id }) {
                     selectedMemberList.add(
                         member
@@ -229,23 +241,37 @@ class ProductSaveListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
                 }
             }
 
-            copyProductDetailList[index].group = ""
+
             copyProductDetailList[index].member = ""
             selectedMemberList.forEach {
-                copyProductDetailList[index].group += "," + it.group[0]
-                copyProductDetailList[index].member += "," + it.number
+                copyProductDetailList[index].member += "," + it.id
             }
-            copyProductDetailList[index].group =
-                copyProductDetailList[index].group.substring(1)
+
             copyProductDetailList[index].member =
                 copyProductDetailList[index].member.substring(1)
+
+            selectedMemberList =
+                selectedMemberList.sortedBy { it.number }.sortedBy { it.group }.toMutableList()
             setMemberSelectedRecyclerView(selectedMemberList, copyProductDetailList[index])
 
         }
 
         btnAddMember.setOnClickListener {
-            if (selectedMemberList.none { it.id == ddlMemberList[ddlMemberPosition].id && it.group == ddlGroupList[ddlGroupPosition].id }) {
-                MemberList.firstOrNull { it.id == ddlMemberList[ddlMemberPosition].id && it.group == ddlGroupList[ddlGroupPosition].id }
+            selectedMemberList.clear()
+
+            MemberList.filter {
+                copyProductDetailList[index].member.contains(it.id)
+            }.sortedBy { it.group }.sortedBy { it.number }.toMutableList().forEach { member ->
+                if (selectedMemberList.none { it.id == member.id }
+                ) {
+                    selectedMemberList.add(
+                        member
+                    )
+                }
+            }
+
+            if (selectedMemberList.none { it.id == ddlMemberList[ddlMemberPosition].id }) {
+                MemberList.firstOrNull { it.id == ddlMemberList[ddlMemberPosition].id }
                     ?.let { it1 ->
                         selectedMemberList.add(
                             it1
@@ -255,7 +281,7 @@ class ProductSaveListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
             if (switchGroup.isChecked) {
                 MemberList.filter { it.group.contains(ddlGroupList[ddlGroupPosition].id) }
                     .forEach { member ->
-                        if (selectedMemberList.none { it.id == member.id && it.group == ddlGroupList[ddlGroupPosition].id }) {
+                        if (selectedMemberList.none { it.id == member.id }) {
                             selectedMemberList.add(
                                 member
                             )
@@ -263,24 +289,21 @@ class ProductSaveListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
                     }
             }
 
-            selectedMemberList = selectedMemberList.sortedBy { it.number }.toMutableList()
+            selectedMemberList =
+                selectedMemberList.sortedBy { it.number }.sortedBy { it.group }.toMutableList()
 
             if (selectedMemberList.isNotEmpty()) {
-                copyProductDetailList[index].group = ""
                 copyProductDetailList[index].member = ""
                 selectedMemberList.forEach {
-                    copyProductDetailList[index].group += "," + it.group[0]
-                    copyProductDetailList[index].member += "," + it.number
+                    copyProductDetailList[index].member += "," + it.id
                 }
-                copyProductDetailList[index].group =
-                    copyProductDetailList[index].group.substring(1)
                 copyProductDetailList[index].member =
                     copyProductDetailList[index].member.substring(1)
+
                 setMemberSelectedRecyclerView(selectedMemberList, copyProductDetailList[index])
             }
 
         }
-
 
     }
 

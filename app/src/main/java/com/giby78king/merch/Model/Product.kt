@@ -4,15 +4,22 @@ import com.google.firebase.firestore.DocumentSnapshot
 
 class ProductDetail(
     var count: Int,
-    var group: String,
     var limit: Int,
     var member: String,
     var price: Int,
 )
 
+class OrderProductDetail(
+    var count: Int,
+    var limit: Int,
+    var member: String,
+    var price: Int,
+    var number:String,
+    var group: String
+)
+
 data class Product(
     val channelDetail: String,
-    val group: Array<String>,
     val id: String,
     val limit: Array<Int?>,
     val member: Array<String>,
@@ -31,8 +38,6 @@ data class Product(
         fun DocumentSnapshot.toProduct(): Product {
 
             val channelDetail = getString("channelDetail")!!
-            val group = get("group").toString().replace("[", "").replace("]", "").split(", ")
-                .toTypedArray()
             val id = getString("id")!!
             val limitA =
                 get("limit").toString().replace("[", "").replace("]", "").split(", ")
@@ -60,7 +65,6 @@ data class Product(
 
             return Product(
                 channelDetail,
-                group,
                 id,
                 limit,
                 member,

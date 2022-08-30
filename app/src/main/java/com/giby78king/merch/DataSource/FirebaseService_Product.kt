@@ -22,7 +22,6 @@ object FirebaseService_Product {
         }
         return Product(
             channelDetail = "",
-            group = arrayOf(),
             id = "newOne",
             limit = arrayOf(),
             member = arrayOf(),

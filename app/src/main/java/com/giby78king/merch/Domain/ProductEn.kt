@@ -4,7 +4,6 @@ import com.giby78king.merch.DataSource.FirebaseService_Product
 
 data class ProductEn(
     val channelDetail: String,
-    val group: Array<String?>,
     val id: String,
     val limit: Array<Int?>,
     val member: Array<String?>,
@@ -18,7 +17,6 @@ data class ProductEn(
         data as ProductEn
         val dbData: HashMap<String, Any> = hashMapOf()
         dbData["channelDetail"] = data.channelDetail
-        dbData["group"] = data.group
         dbData["id"] = data.id
         dbData["limit"] = data.limit
         dbData["member"] = data.member
@@ -35,7 +33,6 @@ data class ProductEn(
         if (data.id == "newOne") {
             val dbData = hashMapOf(
                 "channelDetail" to channelDetail,
-                "group" to group.toCollection(java.util.ArrayList()),
                 "id" to id,
                 "limit" to limit.toCollection(java.util.ArrayList()),
                 "member" to member.toCollection(java.util.ArrayList()),
@@ -49,7 +46,6 @@ data class ProductEn(
         } else {
             val dbData = hashMapOf(
                 "channelDetail" to channelDetail,
-                "group" to group.toCollection(java.util.ArrayList()),
                 "id" to id,
                 "limit" to limit.toCollection(java.util.ArrayList()),
                 "member" to member.toCollection(java.util.ArrayList()),
