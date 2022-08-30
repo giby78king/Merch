@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="5sp"
+        android:paddingEnd="5sp"
+        android:paddingTop="10sp"
+        >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="5dp"
+        android:paddingVertical="5dp"
+        android:background="@drawable/productdepository_item_border"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:orientation="vertical">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/imgEmployed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        android:paddingStart="10dp"
+                        android:src="@drawable/ic_member_love" />
+
+                    <TextView
+                        android:id="@+id/txtBlockW"
+                        android:layout_width="5dp"
+                        android:layout_height="32dp"
+                        android:layout_toEndOf="@+id/imgEmployed"
+                        android:gravity="start|center_vertical"
+                        android:text=""
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txtMember"
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        android:layout_toRightOf="@+id/txtBlockW"
+                        android:gravity="left|center_vertical"
+                        android:text="丹丹"
+                        android:textColor="@color/top_background_color"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/txtBlockT"
+                        android:layout_width="5dp"
+                        android:layout_height="32dp"
+                        android:layout_toRightOf="@+id/txtMember"
+                        android:gravity="start|center_vertical"
+                        android:text=""
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txtName"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_toRightOf="@+id/txtBlockT"
+                        android:gravity="center_vertical"
+                        android:text="111"
+                        android:textSize="18dp"
+                        android:textStyle="bold|italic" />
+
+                </RelativeLayout>
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3">
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/imgProductDepository"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitXY"
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    app:shapeAppearance="@android:color/transparent"
+                    app:shapeAppearanceOverlay="@style/roundedCorner" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:gravity="left"
+                                android:orientation="horizontal">
+
+                                <LinearLayout
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:orientation="vertical">
+
+                                    <RelativeLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent">
+
+                                        <LinearLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:gravity="center"
+                                            android:orientation="vertical">
+
+                                            <ImageView
+                                                android:layout_width="20dp"
+                                                android:layout_height="20dp"
+                                                app:srcCompat="@drawable/ic_productdepository_date" />
+                                        </LinearLayout>
+                                    </RelativeLayout>
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="15dp"
+                                        android:gravity="start|bottom"
+                                        android:text="日期"
+                                        android:textSize="10sp" />
+
+                                    <TextView
+                                        android:id="@+id/txtDate"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="25dp"
+                                        android:focusable="false"
+                                        android:gravity="start|center"
+                                        android:text="txtDate"
+                                        android:inputType="numberSigned|numberDecimal"
+                                        android:textSize="18sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:gravity="left"
+                                android:orientation="horizontal">
+
+                                <LinearLayout
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:orientation="vertical">
+
+                                    <RelativeLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent">
+
+                                        <LinearLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:gravity="center"
+                                            android:orientation="vertical">
+
+                                            <ImageView
+                                                android:layout_width="20dp"
+                                                android:layout_height="20dp"
+                                                app:srcCompat="@drawable/ic_productdepository_holdingamount" />
+                                        </LinearLayout>
+                                    </RelativeLayout>
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="15dp"
+                                        android:gravity="start|bottom"
+                                        android:text="持有數量"
+                                        android:textSize="10sp" />
+
+                                    <TextView
+                                        android:id="@+id/txtHoldingAmount"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="25dp"
+                                        android:focusable="false"
+                                        android:gravity="start|center"
+                                        android:text="txtHoldingAmount"
+                                        android:inputType="numberSigned|numberDecimal"
+                                        android:textSize="18sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:gravity="left"
+                                android:orientation="horizontal">
+
+                                <LinearLayout
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:orientation="vertical">
+
+                                    <RelativeLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent">
+
+                                        <LinearLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:gravity="center"
+                                            android:orientation="vertical">
+
+                                            <ImageView
+                                                android:layout_width="20dp"
+                                                android:layout_height="20dp"
+                                                app:srcCompat="@drawable/ic_productdepository_valuation" />
+                                        </LinearLayout>
+                                    </RelativeLayout>
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="15dp"
+                                        android:gravity="start|bottom"
+                                        android:text="預估價值"
+                                        android:textSize="10sp" />
+
+                                    <TextView
+                                        android:id="@+id/txtValuation"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="25dp"
+                                        android:focusable="false"
+                                        android:gravity="start|center"
+                                        android:text="txtValuation"
+                                        android:inputType="numberSigned|numberDecimal"
+                                        android:textSize="18sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:gravity="left"
+                                android:orientation="horizontal">
+
+                                <LinearLayout
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:orientation="vertical">
+
+                                    <RelativeLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent">
+
+                                        <LinearLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:gravity="center"
+                                            android:orientation="vertical">
+
+                                            <ImageView
+                                                android:layout_width="20dp"
+                                                android:layout_height="20dp"
+                                                app:srcCompat="@drawable/ic_productdepository_valuation" />
+                                        </LinearLayout>
+                                    </RelativeLayout>
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="15dp"
+                                        android:gravity="start|bottom"
+                                        android:text="實際成本"
+                                        android:textSize="10sp" />
+
+                                    <TextView
+                                        android:id="@+id/txtCost"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="25dp"
+                                        android:focusable="false"
+                                        android:gravity="start|center"
+                                        android:text="txtCost"
+                                        android:inputType="numberSigned|numberDecimal"
+                                        android:textSize="18sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:gravity="left"
+                                android:orientation="horizontal">
+
+                                <LinearLayout
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:orientation="vertical">
+
+                                    <RelativeLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent">
+
+                                        <LinearLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:gravity="center"
+                                            android:orientation="vertical">
+
+                                            <ImageView
+                                                android:layout_width="20dp"
+                                                android:layout_height="20dp"
+                                                app:srcCompat="@drawable/ic_productdepository_channeldetail" />
+                                        </LinearLayout>
+                                    </RelativeLayout>
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="15dp"
+                                        android:gravity="start|bottom"
+                                        android:text="來源"
+                                        android:textSize="10sp" />
+
+                                    <TextView
+                                        android:id="@+id/txtChannelDetail"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="25dp"
+                                        android:focusable="false"
+                                        android:gravity="start|center"
+                                        android:text="txtChannelDetail"
+                                        android:inputType="numberSigned|numberDecimal"
+                                        android:textSize="18sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

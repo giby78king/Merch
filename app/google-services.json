@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "294235140931",
+    "project_id": "merch-2a9ce",
+    "storage_bucket": "merch-2a9ce.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:294235140931:android:9151febcff4cfdf9feb5f6",
+        "android_client_info": {
+          "package_name": "com.giby78king.merch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "294235140931-4a6e6ggfnhmk26tofrl2shp0s026u2p6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAx26QwVH_9_IIko1IBuXKAJLr0DleEZZc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "294235140931-4a6e6ggfnhmk26tofrl2shp0s026u2p6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

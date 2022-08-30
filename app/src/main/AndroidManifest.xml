@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.giby78king.merch">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_logo"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/ic_logo"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Merch">
+        <activity
+            android:name=".ui.MainActivity"
+            android:screenOrientation="portrait"
+            android:exported="true"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.MemberEditPage"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_member_edit_page"
+            android:parentActivityName=".ui.MainActivity" />
+        <activity
+            android:name=".ui.ChannelDetailEditPage"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_channeldetail_edit_page"
+            android:parentActivityName=".ui.MainActivity" />
+        <activity
+            android:name=".ui.ProductEditPage"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_product_edit_page"
+            android:parentActivityName=".ui.MainActivity" />
+        <activity
+            android:name=".ui.ProductSelectPage"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_product_select_page"
+            android:parentActivityName=".ui.MainActivity" />
+
+    </application>
+
+</manifest>

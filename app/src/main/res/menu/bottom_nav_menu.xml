@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_query"
+        android:icon="@drawable/ic_bot_query"
+        android:title="@string/title_query" />
+
+    <item
+        android:id="@+id/navigation_target"
+        android:icon="@drawable/ic_bot_target"
+        android:title="@string/title_target" />
+
+    <item
+        android:id="@+id/navigation_collection"
+        android:icon="@drawable/ic_bot_collection"
+        android:title="@string/title_collection" />
+
+    <item
+        android:id="@+id/navigation_trade"
+        android:icon="@drawable/ic_bot_trade"
+        android:title="@string/title_trade" />
+
+    <item
+        android:id="@+id/navigation_setting"
+        android:icon="@drawable/ic_bot_setting"
+        android:title="@string/title_setting" />
+
+</menu>

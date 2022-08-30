@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid
+        android:color="#000000"/>
+    <padding
+        android:bottom="8dp"
+        android:left="8dp"
+        android:right="8dp"
+        android:top="8dp" /> //設置內間距
+
+    <size
+        android:width="35dp"
+        android:height="35dp" /> //設置圓形大小
+<!--    <gradient-->
+<!--        android:gradientRadius="40dp"-->
+<!--        android:startColor="#FFFFFF"-->
+<!--        android:type="radial" /> //設置漸變大小-->
+</shape>

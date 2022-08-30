@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="5sp"
+        android:paddingTop="10sp"
+        android:paddingEnd="5sp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/productdepository_item_border"
+            android:orientation="vertical"
+            android:paddingHorizontal="5dp"
+            android:paddingVertical="5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:gravity="right"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txtCount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="start|bottom"
+                        android:text="01/01"
+                        android:textColor="#2C5C8C"
+                        android:textSize="20sp"
+                        android:paddingStart="25dp"/>
+
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/imgProductDetail"
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitXY"
+                        app:shapeAppearance="@android:color/transparent"
+                        android:background="@drawable/ic_member_save_new"
+                        app:shapeAppearanceOverlay="@style/roundedCorner" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="2"
+                                    android:gravity="left"
+                                    android:orientation="horizontal">
+
+                                    <LinearLayout
+                                        android:layout_width="40dp"
+                                        android:layout_height="40dp"
+                                        android:orientation="vertical">
+
+                                        <RelativeLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent">
+
+                                            <LinearLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:gravity="center"
+                                                android:orientation="vertical">
+
+                                                <ImageView
+                                                    android:layout_width="20dp"
+                                                    android:layout_height="20dp"
+                                                    app:srcCompat="@drawable/ic_productdepository_valuation" />
+                                            </LinearLayout>
+                                        </RelativeLayout>
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical">
+
+                                        <TextView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="15dp"
+                                            android:gravity="start|bottom"
+                                            android:text="價格"
+                                            android:textSize="10sp" />
+
+                                        <EditText
+                                            android:id="@+id/editPrice"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="40dp"
+                                            android:gravity="end"
+                                            android:inputType="number"
+                                            android:maxLength="7"
+                                            android:text="10,000"
+                                            android:textSize="18dp"
+                                            android:textStyle="bold" />
+
+                                    </LinearLayout>
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="2"
+                                    android:gravity="right"
+                                    android:orientation="horizontal">
+
+                                    <LinearLayout
+                                        android:id="@+id/linearDelete"
+                                        android:layout_width="60dp"
+                                        android:layout_height="60dp"
+                                        android:orientation="vertical">
+
+                                        <RelativeLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent">
+
+                                            <LinearLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:gravity="center"
+                                                android:orientation="vertical">
+
+                                                <ImageView
+                                                    android:layout_width="30dp"
+                                                    android:layout_height="30dp"
+                                                    app:srcCompat="@drawable/ic_product_save_delete" />
+                                            </LinearLayout>
+                                        </RelativeLayout>
+                                    </LinearLayout>
+
+                                </LinearLayout>
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="2"
+                                    android:gravity="left"
+                                    android:orientation="horizontal">
+
+                                    <LinearLayout
+                                        android:layout_width="40dp"
+                                        android:layout_height="40dp"
+                                        android:orientation="vertical">
+
+                                        <RelativeLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent">
+
+                                            <LinearLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:gravity="center"
+                                                android:orientation="vertical">
+
+                                                <ImageView
+                                                    android:layout_width="20dp"
+                                                    android:layout_height="20dp"
+                                                    app:srcCompat="@drawable/ic_product_save_limit" />
+                                            </LinearLayout>
+                                        </RelativeLayout>
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical">
+
+                                        <TextView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="15dp"
+                                            android:gravity="start|bottom"
+                                            android:text="限量"
+                                            android:textSize="10sp" />
+
+                                        <EditText
+                                            android:id="@+id/editLimit"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="40dp"
+                                            android:gravity="end"
+                                            android:inputType="number"
+                                            android:maxLength="6"
+                                            android:text="0"
+                                            android:textSize="18dp"
+                                            android:textStyle="bold" />
+                                    </LinearLayout>
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="2"
+                                    android:gravity="left"
+                                    android:orientation="horizontal"></LinearLayout>
+
+
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:orientation="vertical">
+
+                                        <LinearLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:gravity="left"
+                                            android:orientation="horizontal">
+
+                                            <LinearLayout
+                                                android:layout_width="40dp"
+                                                android:layout_height="40dp"
+                                                android:layout_weight="1">
+
+                                                <RelativeLayout
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="match_parent">
+
+                                                    <LinearLayout
+                                                        android:layout_width="match_parent"
+                                                        android:layout_height="match_parent"
+                                                        android:gravity="center"
+                                                        android:orientation="vertical">
+
+                                                        <ImageView
+                                                            android:layout_width="20dp"
+                                                            android:layout_height="20dp"
+                                                            app:srcCompat="@drawable/ic_product_save_member" />
+                                                    </LinearLayout>
+                                                </RelativeLayout>
+                                            </LinearLayout>
+
+                                            <LinearLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_weight="99"
+                                                android:orientation="vertical">
+
+                                                <TextView
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="16dp"
+                                                    android:gravity="left|bottom"
+                                                    android:text=" 團體"
+                                                    android:textSize="10sp" />
+
+                                                <Spinner
+                                                    android:id="@+id/spinnerGroup"
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="30dp" />
+
+                                                <TextView
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="16dp"
+                                                    android:gravity="left|bottom"
+                                                    android:text=" 成員"
+                                                    android:textSize="10sp" />
+
+                                                <Spinner
+                                                    android:id="@+id/spinnerMember"
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="30dp" />
+                                            </LinearLayout>
+                                        </LinearLayout>
+
+                                        <LinearLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:orientation="vertical">
+
+                                            <LinearLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:orientation="horizontal">
+
+                                                <LinearLayout
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_weight="2"
+                                                    android:gravity="center"
+                                                    android:orientation="horizontal">
+
+                                                    <LinearLayout
+                                                        android:layout_width="40dp"
+                                                        android:layout_height="50dp"
+                                                        android:orientation="vertical">
+
+                                                        <RelativeLayout
+                                                            android:layout_width="match_parent"
+                                                            android:layout_height="match_parent">
+
+                                                            <LinearLayout
+                                                                android:layout_width="match_parent"
+                                                                android:layout_height="match_parent"
+                                                                android:gravity="center"
+                                                                android:orientation="vertical">
+
+                                                                <ImageView
+                                                                    android:layout_width="20dp"
+                                                                    android:layout_height="20dp"
+                                                                    app:srcCompat="@drawable/ic_product_save_group" />
+                                                            </LinearLayout>
+                                                        </RelativeLayout>
+                                                    </LinearLayout>
+
+
+                                                    <LinearLayout
+                                                        android:layout_width="match_parent"
+                                                        android:layout_height="match_parent"
+                                                        android:orientation="vertical">
+
+                                                        <LinearLayout
+                                                            android:layout_width="match_parent"
+                                                            android:layout_height="wrap_content"
+                                                            android:gravity="start"
+                                                            android:orientation="vertical">
+
+                                                            <TextView
+                                                                android:layout_width="match_parent"
+                                                                android:layout_height="15dp"
+                                                                android:gravity="left|bottom"
+                                                                android:text="全部成員"
+                                                                android:textSize="10sp" />
+
+                                                            <Switch
+                                                                android:id="@+id/switchGroup"
+                                                                android:layout_width="wrap_content"
+                                                                android:layout_height="35dp"
+                                                                android:switchMinWidth="40dp"
+                                                                android:text=""
+                                                                android:thumb="@drawable/switch_memo_thumb_selector"
+                                                                android:track="@drawable/switch_memo_track_selector"
+                                                                tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+                                                        </LinearLayout>
+                                                    </LinearLayout>
+
+                                                </LinearLayout>
+
+                                                <LinearLayout
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="match_parent"
+                                                    android:layout_weight="2"
+                                                    android:gravity="center"
+                                                    android:orientation="horizontal">
+
+                                                    <Button
+                                                        android:id="@+id/btnAddMember"
+                                                        android:layout_width="match_parent"
+                                                        android:layout_height="36dp"
+                                                        android:background="@drawable/style_edit_button"
+                                                        android:text="ADD MEMBER"
+                                                        android:textColor="#ffffff"
+                                                        android:textSize="10dp"
+                                                        android:textStyle="bold" />
+
+                                                </LinearLayout>
+                                            </LinearLayout>
+                                        </LinearLayout>
+
+
+                                        <androidx.recyclerview.widget.RecyclerView
+                                            android:id="@+id/rvAddPoolMember"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content" />
+
+                                    </LinearLayout>
+
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="2"
+                                    android:gravity="left"
+                                    android:orientation="horizontal">
+
+                                    <LinearLayout
+                                        android:layout_width="40dp"
+                                        android:layout_height="40dp"
+                                        android:orientation="vertical">
+
+                                        <RelativeLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent">
+
+                                            <LinearLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:gravity="center"
+                                                android:orientation="vertical">
+
+                                                <ImageView
+                                                    android:layout_width="20dp"
+                                                    android:layout_height="20dp"
+                                                    app:srcCompat="@drawable/ic_productdepository_date" />
+                                            </LinearLayout>
+                                        </RelativeLayout>
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical">
+
+                                        <TextView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="15dp"
+                                            android:gravity="start|bottom"
+                                            android:text="日期"
+                                            android:textSize="10sp" />
+
+                                        <TextView
+                                            android:id="@+id/txtDate"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="25dp"
+                                            android:focusable="false"
+                                            android:gravity="start|center"
+                                            android:inputType="numberSigned|numberDecimal"
+                                            android:text="txtDate"
+                                            android:textSize="18sp"
+                                            android:textStyle="bold" />
+                                    </LinearLayout>
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="2"
+                                    android:gravity="left"
+                                    android:orientation="horizontal">
+
+                                    <LinearLayout
+                                        android:layout_width="40dp"
+                                        android:layout_height="40dp"
+                                        android:orientation="vertical">
+
+                                        <RelativeLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent">
+
+                                            <LinearLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:gravity="center"
+                                                android:orientation="vertical">
+
+                                                <ImageView
+                                                    android:layout_width="20dp"
+                                                    android:layout_height="20dp"
+                                                    app:srcCompat="@drawable/ic_productdepository_holdingamount" />
+                                            </LinearLayout>
+                                        </RelativeLayout>
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical">
+
+                                        <TextView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="15dp"
+                                            android:gravity="start|bottom"
+                                            android:text="持有數量"
+                                            android:textSize="10sp" />
+
+                                        <TextView
+                                            android:id="@+id/txtHoldingAmount"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="25dp"
+                                            android:focusable="false"
+                                            android:gravity="start|center"
+                                            android:inputType="numberSigned|numberDecimal"
+                                            android:text="txtHoldingAmount"
+                                            android:textSize="18sp"
+                                            android:textStyle="bold" />
+                                    </LinearLayout>
+
+                                </LinearLayout>
+                            </LinearLayout>
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

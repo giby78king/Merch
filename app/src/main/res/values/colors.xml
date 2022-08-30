@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#80C9BB</color>
+    <color name="purple_700">#80C9BB</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="tab_background_color">#80C9BB</color>
+    <color name="tab_touch_back_color">#5F9EB1</color>
+    <color name="tab_text_color">#FFFFFF</color>
+    <color name="tab_selected_text_color">#FFFFCE</color>
+    <color name="tab_selected_bottomline_color">#FFFFCE</color>
+
+    <color name="top_background_color">#2C5C8C</color>
+    <color name="top_productdepository_background_color">#FFFFE6</color>
+    <color name="top_stroke_color">#FF000000</color>
+    <color name="top_productdepository_text_color">#4286f4</color>
+
+    <color name="top_text_background_color">#2C5C8C</color>
+    <color name="top_text_color">#FFFFE6</color>
+
+</resources>

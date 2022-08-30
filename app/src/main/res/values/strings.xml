@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Merch</string>
+    <string name="title_query">搜尋</string>
+    <string name="title_target">目標</string>
+    <string name="title_collection">收藏</string>
+    <string name="title_trade">歷程</string>
+    <string name="title_setting">設定</string>
+
+    <string name="title_activity_member_edit_page">成員</string>
+    <string name="title_activity_channeldetail_edit_page">通路</string>
+    <string name="title_activity_product_select_page">商品</string>
+    <string name="title_activity_product_edit_page">商品</string>
+    <string name="title_activity_trade_edit_page">交易</string>
+</resources>

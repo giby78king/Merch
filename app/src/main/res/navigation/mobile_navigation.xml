@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_trade">
+
+    <fragment
+        android:id="@+id/navigation_query"
+        android:name="com.giby78king.merch.ui.query.QueryFragment"
+        android:label="@string/title_query"
+        tools:layout="@layout/fragment_query" />
+
+    <fragment
+        android:id="@+id/navigation_target"
+        android:name="com.giby78king.merch.ui.target.TargetFragment"
+        android:label="@string/title_target"
+        tools:layout="@layout/fragment_target" />
+
+    <fragment
+        android:id="@+id/navigation_collection"
+        android:name="com.giby78king.merch.ui.collection.CollectionFragment"
+        android:label="@string/title_collection"
+        tools:layout="@layout/fragment_collection" />
+
+    <fragment
+        android:id="@+id/navigation_trade"
+        android:name="com.giby78king.merch.ui.trade.TradeFragment"
+        android:label="@string/title_trade"
+        tools:layout="@layout/fragment_trade" />
+
+    <fragment
+        android:id="@+id/navigation_setting"
+        android:name="com.giby78king.merch.ui.setting.SettingFragment"
+        android:label="@string/title_setting"
+        tools:layout="@layout/fragment_setting" />
+</navigation>
