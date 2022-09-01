@@ -11,6 +11,7 @@ class ImgSetting {
         var img = "img_"
         when (module) {
             "activity" -> img += module
+            "channeldetail" -> img += module
         }
 
         img = img + "_" + imgUrl.toLowerCase().replace(" ", "")

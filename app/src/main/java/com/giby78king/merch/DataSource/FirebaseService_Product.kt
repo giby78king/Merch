@@ -17,15 +17,17 @@ object FirebaseService_Product {
             return data.toProduct()
         }
         return Product(
+            activity = "",
             channelDetail = arrayOf(),
+            group = arrayOf(),
             id = "newOne",
-            limit = arrayOf(),
-            member = arrayOf(),
+            imgUrl = "",
             name = "",
             onSell = false,
             preOrder = false,
-            price = arrayOf(),
+            productType = "",
             publish = "",
+            specification = arrayOf(),
         )
     }
 

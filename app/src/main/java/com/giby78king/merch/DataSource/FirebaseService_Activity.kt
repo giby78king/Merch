@@ -22,7 +22,7 @@ object FirebaseService_Activity {
         return Activity(
             channelDetail = arrayOf(),
             endDate = "",
-            id = "",
+            id = "newOne",
             imgUrl = "",
             name = "",
             startDate = "",

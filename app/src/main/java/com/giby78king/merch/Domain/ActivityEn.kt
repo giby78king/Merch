@@ -1,6 +1,6 @@
 package com.giby78king.merch.Domain
 
-import com.giby78king.merch.DataSource.FirebaseService_ChannelDetail
+import com.giby78king.merch.DataSource.FirebaseService_Activity
 
 data class ActivityEn(
     val channelDetail: Array<String>,
@@ -19,11 +19,11 @@ data class ActivityEn(
         dbData["imgUrl"] = data.imgUrl
         dbData["name"] = data.name
         dbData["startDate"] = data.startDate
-        FirebaseService_ChannelDetail.updateData(id, dbData)
+        FirebaseService_Activity.updateData(id, dbData)
     }
 
     suspend fun save() {
-        val data = FirebaseService_ChannelDetail.getOne(id)
+        val data = FirebaseService_Activity.getOne(id)
         if (data.id == "newOne") {
             val dbData = hashMapOf(
                 "channelDetail" to channelDetail.toCollection(java.util.ArrayList()),
@@ -33,7 +33,7 @@ data class ActivityEn(
                 "name" to name,
                 "startDate" to startDate,
             )
-            FirebaseService_ChannelDetail.insertData(id, dbData)
+            FirebaseService_Activity.insertData(id, dbData)
         } else {
             val dbData = hashMapOf(
                 "channelDetail" to channelDetail.toCollection(java.util.ArrayList()),
@@ -43,11 +43,11 @@ data class ActivityEn(
                 "name" to name,
                 "startDate" to startDate,
             )
-            FirebaseService_ChannelDetail.updateData(id, dbData)
+            FirebaseService_Activity.updateData(id, dbData)
         }
     }
 
     fun delete() {
-        FirebaseService_ChannelDetail.deleteData(id)
+        FirebaseService_Activity.deleteData(id)
     }
 }

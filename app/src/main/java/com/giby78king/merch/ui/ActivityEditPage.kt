@@ -3,7 +3,6 @@ package com.giby78king.merch.ui
 import android.app.DatePickerDialog
 import android.content.res.Resources
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.EditText
@@ -11,13 +10,16 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.giby78king.merch.Adapter.ActivitySaveAdapter
 import com.giby78king.merch.Adapter.CustomDropDownAdapter
+import com.giby78king.merch.Adapter.PoolChannelDetailAdapter
+import com.giby78king.merch.Domain.ActivityEn
 import com.giby78king.merch.Domain.ChannelDetailEn
 import com.giby78king.merch.Model.Activity
+import com.giby78king.merch.Model.Activity.Companion.activityChannelDetailList
 import com.giby78king.merch.Model.Activity.Companion.dbActivityList
-import com.giby78king.merch.Model.Activity.Companion.ddlActivityList
 import com.giby78king.merch.Model.ChannelDetail.Companion.dbChannelDetailList
 import com.giby78king.merch.Model.ChannelDetail.Companion.ddlChannelDetailList
 import com.giby78king.merch.Model.DdlNormalModel
@@ -26,7 +28,6 @@ import com.giby78king.merch.ViewModel.VmActivitylViewModel
 import com.giby78king.merch.ViewModel.VmChannelDetailSaveViewModel
 import com.giby78king.merch.ViewModel.VmChannelDetailViewModel
 import kotlinx.android.synthetic.main.activity_activity_edit_page.*
-import kotlinx.android.synthetic.main.activity_channeldetail_edit_page.*
 import kotlinx.android.synthetic.main.activity_channeldetail_edit_page.btnAddOne
 import kotlinx.android.synthetic.main.activity_channeldetail_edit_page.btnSubmit
 import kotlinx.android.synthetic.main.activity_channeldetail_edit_page.editId
@@ -48,6 +49,8 @@ class ActivityEditPage : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_activity_edit_page)
 
+        activityChannelDetailList.clear()
+
         var ddlPositionChannelDetail = 0
         var ddlPositionQueryChannelDetail = 0
 
@@ -66,7 +69,7 @@ class ActivityEditPage : AppCompatActivity() {
                     ""
                 )
             )
-            dbChannelDetailList.forEach {
+            dbChannelDetailList.sortedBy { it.channel }.forEach {
                 ddlChannelDetailList.add(
                     DdlNormalModel(
                         it.name,
@@ -137,56 +140,6 @@ class ActivityEditPage : AppCompatActivity() {
             }
         }
 
-
-        val vmChannelDetailSaveViewModel =
-            ViewModelProvider(this)[VmChannelDetailSaveViewModel::class.java]
-
-        vmChannelDetailSaveViewModel.channelDetailSelectInfo.observe(this) {
-            val selected = it
-            val activityInfo =
-                dbActivityList.filter { it.id == selected.id }
-                    .toMutableList()[0]
-            editId.setText(activityInfo.id)
-            editName.setText(activityInfo.name)
-
-            if (activityInfo.startDate.isNotEmpty()) {
-                switchPeriod.isChecked = true
-                editStartDate.setText(activityInfo.startDate)
-            }
-            else
-            {
-                editStartDate.setText("")
-                switchPeriod.isChecked = false
-            }
-
-            editEndDate.setText(activityInfo.endDate)
-
-            val ddlIndex =
-                ddlChannelDetailList.indexOfFirst { it.id == activityInfo.channelDetail[0] }
-            spinnerChannelDetail.setSelection(ddlIndex)
-
-            linearEditID.isVisible = false
-            linearTxtId.isVisible = true
-            txtId.text = activityInfo.id
-
-
-            val res: Resources = this.resources
-            //Img相關
-            var img = "img_activity_" + activityInfo.imgUrl.toLowerCase().replace(" ", "")
-            val resourceId: Int = res.getIdentifier(
-                img, "drawable",
-                "com.giby78king.merch"
-            )
-            imgDetailIcon.setImageResource(resourceId)
-        }
-
-        switchPeriod.setOnCheckedChangeListener { _, _ ->
-            linearStartDate.isVisible = switchPeriod.isChecked
-        }
-
-        editEndDate.setOnClickListener(listener)
-        editStartDate.setOnClickListener(listener)
-
         btnAddOne.setOnClickListener {
             linearEditID.isVisible = true
             linearTxtId.isVisible = false
@@ -203,6 +156,100 @@ class ActivityEditPage : AppCompatActivity() {
             imgDetailIcon.setImageResource(resourceId)
         }
 
+        switchPeriod.setOnCheckedChangeListener { _, _ ->
+            linearStartDate.isVisible = switchPeriod.isChecked
+        }
+
+        editEndDate.setOnClickListener(listener)
+        editStartDate.setOnClickListener(listener)
+
+        val vmChannelDetailSaveViewModel =
+            ViewModelProvider(this)[VmChannelDetailSaveViewModel::class.java]
+
+        vmChannelDetailSaveViewModel.channelDetailSelectInfo.observe(this) {
+            val selected = it
+            val activityInfo =
+                dbActivityList.filter { it.id == selected.id }
+                    .toMutableList()[0]
+            editId.setText(activityInfo.id)
+            editName.setText(activityInfo.name)
+
+            if (activityInfo.startDate.isNotEmpty()) {
+                switchPeriod.isChecked = true
+                editStartDate.setText(activityInfo.startDate)
+            } else {
+                editStartDate.setText("")
+                switchPeriod.isChecked = false
+            }
+
+            editEndDate.setText(activityInfo.endDate)
+
+
+            activityChannelDetailList.clear()
+            activityInfo.channelDetail.forEach { re ->
+                if (re.isNotEmpty()) {
+                    activityChannelDetailList.add(re)
+                }
+            }
+            var sortList = mutableListOf<String>()
+            dbChannelDetailList.sortedBy { it.channel }.toMutableList().forEach { chd ->
+                activityChannelDetailList.forEach { act ->
+                    if (act == chd.id) {
+                        sortList.add(act)
+                    }
+                }
+            }
+            activityChannelDetailList = sortList
+
+            vmActivitylViewModel.setSelectedChannelDetail()
+
+            linearEditID.isVisible = false
+            linearTxtId.isVisible = true
+            txtId.text = activityInfo.id
+
+
+            val res: Resources = this.resources
+            //Img相關
+            var img = "img_activity_" + activityInfo.imgUrl.toLowerCase().replace(" ", "")
+            val resourceId: Int = res.getIdentifier(
+                img, "drawable",
+                "com.giby78king.merch"
+            )
+            imgDetailIcon.setImageResource(resourceId)
+        }
+
+        //上方已選
+        vmActivitylViewModel.SelectedRemarkDatas.observe(this) {
+            val layoutManager = LinearLayoutManager(this)
+            layoutManager.orientation = LinearLayoutManager.HORIZONTAL
+            val numberOfColumns = 3
+            rvAddPoolChannelDetail.layoutManager =
+                GridLayoutManager(this, numberOfColumns)
+            rvAddPoolChannelDetail.adapter = PoolChannelDetailAdapter(activityChannelDetailList)
+        }
+
+        //新增相關(尚未入檔)
+        btnAddChannelDetail.setOnClickListener {
+            if (ddlPositionChannelDetail != 0) {
+                if (!activityChannelDetailList.contains(ddlChannelDetailList[ddlPositionChannelDetail].id))            //排除重複點選
+                {
+                    activityChannelDetailList.add(ddlChannelDetailList[ddlPositionChannelDetail].id)
+                }
+
+                var sortList = mutableListOf<String>()
+                dbChannelDetailList.sortedBy { it.channel }.toMutableList().forEach { chd ->
+                    activityChannelDetailList.forEach { act ->
+                        if (act == chd.id) {
+                            sortList.add(act)
+                        }
+                    }
+                }
+                activityChannelDetailList = sortList
+
+                vmActivitylViewModel.setSelectedChannelDetail()
+            }
+        }
+
         btnSubmit.setOnClickListener {
             try {
                 btnSubmit.startLoading()
@@ -211,50 +258,37 @@ class ActivityEditPage : AppCompatActivity() {
                     btnSubmit.loadingFailed()
                     return@setOnClickListener
                 }
-                if (ddlChannelDetailList[ddlPositionChannelDetail].id == "") {
-                    Toast.makeText(applicationContext, "通路主類別不得為空！！", Toast.LENGTH_SHORT)
-                        .show()
+                if (editEndDate.text.isEmpty()) {
+                    Toast.makeText(applicationContext, "迄止時間不得為空！！", Toast.LENGTH_SHORT).show()
                     btnSubmit.loadingFailed()
                     return@setOnClickListener
                 }
 
-                var formatId = editId.text.toString()
-
-                if (ddlChannelDetailList[ddlPositionChannelDetail].id == "Activity" || ddlChannelDetailList[ddlPositionChannelDetail].id == "Seller") {
-                    if (editEndDate.text.isEmpty()) {
-                        Toast.makeText(applicationContext, "迄止時間不得為空！！", Toast.LENGTH_SHORT)
-                            .show()
-                        btnSubmit.loadingFailed()
-                        return@setOnClickListener
-                    }
-                    if (switchPeriod.isChecked && editStartDate.text.isEmpty()) {
-                        Toast.makeText(applicationContext, "起始時間不得為空！！", Toast.LENGTH_SHORT)
-                            .show()
-                        btnSubmit.loadingFailed()
-                        return@setOnClickListener
-                    }
-
-                    formatId = editEndDate.text.toString() + " " + editId.text.toString()
-                }
+                var formatId = editEndDate.text.toString() + " " + editId.text.toString()
 
                 if (txtId.text.isNotEmpty()) {
                     formatId = txtId.text.toString()
                 }
 
-                val channelDetailData = ChannelDetailEn(
-//                    endDate = editEndDate.text.toString(),
-                    channel = ddlChannelDetailList[ddlPositionChannelDetail].id,
+                val arrayChannelDetail: ArrayList<String> = arrayListOf<String>()
+                activityChannelDetailList.forEach {
+                    arrayChannelDetail.add(it)
+                }
+
+                val activityData = ActivityEn(
+                    endDate = editEndDate.text.toString(),
+                    channelDetail = arrayChannelDetail.toTypedArray(),
                     id = formatId,
-                    imgUrl = formatId,
+                    imgUrl = formatId.toLowerCase().replace(" ",""),
                     name = editName.text.toString(),
-//                    startDate = if (switchPeriod.isChecked) editStartDate.text.toString() else "",
+                    startDate = if (switchPeriod.isChecked) editStartDate.text.toString() else "",
                 )
-                vmChannelDetailViewModel.upsertOne(channelDetailData)
+                vmActivitylViewModel.upsertOne(activityData)
 
                 btnSubmit.loadingSuccessful()
 
                 btnSubmit.animationEndAction = {
-                    vmChannelDetailViewModel.getDatas("")
+                    vmActivitylViewModel.getDatas("")
                     btnSubmit.reset()
                 }
 

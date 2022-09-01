@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.giby78king.merch.DataSource.FirebaseService_Activity
 import com.giby78king.merch.Domain.ActivityEn
 import com.giby78king.merch.Model.Activity
+import com.giby78king.merch.Model.Activity.Companion.activityChannelDetailList
 import com.giby78king.merch.Model.Activity.Companion.dbActivityList
 import kotlinx.coroutines.launch
 
@@ -51,5 +52,14 @@ class VmActivitylViewModel : ViewModel() {
         viewModelScope.launch {
             data.delete()
         }
+    }
+
+
+    private val _selectedChannelDetailDatas = MutableLiveData<MutableList<String>>().apply {
+        value = activityChannelDetailList
+    }
+    val SelectedRemarkDatas: LiveData<MutableList<String>> = _selectedChannelDetailDatas
+    fun setSelectedChannelDetail() {
+        _selectedChannelDetailDatas.value = activityChannelDetailList
     }
 }

@@ -15,6 +15,7 @@ data class Activity(
 
         var dbActivityList = mutableListOf<Activity>()
         var ddlActivityList = java.util.ArrayList<DdlNormalModel>()
+        var activityChannelDetailList = mutableListOf<String>()
 
         fun DocumentSnapshot.toActivity(): Activity {
             val channelDetail = get("channelDetail").toString().replace("[", "").replace("]", "").split(", ")

@@ -259,49 +259,49 @@ class ProductSelectPage : AppCompatActivity() {
     private fun processFilter() {
         var list = dbProductList
 
-        if (ddlChannelPosition != 0) {
-            list =
-                list.filter { product ->
-                    dbChannelDetailList.filter { it.id == product.channelDetail[0] }
-                        .toMutableList()[0].channel == ddlChannelList[ddlChannelPosition].id
-                }.toMutableList()
-        }
-        if (ddlChannelPosition != 0 && ddlChannelDetailPosition != 0) {
-            list =
-                list.filter { it.channelDetail[0] == ddlChannelDetailList[ddlChannelDetailPosition].id }
-                    .toMutableList()
-
-        }
-
-        if (ddlGroupPosition != 0) {
-            var memberGroupList =
-                dbMemberList.filter { it.group == ddlGroupList[ddlGroupPosition].id }
-                    .toMutableList()
-
-            var groupList = mutableListOf<Product>()
-            memberGroupList.forEach { member->
-                list.forEach {pro->
-                    if(pro.member.contains(member.id))
-                    {
-                        if(groupList.filter { it.id == pro.id }.isEmpty())
-                        {
-                            groupList.add(pro)
-                        }
-                    }
-                }
-            }
-            list = groupList
-        }
-
-        if (ddlGroupPosition != 0 && ddlMemberPosition != 0) {
-            var id =
-                dbMemberList.filter { it.id == ddlMemberList[ddlMemberPosition].id && it.group == ddlGroupList[ddlGroupPosition].id }
-                    .toMutableList()[0].id
-
-            list =
-                list.filter { product -> product.member.contains(id) }
-                    .toMutableList()
-        }
+//        if (ddlChannelPosition != 0) {
+//            list =
+//                list.filter { product ->
+//                    dbChannelDetailList.filter { it.id == product.channelDetail[0] }
+//                        .toMutableList()[0].channel == ddlChannelList[ddlChannelPosition].id
+//                }.toMutableList()
+//        }
+//        if (ddlChannelPosition != 0 && ddlChannelDetailPosition != 0) {
+//            list =
+//                list.filter { it.channelDetail[0] == ddlChannelDetailList[ddlChannelDetailPosition].id }
+//                    .toMutableList()
+//
+//        }
+//
+//        if (ddlGroupPosition != 0) {
+//            var memberGroupList =
+//                dbMemberList.filter { it.group == ddlGroupList[ddlGroupPosition].id }
+//                    .toMutableList()
+//
+//            var groupList = mutableListOf<Product>()
+//            memberGroupList.forEach { member->
+//                list.forEach {pro->
+//                    if(pro.member.contains(member.id))
+//                    {
+//                        if(groupList.filter { it.id == pro.id }.isEmpty())
+//                        {
+//                            groupList.add(pro)
+//                        }
+//                    }
+//                }
+//            }
+//            list = groupList
+//        }
+//
+//        if (ddlGroupPosition != 0 && ddlMemberPosition != 0) {
+//            var id =
+//                dbMemberList.filter { it.id == ddlMemberList[ddlMemberPosition].id && it.group == ddlGroupList[ddlGroupPosition].id }
+//                    .toMutableList()[0].id
+//
+//            list =
+//                list.filter { product -> product.member.contains(id) }
+//                    .toMutableList()
+//        }
 
         setProductRecyclerView(list)
     }
