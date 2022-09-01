@@ -12,10 +12,12 @@ class ImgSetting {
         when (module) {
             "activity" -> img += module
             "channeldetail" -> img += module
+            "group" -> img += module
+            "product" -> img += module
         }
 
         img = img + "_" + imgUrl.toLowerCase().replace(" ", "")
-        Log.d(":", ":" + img)
+
         val resourceId: Int = res.getIdentifier(
             img, "drawable",
             "com.giby78king.merch"

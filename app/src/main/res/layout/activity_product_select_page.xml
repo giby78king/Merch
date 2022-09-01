@@ -76,7 +76,7 @@
                                             android:textSize="12dp" />
 
                                         <Spinner
-                                            android:id="@+id/spinnerChannel"
+                                            android:id="@+id/spinnerChannelDetail"
                                             android:layout_width="match_parent"
                                             android:layout_height="45dp" />
 
@@ -84,11 +84,11 @@
                                             android:layout_width="match_parent"
                                             android:layout_height="16dp"
                                             android:gravity="left|bottom"
-                                            android:text=" 通路明細"
+                                            android:text=" 活動"
                                             android:textSize="12dp" />
 
                                         <Spinner
-                                            android:id="@+id/spinnerChannelDetail"
+                                            android:id="@+id/spinnerActivity"
                                             android:layout_width="match_parent"
                                             android:layout_height="45dp" />
                                     </LinearLayout>

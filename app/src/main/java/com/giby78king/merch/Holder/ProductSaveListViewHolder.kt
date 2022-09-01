@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.giby78king.merch.Adapter.*
 import com.giby78king.merch.Model.*
-import com.giby78king.merch.Model.Group.Companion.GroupList
+import com.giby78king.merch.Model.Group.Companion.dbGroupList
 import com.giby78king.merch.Model.Group.Companion.ddlGroupList
 import com.giby78king.merch.Model.Member.Companion.dbMemberList
 import com.giby78king.merch.Model.Member.Companion.ddlMemberList
@@ -155,7 +155,7 @@ class ProductSaveListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
                 ""
             )
         )
-        GroupList.forEach {
+        dbGroupList.forEach {
             ddlGroupList.add(
                 DdlNormalModel(
                     it.name,

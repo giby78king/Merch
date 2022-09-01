@@ -5,8 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.giby78king.merch.DataSource.FirebaseService_Group
-import com.giby78king.merch.DataSource.FirebaseService_Member
-import com.giby78king.merch.Model.Group.Companion.GroupList
+import com.giby78king.merch.Model.Group.Companion.dbGroupList
 import com.giby78king.merch.Domain.MemberEn
 import com.giby78king.merch.Model.Group
 import kotlinx.coroutines.launch
@@ -21,7 +20,7 @@ class VmGroupViewModel : ViewModel() {
     init {
         viewModelScope.launch {
             FirebaseService_Group.getDatas()
-            _groupDatas.value = GroupList
+            _groupDatas.value = dbGroupList
         }
     }
 
@@ -30,10 +29,10 @@ class VmGroupViewModel : ViewModel() {
             FirebaseService_Group.getDatas()
             when(selection){
                 "editGroupId"-> {
-                    _groupDatas.value = GroupList
+                    _groupDatas.value = dbGroupList
                 }
                 "UpsertGroup"->{
-                    _upsertGroupDatas.value = GroupList
+                    _upsertGroupDatas.value = dbGroupList
                 }
             }
         }
@@ -52,5 +51,13 @@ class VmGroupViewModel : ViewModel() {
         viewModelScope.launch {
             data.delete()
         }
+    }
+
+    private val _selectedGroupDatas = MutableLiveData<MutableList<String>>().apply {
+        value = Group.productGroupList
+    }
+    val SelectedGroupDatas: LiveData<MutableList<String>> = _selectedGroupDatas
+    fun setSelectedGroup() {
+        _selectedGroupDatas.value = Group.productGroupList
     }
 }

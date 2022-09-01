@@ -8,6 +8,8 @@ import com.giby78king.merch.DataSource.FirebaseService_ChannelDetail
 import com.giby78king.merch.Domain.ChannelDetailEn
 import com.giby78king.merch.Model.ChannelDetail
 import com.giby78king.merch.Model.ChannelDetail.Companion.dbChannelDetailList
+import com.giby78king.merch.Model.ChannelDetail.Companion.productChannelDetailList
+import com.giby78king.merch.Model.Group
 import kotlinx.coroutines.launch
 
 class VmChannelDetailViewModel : ViewModel() {
@@ -51,5 +53,13 @@ class VmChannelDetailViewModel : ViewModel() {
         viewModelScope.launch {
             data.delete()
         }
+    }
+
+    private val _selectedChannelDetailDatas = MutableLiveData<MutableList<String>>().apply {
+        value = productChannelDetailList
+    }
+    val SelectedChannelDetailDatas: LiveData<MutableList<String>> = _selectedChannelDetailDatas
+    fun setSelectedChannelDetail() {
+        _selectedChannelDetailDatas.value = productChannelDetailList
     }
 }

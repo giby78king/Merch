@@ -11,8 +11,9 @@ data class Group(
 
     companion object {
 
-        var GroupList = mutableListOf<Group>()
+        var dbGroupList = mutableListOf<Group>()
         var ddlGroupList = java.util.ArrayList<DdlNormalModel>()
+        var productGroupList = mutableListOf<String>()
 
         fun DocumentSnapshot.toGroup(): Group {
 

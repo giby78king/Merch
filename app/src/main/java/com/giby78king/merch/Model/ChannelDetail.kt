@@ -13,6 +13,7 @@ data class ChannelDetail(
 
         var dbChannelDetailList = mutableListOf<ChannelDetail>()
         var ddlChannelDetailList = java.util.ArrayList<DdlNormalModel>()
+        var productChannelDetailList = mutableListOf<String>()
 
         fun DocumentSnapshot.toChannelDetail(): ChannelDetail {
             val channel = getString("channel")!!

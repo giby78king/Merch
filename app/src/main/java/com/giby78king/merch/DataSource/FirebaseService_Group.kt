@@ -1,7 +1,7 @@
 package com.giby78king.merch.DataSource
 
 import com.giby78king.merch.Model.Group
-import com.giby78king.merch.Model.Group.Companion.GroupList
+import com.giby78king.merch.Model.Group.Companion.dbGroupList
 import com.giby78king.merch.Model.Group.Companion.toGroup
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -25,13 +25,13 @@ object FirebaseService_Group {
     }
 
     suspend fun getDatas(): MutableList<Group> {
-        GroupList = db
+        dbGroupList = db
 //            .orderBy("number", Query.Direction.DESCENDING)
             .get()
             .await()
             .documents.mapNotNull { it.toGroup() }.toMutableList()
 
-        return GroupList
+        return dbGroupList
     }
 
     fun insertData(id: String, data: Map<String, Any>) {
@@ -53,5 +53,4 @@ object FirebaseService_Group {
             .addOnSuccessListener {
             }
     }
-
 }

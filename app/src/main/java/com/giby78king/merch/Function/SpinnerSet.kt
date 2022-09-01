@@ -16,8 +16,11 @@ class SpinnerSet {
             "member" -> {
                 "img_member_"
             }
-            "channelDetail" -> {
+            "channeldetail" -> {
                 "img_channeldetail_"
+            }
+            "activity" -> {
+                "img_activity_"
             }
             else -> {
                 "ic_" + module.toLowerCase() + "_"

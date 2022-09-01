@@ -49,7 +49,7 @@ class TabQueryFragment : Fragment() {
                     ""
                 )
             )
-            Group.GroupList.forEach {
+            Group.dbGroupList.forEach {
                 Group.ddlGroupList.add(
                     DdlNormalModel(
                         it.name,

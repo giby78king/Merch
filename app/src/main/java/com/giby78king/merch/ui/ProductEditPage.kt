@@ -3,42 +3,33 @@ package com.giby78king.merch.ui
 import android.app.DatePickerDialog
 import android.content.res.Resources
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.LayoutInflater
+import android.util.Log
 import android.view.View
-import android.view.Window
-import android.view.WindowManager
 import android.widget.*
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.giby78king.merch.Adapter.CustomDropDownAdapter
-import com.giby78king.merch.Adapter.ProductSaveAdapter
-import com.giby78king.merch.Domain.ProductEn
+import com.giby78king.merch.Adapter.*
+import com.giby78king.merch.ImgSetting
 import com.giby78king.merch.Model.*
-import com.giby78king.merch.Model.Channel.Companion.dbChannelList
-import com.giby78king.merch.Model.Channel.Companion.ddlChannelList
+import com.giby78king.merch.Model.Activity.Companion.dbActivityList
+import com.giby78king.merch.Model.Activity.Companion.ddlActivityList
 import com.giby78king.merch.Model.ChannelDetail.Companion.dbChannelDetailList
 import com.giby78king.merch.Model.ChannelDetail.Companion.ddlChannelDetailList
-import com.giby78king.merch.Model.Member.Companion.dbMemberList
-import com.giby78king.merch.Model.Product.Companion.dbProductList
+import com.giby78king.merch.Model.ChannelDetail.Companion.productChannelDetailList
+import com.giby78king.merch.Model.Group.Companion.dbGroupList
+import com.giby78king.merch.Model.Group.Companion.ddlGroupList
+import com.giby78king.merch.Model.Group.Companion.productGroupList
 import com.giby78king.merch.Model.Product.Companion.copyProductDetailList
+import com.giby78king.merch.Model.Product.Companion.dbProductList
 import com.giby78king.merch.Model.Product.Companion.nowEditProductId
-import com.giby78king.merch.Model.Product.Companion.productDetailList
 import com.giby78king.merch.R
 import com.giby78king.merch.ViewModel.*
-import kotlinx.android.synthetic.main.activity_channeldetail_edit_page.spinnerChannel
-import kotlinx.android.synthetic.main.activity_member_edit_page.btnSubmit
-import kotlinx.android.synthetic.main.activity_member_edit_page.editId
-import kotlinx.android.synthetic.main.activity_member_edit_page.editName
-import kotlinx.android.synthetic.main.activity_member_edit_page.imgDetailIcon
-import kotlinx.android.synthetic.main.activity_member_edit_page.linearEditID
-import kotlinx.android.synthetic.main.activity_member_edit_page.linearTxtId
-import kotlinx.android.synthetic.main.activity_member_edit_page.txtId
 import kotlinx.android.synthetic.main.activity_product_edit_page.*
+import kotlinx.android.synthetic.main.activity_product_edit_page.btnAddChannelDetail
+import kotlinx.android.synthetic.main.activity_product_edit_page.spinnerChannelDetail
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -46,7 +37,7 @@ import java.util.*
 class ProductEditPage : AppCompatActivity() {
 
     private lateinit var nowEdit: EditText
-    var ddlChannelDetailPosition = 0
+    var ddlPositionChannelDetail = 0
     var init = true
     lateinit var page: ProductEditPage
 
@@ -54,192 +45,272 @@ class ProductEditPage : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product_edit_page)
 
-//        val bundle = intent.extras
-//        val selectedProduct = bundle?.getString("selectedProduct").toString()
-//        page = this
-//
-//        copyProductDetailList.clear()
-//
-//        var ddlChannelPosition = 0
-//        ddlChannelDetailPosition = 0
-//
-//        val vmChannelViewModel =
-//            ViewModelProvider(this)[VmChannelViewModel::class.java]
-//        val vmChannelDetailViewModel =
-//            ViewModelProvider(this)[VmChannelDetailViewModel::class.java]
-//        val vmProductViewModel =
-//            ViewModelProvider(this)[VmProductViewModel::class.java]
-//
-//
-//        vmChannelViewModel.channelDatas.observe(this) {
-//            ddlChannelList.clear()
-//            ddlChannelList.add(
-//                DdlNormalModel(
-//                    "請選擇",
-//                    "",
-//                    ""
-//                )
-//            )
-//            dbChannelList.sortedBy { it.order }.forEach {
-//                ddlChannelList.add(
-//                    DdlNormalModel(
-//                        it.name,
-//                        it.imgUrl,
-//                        it.id
-//                    )
-//                )
-//            }
-//
-//            vmChannelDetailViewModel.getDatas("")
-//            vmChannelDetailViewModel.channelDetailDatas.observe(this) {
-//                spinnerChannel.onItemSelectedListener =
-//                    object : AdapterView.OnItemSelectedListener {
-//                        override fun onItemSelected(
-//                            parent: AdapterView<*>,
-//                            view: View?,
-//                            position: Int,
-//                            id: Long
-//                        ) {
-//                            ddlChannelPosition = position
-//
-//                            ddlChannelDetailList.clear()
-//                            ddlChannelDetailList.add(
-//                                DdlNormalModel(
-//                                    "請選擇",
-//                                    "",
-//                                    ""
-//                                )
-//                            )
-//
-//                            dbChannelDetailList.filter { it.channel == ddlChannelList[ddlChannelPosition].id }
-//                                .forEach {
-//                                    ddlChannelDetailList.add(
-//                                        DdlNormalModel(
-//                                            it.name,
-//                                            it.imgUrl,
-//                                            it.id
-//                                        )
-//                                    )
-//                                }
-//
-//                            spinnerChannelDetail.onItemSelectedListener =
-//                                object : AdapterView.OnItemSelectedListener {
-//                                    override fun onItemSelected(
-//                                        parent: AdapterView<*>,
-//                                        view: View?,
-//                                        position: Int,
-//                                        id: Long
-//                                    ) {
-//                                        ddlChannelDetailPosition = position
-//                                    }
-//
-//                                    override fun onNothingSelected(parent: AdapterView<*>) {}
-//                                }
-//
-//                            val customDropDownAdapter =
-//                                CustomDropDownAdapter(
-//                                    "channelDetail",
-//                                    parent.context,
-//                                    ddlChannelDetailList
-//                                )
-//                            spinnerChannelDetail.adapter = customDropDownAdapter
-//                            if (init && ddlChannelDetailPosition != 0) {
-//                                spinnerChannelDetail.setSelection(ddlChannelDetailPosition)
-//                                init = false
-//                            } else {
-//                                spinnerChannelDetail.setSelection(0)
-//                            }
-//                        }
-//
-//                        override fun onNothingSelected(parent: AdapterView<*>) {}
-//                    }
-//
-//                val customDropDownAdapter =
-//                    CustomDropDownAdapter("channel", this, ddlChannelList)
-//                spinnerChannel.adapter = customDropDownAdapter
-//                spinnerChannel.setSelection(ddlChannelPosition)
-//            }
-//        }
-//
-//
-//        val vmChannelDetailSaveViewModel =
-//            ViewModelProvider(this)[VmChannelDetailSaveViewModel::class.java]
-//
-//        vmChannelDetailSaveViewModel.channelDetailSelectInfo.observe(this) {
-//            val selected = it
-//            val channelDetailInfo =
-//                dbChannelDetailList.filter { it.id == selected.id }
-//                    .toMutableList()[0]
-//            editId.setText(channelDetailInfo.id)
-//            editName.setText(channelDetailInfo.name)
-//
-////            if (channelDetailInfo.channel == "Activity" || channelDetailInfo.channel == "Seller") {
-////                if (channelDetailInfo.startDate.isNotEmpty()) {
-////                    linearStartDate.isVisible = true
-////                    switchPeriod.isChecked = true
-////                    editStartDate.setText(channelDetailInfo.startDate)
-////                }
-////                linearEndDate.isVisible = true
-////                editEndDate.setText(channelDetailInfo.endDate)
-////            } else {
-////                linearStartDate.isVisible = false
-////                linearEndDate.isVisible = false
-////                editStartDate.setText("")
-////                editEndDate.setText("")
-////            }
-//
-//            val ddlIndex = ddlChannelList.indexOfFirst { it.id == channelDetailInfo.channel }
-//            spinnerChannel.setSelection(ddlIndex)
-//
-//            linearEditID.isVisible = false
-//            linearTxtId.isVisible = true
-//            txtId.text = channelDetailInfo.id
-//
-//
-//            val res: Resources = this.resources
-//            //Img相關
-//            var img = "img_channeldetail_" + channelDetailInfo.imgUrl.toLowerCase().replace(" ", "")
-//            val resourceId: Int = res.getIdentifier(
-//                img, "drawable",
-//                "com.giby78king.merch"
-//            )
-//            imgDetailIcon.setImageResource(resourceId)
-//        }
-//
-//        editPublish.setOnClickListener(listener)
-//
-//        btnAddProduct.setOnClickListener {
-//
-//            if (btnAddProduct.text == "NEW PRODUCT") {
-//                btnAddProduct.text = "INSERT ID"
-//                linearDetail.isVisible = false
-//                linearEditID.isVisible = true
-//                linearTxtId.isVisible = false
-//                txtId.text = ""
-//                editId.setText("")
-//
-//                val res: Resources = this.resources
-//                //Img相關
-//                var img = "ic_member_save_new"
-//                val resourceId: Int = res.getIdentifier(
-//                    img, "drawable",
-//                    "com.giby78king.merch"
-//                )
-//                imgDetailIcon.setImageResource(resourceId)
-//            } else {
-//                if (editId.text.isEmpty()) {
-//                    Toast.makeText(applicationContext, "暱稱/識別不得為空！！", Toast.LENGTH_SHORT)
-//                        .show()
-//                    return@setOnClickListener
-//                }
-//                nowEditProductId = editId.text.toString()
-//                btnAddProduct.text = "NEW PRODUCT"
-//                linearEditID.isVisible = false
-//                linearTxtId.isVisible = true
-//                linearDetail.isVisible = true
-//            }
-//
-//        }
+        val bundle = intent.extras
+        val selectedProduct = bundle?.getString("selectedProduct").toString()
+        page = this
+
+        copyProductDetailList.clear()
+
+
+        val vmActivitylViewModel =
+            ViewModelProvider(this)[VmActivitylViewModel::class.java]
+        val vmGroupViewModel =
+            ViewModelProvider(this)[VmGroupViewModel::class.java]
+        val vmChannelViewModel =
+            ViewModelProvider(this)[VmChannelViewModel::class.java]
+        val vmChannelDetailViewModel =
+            ViewModelProvider(this)[VmChannelDetailViewModel::class.java]
+        val vmProductViewModel =
+            ViewModelProvider(this)[VmProductViewModel::class.java]
+
+        var ddlPositionActivity = 0
+        var ddlPositionGroup = 0
+
+
+        vmActivitylViewModel.getDatas("")
+        vmActivitylViewModel.activityDatas.observe(this) {
+            ddlActivityList.clear()
+            ddlActivityList.add(DdlNormalModel("請選擇", "", ""))
+
+            dbActivityList.forEach {
+                ddlActivityList.add(
+                    DdlNormalModel(
+                        it.name,
+                        it.imgUrl,
+                        it.id
+                    )
+                )
+            }
+            vmChannelDetailViewModel.getDatas("")
+            vmChannelDetailViewModel.channelDetailDatas.observe(this) {
+                spinnerActivity.onItemSelectedListener =
+                    object : AdapterView.OnItemSelectedListener {
+                        override fun onItemSelected(
+                            parent: AdapterView<*>,
+                            view: View?,
+                            position: Int,
+                            id: Long
+                        ) {
+                            ddlPositionActivity = position
+
+                            if(!init) {
+                                productChannelDetailList.clear()
+
+                                rvAddPoolChannelDetail.adapter =
+                                    PoolProductEditChannelDetailAdapter(productChannelDetailList)
+                            }
+                            init = false
+
+                            ddlChannelDetailList.clear()
+                            ddlChannelDetailList.add(
+                                DdlNormalModel(
+                                    "請選擇",
+                                    "",
+                                    ""
+                                )
+                            )
+
+                            if (ddlPositionActivity != 0) {
+                                var nowActivityList =
+                                    dbActivityList.filter { it.id == ddlActivityList[ddlPositionActivity].id }
+                                        .toMutableList()[0]
+
+
+                                var dbList = mutableListOf<ChannelDetail>()
+
+                                nowActivityList.channelDetail.forEach { now ->
+                                    dbChannelDetailList.forEach { db ->
+                                        if (db.id == now) {
+                                            dbList.add(db)
+                                        }
+                                    }
+                                }
+
+                                dbList.forEach {
+                                    ddlChannelDetailList.add(
+                                        DdlNormalModel(
+                                            it.name,
+                                            it.imgUrl,
+                                            it.id
+                                        )
+                                    )
+                                }
+                            }
+                            spinnerChannelDetail.onItemSelectedListener =
+                                object : AdapterView.OnItemSelectedListener {
+                                    override fun onItemSelected(
+                                        parent: AdapterView<*>,
+                                        view: View?,
+                                        position: Int,
+                                        id: Long
+                                    ) {
+                                        ddlPositionChannelDetail = position
+                                    }
+
+                                    override fun onNothingSelected(parent: AdapterView<*>) {}
+                                }
+
+                            val customDropDownAdapter =
+                                CustomDropDownAdapter(
+                                    "channeldetail",
+                                    parent.context,
+                                    ddlChannelDetailList
+                                )
+                            spinnerChannelDetail.adapter = customDropDownAdapter
+                            spinnerChannelDetail.setSelection(0)
+
+                        }
+
+                        override fun onNothingSelected(parent: AdapterView<*>) {}
+                    }
+
+                val customDropDownAdapter =
+                    CustomDropDownAdapter("activity", this, ddlActivityList)
+                spinnerActivity.adapter = customDropDownAdapter
+                spinnerActivity.setSelection(ddlPositionActivity)
+
+                if (selectedProduct.isNotEmpty() && selectedProduct != "null") {
+                    setEditPageData(selectedProduct)
+                }
+
+                btnAddChannelDetail.setOnClickListener {
+                    if (ddlPositionChannelDetail != 0) {
+                        if (!productChannelDetailList.contains(ddlChannelDetailList[ddlPositionChannelDetail].id))            //排除重複點選
+                        {
+                            productChannelDetailList.add(ddlChannelDetailList[ddlPositionChannelDetail].id)
+                        }
+
+                        var sortList = mutableListOf<String>()
+                        dbChannelDetailList.sortedBy { it.channel }.sortedBy { it.id }
+                            .toMutableList().forEach { chd ->
+                                productChannelDetailList.forEach { act ->
+                                    if (act == chd.id) {
+                                        sortList.add(act)
+                                    }
+                                }
+                            }
+                        productChannelDetailList = sortList
+
+                        vmChannelDetailViewModel.setSelectedChannelDetail()
+                    }
+                }
+
+                vmChannelDetailViewModel.SelectedChannelDetailDatas.observe(this) {
+                    val layoutManager = LinearLayoutManager(this)
+                    layoutManager.orientation = LinearLayoutManager.HORIZONTAL
+                    val numberOfColumns = 3
+                    rvAddPoolChannelDetail.layoutManager =
+                        GridLayoutManager(this, numberOfColumns)
+                    rvAddPoolChannelDetail.adapter =
+                        PoolProductEditChannelDetailAdapter(productChannelDetailList)
+                }
+            }
+        }
+
+        vmGroupViewModel.getDatas("")
+        vmGroupViewModel.groupDatas.observe(this) {
+            ddlGroupList.clear()
+            ddlGroupList.add(DdlNormalModel("請選擇", "", ""))
+            dbGroupList.forEach {
+                ddlGroupList.add(
+                    DdlNormalModel(
+                        it.name,
+                        it.imgUrl,
+                        it.id
+                    )
+                )
+            }
+            spinnerGroup.onItemSelectedListener =
+                object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        parent: AdapterView<*>,
+                        view: View?,
+                        position: Int,
+                        id: Long
+                    ) {
+                        ddlPositionGroup = position
+                    }
+
+                    override fun onNothingSelected(parent: AdapterView<*>) {}
+                }
+
+            val customDropDownAdapter =
+                CustomDropDownAdapter(
+                    "group",
+                    this,
+                    ddlGroupList
+                )
+            spinnerGroup.adapter = customDropDownAdapter
+            spinnerGroup.setSelection(0)
+        }
+        btnAddGroup.setOnClickListener {
+            if (ddlPositionGroup != 0) {
+                if (!productGroupList.contains(ddlGroupList[ddlPositionGroup].id))            //排除重複點選
+                {
+                    productGroupList.add(ddlGroupList[ddlPositionGroup].id)
+                }
+
+                var sortList = mutableListOf<String>()
+                dbGroupList.sortedBy { it.id }.toMutableList().forEach { chd ->
+                    productGroupList.forEach { act ->
+                        if (act == chd.id) {
+                            sortList.add(act)
+                        }
+                    }
+                }
+                productGroupList = sortList
+
+                vmGroupViewModel.setSelectedGroup()
+            }
+        }
+        vmGroupViewModel.SelectedGroupDatas.observe(this) {
+            val layoutManager = LinearLayoutManager(this)
+            layoutManager.orientation = LinearLayoutManager.HORIZONTAL
+            val numberOfColumns = 3
+            rvAddPoolGroup.layoutManager =
+                GridLayoutManager(this, numberOfColumns)
+            rvAddPoolGroup.adapter = PoolProductEditGroupAdapter(productGroupList)
+        }
+
+        editPublish.setOnClickListener(listener)
+
+        btnAddProduct.setOnClickListener {
+            if (btnAddProduct.text == "NEW PRODUCT") {
+                btnAddProduct.text = "INSERT ID"
+                linearDetail.isVisible = false
+                linearEditID.isVisible = true
+                linearTxtId.isVisible = false
+                txtId.text = ""
+                editId.setText("")
+                txtPublish.text = ""
+                editPublish.setText("")
+
+                val res: Resources = this.resources
+                //Img相關
+                var img = "ic_member_save_new"
+                val resourceId: Int = res.getIdentifier(
+                    img, "drawable",
+                    "com.giby78king.merch"
+                )
+                imgDetailIcon.setImageResource(resourceId)
+            } else {
+                if (editPublish.text.isEmpty()) {
+                    Toast.makeText(applicationContext, "發行日不得為空！！", Toast.LENGTH_SHORT)
+                        .show()
+                    return@setOnClickListener
+                }
+                if (editId.text.isEmpty()) {
+                    Toast.makeText(applicationContext, "暱稱/識別不得為空！！", Toast.LENGTH_SHORT)
+                        .show()
+                    return@setOnClickListener
+                }
+                nowEditProductId = editId.text.toString()
+                btnAddProduct.text = "NEW PRODUCT"
+                linearEditID.isVisible = false
+                linearTxtId.isVisible = true
+                linearDetail.isVisible = true
+            }
+        }
 //
 //        btnAddSpecification.setOnClickListener {
 //
@@ -281,28 +352,8 @@ class ProductEditPage : AppCompatActivity() {
 //
 //            setProductDetailRecyclerView(productDetailList)
 //        }
-//
-//        val vmGroupViewModel =
-//            ViewModelProvider(this)[VmGroupViewModel::class.java]
-//        val vmMemberViewModel =
-//            ViewModelProvider(this)[VmMemberViewModel::class.java]
-//
-//        vmChannelViewModel.channelDatas.observe(this) {
-//            vmChannelDetailViewModel.getDatas("")
-//            vmChannelDetailViewModel.channelDetailDatas.observe(this) {
-//                vmGroupViewModel.groupDatas.observe(this) {
-//                    vmMemberViewModel.getDatas("")
-//                    vmMemberViewModel.memberDatas.observe(this) {
-//                        if (selectedProduct.isNotEmpty() && selectedProduct != "null") {
-//                            vmProductViewModel.getDatas("editProductId")
-//                            vmProductViewModel.productDatas.observe(this) {
-//                                setEditPageData(selectedProduct)
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
+
+
 //
 //        val vmProductSaveViewModel =
 //            ViewModelProvider(this)[VmProductSaveViewModel::class.java]
@@ -443,9 +494,7 @@ class ProductEditPage : AppCompatActivity() {
 //                                    group = mem.group,
 //                                )
 //                            )
-//                        }
-//                        else
-//                        {
+//                        } else {
 //                            if (mem.id == pro.member.split(",")[0]) {
 //                                orderList.add(
 //                                    OrderProductDetail(
@@ -476,7 +525,7 @@ class ProductEditPage : AppCompatActivity() {
 //                    channelDetail = arrayOf(),
 //                    group = arrayOf(),
 //                    id = formatId,
-//                    imgUrl = formatId.toLowerCase().replace(" ",""),
+//                    imgUrl = formatId.toLowerCase().replace(" ", ""),
 //                    name = editName.text.toString(),
 //                    onSell = switchOnSell.isChecked,
 //                    preOrder = switchPreOrder.isChecked,
@@ -540,39 +589,51 @@ class ProductEditPage : AppCompatActivity() {
 
     private fun setEditPageData(selectedProduct: String) {
 
-//        nowEditProductId = selectedProduct
-//        btnAddProduct.text = "NEW PRODUCT"
-//        linearDetail.isVisible = true
-//
-//        val productInfo = dbProductList.filter { it.id == selectedProduct }.toMutableList()[0]
-//
-//        val res: Resources = this.resources
-//        //Img相關
-//        var img = "img_product_" + productInfo.id.toLowerCase().replace(" ", "")
-//        val resourceId: Int = res.getIdentifier(
-//            img, "drawable",
-//            "com.giby78king.merch"
-//        )
-//        imgDetailIcon.setImageResource(resourceId)
-//
-//        linearTxtId.isVisible = true
-//        linearEditID.isVisible = false
-//
-//        txtId.text = productInfo.id
-//        editId.setText(productInfo.id)
-//
-//        editName.setText(productInfo.name)
-//        editPublish.setText(productInfo.publish)
-//        switchOnSell.isChecked = productInfo.onSell
-//        switchPreOrder.isChecked = productInfo.preOrder
-//
-//        val channelDetailInfo = dbChannelDetailList.filter { it.id == productInfo.channelDetail[0] }[0]
-//        val channelInfo = dbChannelList.filter { it.id == channelDetailInfo.channel }[0]
-//
-//        spinnerChannel.setSelection(dbChannelList.sortedBy { it.order }.indexOf(channelInfo) + 1)
-//        ddlChannelDetailPosition =
-//            dbChannelDetailList.filter { it.channel == channelInfo.id }.indexOf(channelDetailInfo) + 1
-//
+        nowEditProductId = selectedProduct
+        btnAddProduct.text = "NEW PRODUCT"
+        linearDetail.isVisible = true
+
+        val productInfo = dbProductList.filter { it.id == nowEditProductId }.toMutableList()[0]
+
+        val res: Resources = this.resources
+        ImgSetting().setImage("product", res, imgDetailIcon, productInfo.id)
+
+
+        linearTxtId.isVisible = true
+        linearEditID.isVisible = false
+
+        editPublish.setText(productInfo.publish)
+        txtPublish.text = productInfo.publish
+        txtId.text = productInfo.id
+        editId.setText(productInfo.id)
+
+        editName.setText(productInfo.name)
+
+        switchOnSell.isChecked = productInfo.onSell
+        switchPreOrder.isChecked = productInfo.preOrder
+
+        spinnerActivity.setSelection(ddlActivityList.indexOfFirst { it.id == productInfo.activity })
+
+        productChannelDetailList.clear()
+        productInfo.channelDetail.forEach { pcd ->
+            dbChannelDetailList.forEach {
+                if (pcd == it.id) {
+                    productChannelDetailList.add(it.id)
+                }
+            }
+        }
+        rvAddPoolChannelDetail.adapter =
+            PoolProductEditChannelDetailAdapter(productChannelDetailList)
+
+        productGroupList.clear()
+        dbGroupList.forEach {
+            if (productInfo.group.contains(it.id)) {
+                productGroupList.add(it.id)
+            }
+        }
+        rvAddPoolGroup.adapter = PoolProductEditGroupAdapter(productGroupList)
+
+
 //        copyProductDetailList.clear()
 //        for (i in 0 until productInfo.member.size) {
 //            copyProductDetailList.add(

@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.giby78king.merch.ImgSetting
 import com.giby78king.merch.Model.ChannelDetail.Companion.dbChannelDetailList
 import com.giby78king.merch.Model.Product
 import com.giby78king.merch.R
@@ -43,14 +44,7 @@ class ProductListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
             itemView.context.startActivity(intent)
         }
 
-
-        //Img相關
-        var img = "img_product_" + data.id.toLowerCase()
-        val resourceId: Int = res.getIdentifier(
-            img, "drawable",
-            "com.giby78king.merch"
-        )
-        imgProduct.setImageResource(resourceId)
+        ImgSetting().setImage("product", res, imgProduct, data.id)
 
     }
 }

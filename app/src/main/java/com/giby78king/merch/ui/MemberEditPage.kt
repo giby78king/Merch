@@ -13,7 +13,7 @@ import com.giby78king.merch.Adapter.CustomDropDownAdapter
 import com.giby78king.merch.Adapter.MemberSaveAdapter
 import com.giby78king.merch.Domain.MemberEn
 import com.giby78king.merch.Model.DdlNormalModel
-import com.giby78king.merch.Model.Group.Companion.GroupList
+import com.giby78king.merch.Model.Group.Companion.dbGroupList
 import com.giby78king.merch.Model.Group.Companion.ddlGroupList
 import com.giby78king.merch.Model.Member
 import com.giby78king.merch.Model.Member.Companion.dbMemberList
@@ -47,7 +47,7 @@ class MemberEditPage : AppCompatActivity() {
                     ""
                 )
             )
-            GroupList.forEach {
+            dbGroupList.forEach {
                 ddlGroupList.add(
                     DdlNormalModel(
                         it.name,

@@ -8,8 +8,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.giby78king.merch.Adapter.CustomDropDownAdapter
 import com.giby78king.merch.Adapter.ProductAdapter
-import com.giby78king.merch.Model.Channel.Companion.dbChannelList
-import com.giby78king.merch.Model.Channel.Companion.ddlChannelList
+import com.giby78king.merch.Model.Activity.Companion.dbActivityList
+import com.giby78king.merch.Model.Activity.Companion.ddlActivityList
 import com.giby78king.merch.Model.ChannelDetail.Companion.dbChannelDetailList
 import com.giby78king.merch.Model.ChannelDetail.Companion.ddlChannelDetailList
 import com.giby78king.merch.Model.DdlNormalModel
@@ -18,23 +18,22 @@ import com.giby78king.merch.Model.Group.Companion.ddlGroupList
 import com.giby78king.merch.Model.Member.Companion.dbMemberList
 import com.giby78king.merch.Model.Member.Companion.ddlMemberList
 import com.giby78king.merch.Model.Product
-import com.giby78king.merch.Model.Product.Companion.dbProductList
 import com.giby78king.merch.Model.Product.Companion.copyProductDetailList
+import com.giby78king.merch.Model.Product.Companion.dbProductList
+import com.giby78king.merch.Model.Specification.Companion.dbSpecificationList
 import com.giby78king.merch.R
 import com.giby78king.merch.ViewModel.*
-import kotlinx.android.synthetic.main.activity_channeldetail_edit_page.spinnerChannel
 import kotlinx.android.synthetic.main.activity_member_edit_page.spinnerGroup
-import kotlinx.android.synthetic.main.activity_product_edit_page.spinnerChannelDetail
 import kotlinx.android.synthetic.main.activity_product_select_page.*
 
 
 class ProductSelectPage : AppCompatActivity() {
 
-    var ddlChannelPosition = 0
-    var ddlChannelDetailPosition = 0
+    var ddlPositionChannelDetail = 0
+    var ddlPositionActivity = 0
 
-    var ddlGroupPosition = 0
-    var ddlMemberPosition = 0
+    var ddlPositionGroup = 0
+    var ddlPositionMember = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,24 +42,28 @@ class ProductSelectPage : AppCompatActivity() {
         copyProductDetailList.clear()
 
 
-        val vmChannelViewModel =
-            ViewModelProvider(this)[VmChannelViewModel::class.java]
         val vmChannelDetailViewModel =
             ViewModelProvider(this)[VmChannelDetailViewModel::class.java]
+        val vmActivitylViewModel =
+            ViewModelProvider(this)[VmActivitylViewModel::class.java]
         val vmProductViewModel =
             ViewModelProvider(this)[VmProductViewModel::class.java]
+        vmChannelDetailViewModel.getDatas("")
+        val vmSpecificationViewModel =
+            ViewModelProvider(this)[VmSpecificationViewModel::class.java]
 
-        vmChannelViewModel.channelDatas.observe(this) {
-            ddlChannelList.clear()
-            ddlChannelList.add(
+
+        vmChannelDetailViewModel.channelDetailDatas.observe(this) {
+            ddlChannelDetailList.clear()
+            ddlChannelDetailList.add(
                 DdlNormalModel(
                     "請選擇",
                     "",
                     ""
                 )
             )
-            dbChannelList.sortedBy { it.order }.forEach {
-                ddlChannelList.add(
+            dbChannelDetailList.sortedBy { it.channel }.forEach {
+                ddlChannelDetailList.add(
                     DdlNormalModel(
                         it.name,
                         it.imgUrl,
@@ -69,79 +72,86 @@ class ProductSelectPage : AppCompatActivity() {
                 )
             }
 
-            vmChannelDetailViewModel.getDatas("")
-            vmChannelDetailViewModel.channelDetailDatas.observe(this) {
+            vmActivitylViewModel.getDatas("")
+            vmActivitylViewModel.activityDatas.observe(this) {
                 vmProductViewModel.getDatas("")
-                vmProductViewModel.productDatas.observe(this) {
-                    setProductRecyclerView(it)
+                vmProductViewModel.productDatas.observe(this) { pro ->
+                    vmSpecificationViewModel.getDatas("")
+                    vmSpecificationViewModel.specificationDatas.observe(this) {
 
+                        setProductRecyclerView(pro)
 
-                    spinnerChannel.onItemSelectedListener =
-                        object : AdapterView.OnItemSelectedListener {
-                            override fun onItemSelected(
-                                parent: AdapterView<*>,
-                                view: View?,
-                                position: Int,
-                                id: Long
-                            ) {
-                                ddlChannelPosition = position
+                        spinnerChannelDetail.onItemSelectedListener =
+                            object : AdapterView.OnItemSelectedListener {
+                                override fun onItemSelected(
+                                    parent: AdapterView<*>,
+                                    view: View?,
+                                    position: Int,
+                                    id: Long
+                                ) {
+                                    ddlPositionChannelDetail = position
 
-                                ddlChannelDetailList.clear()
-                                ddlChannelDetailList.add(
-                                    DdlNormalModel(
-                                        "請選擇",
-                                        "",
-                                        ""
+                                    ddlActivityList.clear()
+                                    ddlActivityList.add(
+                                        DdlNormalModel(
+                                            "請選擇",
+                                            "",
+                                            ""
+                                        )
                                     )
-                                )
 
-                                dbChannelDetailList.filter { it.channel == ddlChannelList[ddlChannelPosition].id }
-                                    .forEach {
-                                        ddlChannelDetailList.add(
-                                            DdlNormalModel(
-                                                it.name,
-                                                it.imgUrl,
-                                                it.id
-                                            )
+                                    dbActivityList.filter {
+                                        it.channelDetail.contains(
+                                            ddlChannelDetailList[ddlPositionChannelDetail].id
                                         )
                                     }
-
-                                spinnerChannelDetail.onItemSelectedListener =
-                                    object : AdapterView.OnItemSelectedListener {
-                                        override fun onItemSelected(
-                                            parent: AdapterView<*>,
-                                            view: View?,
-                                            position: Int,
-                                            id: Long
-                                        ) {
-                                            ddlChannelDetailPosition = position
-                                            processFilter()
+                                        .forEach {
+                                            ddlActivityList.add(
+                                                DdlNormalModel(
+                                                    it.name,
+                                                    it.imgUrl,
+                                                    it.id
+                                                )
+                                            )
                                         }
 
-                                        override fun onNothingSelected(parent: AdapterView<*>) {}
-                                    }
+                                    spinnerActivity.onItemSelectedListener =
+                                        object : AdapterView.OnItemSelectedListener {
+                                            override fun onItemSelected(
+                                                parent: AdapterView<*>,
+                                                view: View?,
+                                                position: Int,
+                                                id: Long
+                                            ) {
+                                                ddlPositionActivity = position
+                                                processFilter()
+                                            }
 
-                                val customDropDownAdapter =
-                                    CustomDropDownAdapter(
-                                        "channelDetail",
-                                        parent.context,
-                                        ddlChannelDetailList
-                                    )
-                                spinnerChannelDetail.adapter = customDropDownAdapter
-                                spinnerChannelDetail.setSelection(0)
+                                            override fun onNothingSelected(parent: AdapterView<*>) {}
+                                        }
+
+                                    val customDropDownAdapter =
+                                        CustomDropDownAdapter(
+                                            "activity",
+                                            parent.context,
+                                            ddlActivityList
+                                        )
+                                    spinnerActivity.adapter = customDropDownAdapter
+                                    spinnerActivity.setSelection(0)
 
 
-                                processFilter()
+                                    processFilter()
 
+                                }
+
+                                override fun onNothingSelected(parent: AdapterView<*>) {}
                             }
 
-                            override fun onNothingSelected(parent: AdapterView<*>) {}
-                        }
-
-                    val customDropDownAdapter =
-                        CustomDropDownAdapter("channel", this, ddlChannelList)
-                    spinnerChannel.adapter = customDropDownAdapter
-                    spinnerChannel.setSelection(ddlChannelPosition)
+                        val customDropDownAdapter =
+                            CustomDropDownAdapter("channeldetail", this, ddlChannelDetailList)
+                        spinnerChannelDetail.adapter = customDropDownAdapter
+                        spinnerChannelDetail.setSelection(ddlPositionChannelDetail)
+                    }
                 }
             }
         }
@@ -165,7 +175,7 @@ class ProductSelectPage : AppCompatActivity() {
                             ""
                         )
                     )
-                    Group.GroupList.forEach {
+                    Group.dbGroupList.forEach {
                         ddlGroupList.add(
                             DdlNormalModel(
                                 it.name,
@@ -183,7 +193,7 @@ class ProductSelectPage : AppCompatActivity() {
                                 position: Int,
                                 id: Long
                             ) {
-                                ddlGroupPosition = position
+                                ddlPositionGroup = position
 
                                 ddlMemberList.clear()
                                 ddlMemberList.add(
@@ -194,7 +204,7 @@ class ProductSelectPage : AppCompatActivity() {
                                     )
                                 )
 
-                                dbMemberList.filter { it.group.contains(ddlGroupList[ddlGroupPosition].id) }
+                                dbMemberList.filter { it.group.contains(ddlGroupList[ddlPositionGroup].id) }
                                     .forEach {
                                         ddlMemberList.add(
                                             DdlNormalModel(
@@ -223,7 +233,7 @@ class ProductSelectPage : AppCompatActivity() {
                     val customDropDownAdapter =
                         CustomDropDownAdapter("group", this, Group.ddlGroupList)
                     spinnerGroup.adapter = customDropDownAdapter
-                    spinnerGroup.setSelection(ddlGroupPosition)
+                    spinnerGroup.setSelection(ddlPositionGroup)
 
 
                     spinnerMember.onItemSelectedListener =
@@ -234,7 +244,7 @@ class ProductSelectPage : AppCompatActivity() {
                                 position: Int,
                                 id: Long
                             ) {
-                                ddlMemberPosition = position
+                                ddlPositionMember = position
 
                                 processFilter()
 
@@ -259,49 +269,40 @@ class ProductSelectPage : AppCompatActivity() {
     private fun processFilter() {
         var list = dbProductList
 
-//        if (ddlChannelPosition != 0) {
-//            list =
-//                list.filter { product ->
-//                    dbChannelDetailList.filter { it.id == product.channelDetail[0] }
-//                        .toMutableList()[0].channel == ddlChannelList[ddlChannelPosition].id
-//                }.toMutableList()
-//        }
-//        if (ddlChannelPosition != 0 && ddlChannelDetailPosition != 0) {
-//            list =
-//                list.filter { it.channelDetail[0] == ddlChannelDetailList[ddlChannelDetailPosition].id }
-//                    .toMutableList()
-//
-//        }
-//
-//        if (ddlGroupPosition != 0) {
-//            var memberGroupList =
-//                dbMemberList.filter { it.group == ddlGroupList[ddlGroupPosition].id }
-//                    .toMutableList()
-//
-//            var groupList = mutableListOf<Product>()
-//            memberGroupList.forEach { member->
-//                list.forEach {pro->
-//                    if(pro.member.contains(member.id))
-//                    {
-//                        if(groupList.filter { it.id == pro.id }.isEmpty())
-//                        {
-//                            groupList.add(pro)
-//                        }
-//                    }
-//                }
-//            }
-//            list = groupList
-//        }
-//
-//        if (ddlGroupPosition != 0 && ddlMemberPosition != 0) {
-//            var id =
-//                dbMemberList.filter { it.id == ddlMemberList[ddlMemberPosition].id && it.group == ddlGroupList[ddlGroupPosition].id }
-//                    .toMutableList()[0].id
-//
-//            list =
-//                list.filter { product -> product.member.contains(id) }
-//                    .toMutableList()
-//        }
+        if (ddlPositionChannelDetail != 0) {
+            list =
+                list.filter { it.channelDetail.contains(ddlChannelDetailList[ddlPositionChannelDetail].id) }
+                    .toMutableList()
+        }
+        if (ddlPositionChannelDetail != 0 && ddlPositionActivity != 0) {
+            list =
+                list.filter { it.activity == ddlActivityList[ddlPositionActivity].id }
+                    .toMutableList()
+        }
+        if (ddlPositionGroup != 0) {
+            list =
+                list.filter { it.group.contains(ddlGroupList[ddlPositionGroup].id) }
+                    .toMutableList()
+        }
+        if (ddlPositionGroup != 0 && ddlPositionMember != 0) {
+
+            var specificationList = dbSpecificationList.filter {
+                it.specificationType == "Member" && it.member.contains(ddlMemberList[ddlPositionMember].id)
+            }.toMutableList()
+
+            var memberProductList =  mutableListOf<Product>()
+
+            specificationList.forEach { sp->
+                list.forEach {
+                    if(it.specification.contains(sp.id))
+                    {
+                        memberProductList.add(it)
+                    }
+                }
+            }
+
+            list = memberProductList
+        }
 
         setProductRecyclerView(list)
     }
