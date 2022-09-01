@@ -1,7 +1,6 @@
 package com.giby78king.merch.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatActivity
@@ -9,23 +8,22 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.giby78king.merch.Adapter.CustomDropDownAdapter
 import com.giby78king.merch.Adapter.ProductAdapter
-import com.giby78king.merch.Model.Channel.Companion.ChannelList
+import com.giby78king.merch.Model.Channel.Companion.dbChannelList
 import com.giby78king.merch.Model.Channel.Companion.ddlChannelList
-import com.giby78king.merch.Model.ChannelDetail.Companion.ChannelDetailList
+import com.giby78king.merch.Model.ChannelDetail.Companion.dbChannelDetailList
 import com.giby78king.merch.Model.ChannelDetail.Companion.ddlChannelDetailList
 import com.giby78king.merch.Model.DdlNormalModel
 import com.giby78king.merch.Model.Group
 import com.giby78king.merch.Model.Group.Companion.ddlGroupList
-import com.giby78king.merch.Model.Member.Companion.MemberList
+import com.giby78king.merch.Model.Member.Companion.dbMemberList
 import com.giby78king.merch.Model.Member.Companion.ddlMemberList
 import com.giby78king.merch.Model.Product
-import com.giby78king.merch.Model.Product.Companion.ProductList
+import com.giby78king.merch.Model.Product.Companion.dbProductList
 import com.giby78king.merch.Model.Product.Companion.copyProductDetailList
 import com.giby78king.merch.R
 import com.giby78king.merch.ViewModel.*
 import kotlinx.android.synthetic.main.activity_channeldetail_edit_page.spinnerChannel
 import kotlinx.android.synthetic.main.activity_member_edit_page.spinnerGroup
-import kotlinx.android.synthetic.main.activity_product_edit_page.*
 import kotlinx.android.synthetic.main.activity_product_edit_page.spinnerChannelDetail
 import kotlinx.android.synthetic.main.activity_product_select_page.*
 
@@ -61,11 +59,11 @@ class ProductSelectPage : AppCompatActivity() {
                     ""
                 )
             )
-            ChannelList.sortedBy { it.order }.forEach {
+            dbChannelList.sortedBy { it.order }.forEach {
                 ddlChannelList.add(
                     DdlNormalModel(
                         it.name,
-                        it.icon,
+                        it.imgUrl,
                         it.id
                     )
                 )
@@ -97,7 +95,7 @@ class ProductSelectPage : AppCompatActivity() {
                                     )
                                 )
 
-                                ChannelDetailList.filter { it.belong == ddlChannelList[ddlChannelPosition].id }
+                                dbChannelDetailList.filter { it.channel == ddlChannelList[ddlChannelPosition].id }
                                     .forEach {
                                         ddlChannelDetailList.add(
                                             DdlNormalModel(
@@ -170,7 +168,7 @@ class ProductSelectPage : AppCompatActivity() {
                     Group.GroupList.forEach {
                         ddlGroupList.add(
                             DdlNormalModel(
-                                it.chName,
+                                it.name,
                                 it.id,
                                 it.id
                             )
@@ -196,12 +194,12 @@ class ProductSelectPage : AppCompatActivity() {
                                     )
                                 )
 
-                                MemberList.filter { it.group.contains(ddlGroupList[ddlGroupPosition].id) }
+                                dbMemberList.filter { it.group.contains(ddlGroupList[ddlGroupPosition].id) }
                                     .forEach {
                                         ddlMemberList.add(
                                             DdlNormalModel(
                                                 it.id,
-                                                it.icon,
+                                                it.imgUrl,
                                                 it.id
                                             )
                                         )
@@ -259,25 +257,25 @@ class ProductSelectPage : AppCompatActivity() {
     }
 
     private fun processFilter() {
-        var list = ProductList
+        var list = dbProductList
 
         if (ddlChannelPosition != 0) {
             list =
                 list.filter { product ->
-                    ChannelDetailList.filter { it.id == product.channelDetail }
-                        .toMutableList()[0].belong == ddlChannelList[ddlChannelPosition].id
+                    dbChannelDetailList.filter { it.id == product.channelDetail[0] }
+                        .toMutableList()[0].channel == ddlChannelList[ddlChannelPosition].id
                 }.toMutableList()
         }
         if (ddlChannelPosition != 0 && ddlChannelDetailPosition != 0) {
             list =
-                list.filter { it.channelDetail == ddlChannelDetailList[ddlChannelDetailPosition].id }
+                list.filter { it.channelDetail[0] == ddlChannelDetailList[ddlChannelDetailPosition].id }
                     .toMutableList()
 
         }
 
         if (ddlGroupPosition != 0) {
             var memberGroupList =
-                MemberList.filter { it.group == ddlGroupList[ddlGroupPosition].id }
+                dbMemberList.filter { it.group == ddlGroupList[ddlGroupPosition].id }
                     .toMutableList()
 
             var groupList = mutableListOf<Product>()
@@ -297,7 +295,7 @@ class ProductSelectPage : AppCompatActivity() {
 
         if (ddlGroupPosition != 0 && ddlMemberPosition != 0) {
             var id =
-                MemberList.filter { it.id == ddlMemberList[ddlMemberPosition].id && it.group == ddlGroupList[ddlGroupPosition].id }
+                dbMemberList.filter { it.id == ddlMemberList[ddlMemberPosition].id && it.group == ddlGroupList[ddlGroupPosition].id }
                     .toMutableList()[0].id
 
             list =

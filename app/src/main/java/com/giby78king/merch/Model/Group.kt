@@ -3,8 +3,9 @@ package com.giby78king.merch.Model
 import com.google.firebase.firestore.DocumentSnapshot
 
 data class Group(
-    val chName: String,
-    var id: String,
+    val id: String,
+    var imgUrl: String,
+    var league: Array<String>,
     val name: String,
 ) {
 
@@ -15,13 +16,16 @@ data class Group(
 
         fun DocumentSnapshot.toGroup(): Group {
 
-            val chName = getString("chName")!!
             val id = getString("id")!!
+            val imgUrl = getString("imgUrl")!!
+            val league = get("league").toString().replace("[", "").replace("]", "").split(", ")
+                .toTypedArray()
             val name = getString("name")!!
 
             return Group(
-                chName,
                 id,
+                imgUrl,
+                league,
                 name,
             )
         }

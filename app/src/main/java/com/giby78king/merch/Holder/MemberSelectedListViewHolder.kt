@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.graphics.Color
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -13,15 +12,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.giby78king.merch.Adapter.MemberSelectedAdapter
-import com.giby78king.merch.Adapter.PoolGroupAdapter
 import com.giby78king.merch.Model.Member
-import com.giby78king.merch.Model.Member.Companion.MemberList
+import com.giby78king.merch.Model.Member.Companion.dbMemberList
 import com.giby78king.merch.Model.Member.Companion.selectedMemberList
-import com.giby78king.merch.Model.Product
 import com.giby78king.merch.Model.Product.Companion.copyProductDetailList
 import com.giby78king.merch.Model.ProductDetail
 import com.giby78king.merch.R
-import com.giby78king.merch.ViewModel.VmTopProductDepositoryViewModel
 
 
 class MemberSelectedListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
@@ -54,7 +50,7 @@ class MemberSelectedListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
         itemView.setOnClickListener {
 
-            MemberList.filter {
+            dbMemberList.filter {
                 productDetail.member.contains(it.id)
             }.toMutableList().forEach { member ->
                 if (selectedMemberList.none { it.id == member.id }) {
@@ -94,7 +90,7 @@ class MemberSelectedListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         }
 
         //Img相關
-        var img = "img_member_" + data.icon.toLowerCase()
+        var img = "img_member_" + data.imgUrl.toLowerCase()
         val resourceId: Int = res.getIdentifier(
             img, "drawable",
             "com.giby78king.merch"

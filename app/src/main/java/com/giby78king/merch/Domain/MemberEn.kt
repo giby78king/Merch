@@ -1,7 +1,6 @@
 package com.giby78king.merch.Domain
 
 import com.giby78king.merch.DataSource.FirebaseService_Member
-import com.giby78king.merch.TimeFormat
 
 data class MemberEn(
     val birthday: String,
@@ -9,7 +8,7 @@ data class MemberEn(
     val firstBoard: String,
     val group: String,
     val height: Int,
-    val icon: String,
+    val imgUrl: String,
     val id: String,
     val ig: String,
     val name: String,
@@ -24,7 +23,7 @@ data class MemberEn(
         dbData["employed"] = data.employed
         dbData["firstBoard"] = data.firstBoard
         dbData["group"] = data.group
-        dbData["icon"] = data.icon
+        dbData["imgUrl"] = data.imgUrl
         dbData["height"] = data.height
         dbData["id"] = data.id
         dbData["ig"] = data.ig
@@ -44,7 +43,7 @@ data class MemberEn(
                 "firstBoard" to firstBoard,
                 "group" to group,
                 "height" to height,
-                "icon" to icon,
+                "imgUrl" to imgUrl,
                 "id" to id,
                 "ig" to ig,
                 "name" to name,
@@ -60,7 +59,7 @@ data class MemberEn(
                 "firstBoard" to firstBoard,
                 "group" to group,
                 "height" to height,
-                "icon" to icon,
+                "imgUrl" to imgUrl,
                 "id" to id,
                 "ig" to ig,
                 "name" to name,

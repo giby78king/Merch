@@ -8,7 +8,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.giby78king.merch.Model.ChannelDetail.Companion.ChannelDetailList
+import com.giby78king.merch.Model.ChannelDetail.Companion.dbChannelDetailList
 import com.giby78king.merch.Model.Product
 import com.giby78king.merch.R
 import com.giby78king.merch.ui.ProductEditPage
@@ -29,7 +29,7 @@ class ProductListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
         txtPublish.text = data.publish
         txtChannelDetail.text =
-            ChannelDetailList.filter { it.id == data.channelDetail }.toMutableList()[0].name
+            dbChannelDetailList.filter { it.id == data.channelDetail[0] }.toMutableList()[0].name
         txtMember.text = data.name
 
         itemView.setOnClickListener {

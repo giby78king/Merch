@@ -1,8 +1,7 @@
 package com.giby78king.merch.DataSource
 
-import android.util.Log
 import com.giby78king.merch.Model.ProductDepository
-import com.giby78king.merch.Model.ProductDepository.Companion.ProductDepositoryList
+import com.giby78king.merch.Model.ProductDepository.Companion.dbProductDepositoryList
 import com.giby78king.merch.Model.ProductDepository.Companion.toProductDepository
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -39,14 +38,14 @@ object FirebaseService_ProductDepository {
     }
 
     suspend fun getDatas(): MutableList<ProductDepository> {
-        ProductDepositoryList = db
+        dbProductDepositoryList = db
 //            .orderBy("number", Query.Direction.DESCENDING)
             .get()
             .await()
             .documents.mapNotNull { it.toProductDepository() }.sortedBy { it.valuation }
             .toMutableList()
 
-        return ProductDepositoryList
+        return dbProductDepositoryList
     }
 
     fun insertData(id: String, data: Map<String, Any>) {

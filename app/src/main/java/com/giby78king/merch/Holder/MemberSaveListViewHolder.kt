@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.giby78king.merch.Model.Member
 import com.giby78king.merch.R
 import com.giby78king.merch.ViewModel.VmMemberSaveViewModel
-import com.giby78king.merch.ViewModel.VmTopProductDepositoryViewModel
 
 class MemberSaveListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
     private val parentView = v
@@ -27,12 +26,12 @@ class MemberSaveListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         txtNumber.text = data.number
 
         itemView.setOnClickListener {
-            vmMemberSaveViewModel.setSelectMemberDatas(data.group, data.number, data.icon)
+            vmMemberSaveViewModel.setSelectMemberDatas(data.group, data.number, data.imgUrl)
         }
 
 
         //Img相關
-        var img = "img_member_" + data.icon.toLowerCase()
+        var img = "img_member_" + data.imgUrl.toLowerCase()
         val resourceId: Int = res.getIdentifier(
             img, "drawable",
             "com.giby78king.merch"

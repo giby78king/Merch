@@ -8,10 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
 import com.giby78king.merch.R
-import com.giby78king.merch.ui.ChannelDetailEditPage
-import com.giby78king.merch.ui.MemberEditPage
-import com.giby78king.merch.ui.ProductEditPage
-import com.giby78king.merch.ui.ProductSelectPage
+import com.giby78king.merch.ui.*
 
 
 class SettingFragment : Fragment() {
@@ -38,7 +35,7 @@ class SettingFragment : Fragment() {
 
         val button3 = root.findViewById<Button>(R.id.button3)
         button3.setOnClickListener{
-            val intent = Intent(context, ProductEditPage::class.java)
+            val intent = Intent(context, ActivityEditPage::class.java)
             context?.startActivity(intent)
         }
 

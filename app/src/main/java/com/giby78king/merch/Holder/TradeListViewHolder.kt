@@ -1,26 +1,16 @@
 package com.giby78king.merch.Holder
 
 import android.annotation.SuppressLint
-import android.content.res.ColorStateList
 import android.content.res.Resources
-import android.graphics.Color
-import android.util.Log
 import android.view.View
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.widget.ImageViewCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.giby78king.merch.Adapter.TradeAdapter
 import com.giby78king.merch.Adapter.TradeInnerAdapter
-import com.giby78king.merch.Model.Member.Companion.MemberList
-import com.giby78king.merch.Model.Product.Companion.ProductList
-import com.giby78king.merch.Model.ProductDepository
 import com.giby78king.merch.Model.TextAmountSetting
 import com.giby78king.merch.Model.Trade
-import com.giby78king.merch.Model.Trade.Companion.TradeList
 import com.giby78king.merch.Model.TradeInner
 import com.giby78king.merch.R
 

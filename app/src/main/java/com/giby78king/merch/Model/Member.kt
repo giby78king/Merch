@@ -8,7 +8,7 @@ data class Member(
     val firstBoard: String,
     val group: String,
     val height: Int,
-    val icon: String,
+    val imgUrl: String,
     val id: String,
     val ig: String,
     val name: String,
@@ -17,7 +17,7 @@ data class Member(
     val weight: Int,
 ) {
     companion object {
-        var MemberList = mutableListOf<Member>()
+        var dbMemberList = mutableListOf<Member>()
         var SelectGroupList = mutableListOf<String>()
         var ddlMemberList = mutableListOf<DdlNormalModel>()
         var selectedMemberList = mutableListOf<Member>()
@@ -29,7 +29,7 @@ data class Member(
             val firstBoard = getString("firstBoard")!!
             val group = getString("group")!!
             val height = getLong("height")?.toInt()!!
-            val icon = getString("icon")!!
+            val imgUrl = getString("imgUrl")!!
             val id = getString("id")!!
             val ig = getString("ig")!!
             val name = getString("name")!!
@@ -43,7 +43,7 @@ data class Member(
                 firstBoard,
                 group,
                 height,
-                icon,
+                imgUrl,
                 id,
                 ig,
                 name,

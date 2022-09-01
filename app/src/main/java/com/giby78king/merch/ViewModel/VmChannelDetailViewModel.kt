@@ -6,9 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.giby78king.merch.DataSource.FirebaseService_ChannelDetail
 import com.giby78king.merch.Domain.ChannelDetailEn
-import com.giby78king.merch.Domain.MemberEn
 import com.giby78king.merch.Model.ChannelDetail
-import com.giby78king.merch.Model.ChannelDetail.Companion.ChannelDetailList
+import com.giby78king.merch.Model.ChannelDetail.Companion.dbChannelDetailList
 import kotlinx.coroutines.launch
 
 class VmChannelDetailViewModel : ViewModel() {
@@ -23,14 +22,14 @@ class VmChannelDetailViewModel : ViewModel() {
             FirebaseService_ChannelDetail.getDatas()
             when (selection) {
                 "editChannelId" -> {
-                    _channelDetailDatas.value = ChannelDetailList
+                    _channelDetailDatas.value = dbChannelDetailList
                 }
                 "UpsertChannel" -> {
-                    _upsertChannelDetailDatas.value = ChannelDetailList
+                    _upsertChannelDetailDatas.value = dbChannelDetailList
                 }
                 else ->
                 {
-                    _channelDetailDatas.value = ChannelDetailList
+                    _channelDetailDatas.value = dbChannelDetailList
                 }
             }
         }

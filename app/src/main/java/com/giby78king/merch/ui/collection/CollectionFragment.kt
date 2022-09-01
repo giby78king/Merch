@@ -29,24 +29,24 @@ class CollectionFragment : Fragment() {
     ): View {
 
         root = inflater.inflate(R.layout.fragment_collection, container, false)
-        val vmProductDepositoryViewModel =
-            ViewModelProvider(this)[VmProductDepositoryViewModel::class.java]
-
-        vmProductDepositoryViewModel.getDatas("")
-        vmProductDepositoryViewModel.productDepositoryDatas.observe(viewLifecycleOwner) {
-
-            val vmProductViewModel =
-                ViewModelProvider(this)[VmProductViewModel::class.java]
-            vmProductViewModel.getDatas("")
-            vmProductViewModel.productDatas.observe(viewLifecycleOwner) {
-                val vmMemberViewModel =
-                    ViewModelProvider(this)[VmMemberViewModel::class.java]
-                vmMemberViewModel.getDatas("")
-                vmMemberViewModel.memberDatas.observe(viewLifecycleOwner) {
-                    setProductDepositoryRecyclerView(ProductDepository.ProductDepositoryList)
-                }
-            }
-        }
+//        val vmProductDepositoryViewModel =
+//            ViewModelProvider(this)[VmProductDepositoryViewModel::class.java]
+//
+//        vmProductDepositoryViewModel.getDatas("")
+//        vmProductDepositoryViewModel.productDepositoryDatas.observe(viewLifecycleOwner) {
+//
+//            val vmProductViewModel =
+//                ViewModelProvider(this)[VmProductViewModel::class.java]
+//            vmProductViewModel.getDatas("")
+//            vmProductViewModel.productDatas.observe(viewLifecycleOwner) {
+//                val vmMemberViewModel =
+//                    ViewModelProvider(this)[VmMemberViewModel::class.java]
+//                vmMemberViewModel.getDatas("")
+//                vmMemberViewModel.memberDatas.observe(viewLifecycleOwner) {
+//                    setProductDepositoryRecyclerView(ProductDepository.ProductDepositoryList)
+//                }
+//            }
+//        }
         //TODO 排序按鈕 喜愛 最近▲ 價值▲
         return root
     }

@@ -31,7 +31,7 @@ class MemberListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         txtNumber.text = data.number
 
         itemView.setOnClickListener {
-            vmTopProductDepositoryViewModel.setTopMemberDatas(data.group,data.number,data.icon)
+            vmTopProductDepositoryViewModel.setTopMemberDatas(data.group,data.number,data.imgUrl)
         }
 
         if (data.employed) {
@@ -45,7 +45,7 @@ class MemberListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         }
 
         //Img相關
-        var img = "img_member_" + data.icon.toLowerCase()
+        var img = "img_member_" + data.imgUrl.toLowerCase()
         val resourceId: Int = res.getIdentifier(
             img, "drawable",
             "com.giby78king.merch"

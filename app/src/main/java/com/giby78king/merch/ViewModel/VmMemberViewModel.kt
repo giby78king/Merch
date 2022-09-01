@@ -6,9 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.giby78king.merch.DataSource.FirebaseService_Member
 import com.giby78king.merch.Model.Member
-import com.giby78king.merch.Model.Member.Companion.MemberList
+import com.giby78king.merch.Model.Member.Companion.dbMemberList
 import com.giby78king.merch.Domain.MemberEn
-import com.giby78king.merch.Model.Member.Companion.SelectGroupList
 import kotlinx.coroutines.launch
 
 class VmMemberViewModel : ViewModel() {
@@ -23,13 +22,13 @@ class VmMemberViewModel : ViewModel() {
             FirebaseService_Member.getDatas()
             when (selection) {
                 "editMemberId" -> {
-                    _memberDatas.value = MemberList
+                    _memberDatas.value = dbMemberList
                 }
                 "UpsertMember" -> {
-                    _upsertMemberDatas.value = MemberList
+                    _upsertMemberDatas.value = dbMemberList
                 }
                 else -> {
-                    _memberDatas.value = MemberList
+                    _memberDatas.value = dbMemberList
                 }
             }
         }

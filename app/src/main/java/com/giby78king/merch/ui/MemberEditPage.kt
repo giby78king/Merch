@@ -16,13 +16,12 @@ import com.giby78king.merch.Model.DdlNormalModel
 import com.giby78king.merch.Model.Group.Companion.GroupList
 import com.giby78king.merch.Model.Group.Companion.ddlGroupList
 import com.giby78king.merch.Model.Member
-import com.giby78king.merch.Model.Member.Companion.MemberList
+import com.giby78king.merch.Model.Member.Companion.dbMemberList
 import com.giby78king.merch.Model.Member.Companion.SelectGroupList
 import com.giby78king.merch.R
 import com.giby78king.merch.ViewModel.VmGroupViewModel
 import com.giby78king.merch.ViewModel.VmMemberSaveViewModel
 import com.giby78king.merch.ViewModel.VmMemberViewModel
-import com.giby78king.merch.ViewModel.VmProductViewModel
 import kotlinx.android.synthetic.main.activity_member_edit_page.*
 
 class MemberEditPage : AppCompatActivity() {
@@ -51,7 +50,7 @@ class MemberEditPage : AppCompatActivity() {
             GroupList.forEach {
                 ddlGroupList.add(
                     DdlNormalModel(
-                        it.chName,
+                        it.name,
                         it.id,
                         it.id
                     )
@@ -102,7 +101,7 @@ class MemberEditPage : AppCompatActivity() {
                     ddlQueryGroupPosition = position
 
                     var filterList =
-                        Member.MemberList.filter { it.group.contains(ddlGroupList[position].id) }
+                        Member.dbMemberList.filter { it.group.contains(ddlGroupList[position].id) }
                             .toMutableList()
                     setMemberRecyclerView(filterList)
                 }
@@ -118,12 +117,7 @@ class MemberEditPage : AppCompatActivity() {
 
             vmMemberViewModel.getDatas("")
             vmMemberViewModel.memberDatas.observe(this) {
-                val vmProductViewModel =
-                    ViewModelProvider(this)[VmProductViewModel::class.java]
-                vmProductViewModel.getDatas("")
-                vmProductViewModel.productDatas.observe(this) {
-                    setMemberRecyclerView(MemberList)
-                }
+                setMemberRecyclerView(dbMemberList)
             }
         }
 
@@ -134,7 +128,7 @@ class MemberEditPage : AppCompatActivity() {
         vmMemberSaveViewModel.memberSelectInfo.observe(this) {
             val selected = it
             val memberInfo =
-                MemberList.filter { it.number == selected.id && it.group == selected.belong }
+                dbMemberList.filter { it.number == selected.id && it.group == selected.belong }
                     .toMutableList()[0]
             editId.setText(memberInfo.id)
             editName.setText(memberInfo.name)
@@ -156,7 +150,7 @@ class MemberEditPage : AppCompatActivity() {
 
             val res: Resources = this.resources
             //Img相關
-            var img = "img_member_" + memberInfo.icon.toLowerCase()
+            var img = "img_member_" + memberInfo.imgUrl.toLowerCase()
             val resourceId: Int = res.getIdentifier(
                 img, "drawable",
                 "com.giby78king.merch"
@@ -215,7 +209,7 @@ class MemberEditPage : AppCompatActivity() {
                     firstBoard = editFirstBoard.text.toString(),
                     group = ddlGroupList[ddlGroupPosition].id,
                     height = editHeight.text.toString().toInt(),
-                    icon = iconId.toLowerCase() + editFirstBoard.text.toString() + editNumber.text.toString(),
+                    imgUrl = iconId.toLowerCase() + editFirstBoard.text.toString() + editNumber.text.toString(),
                     id = editId.text.toString(),
                     ig = editIg.text.toString(),
                     name = editName.text.toString(),

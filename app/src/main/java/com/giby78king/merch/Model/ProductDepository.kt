@@ -22,7 +22,7 @@ data class ProductDepository(
     val ym: String,
 ) {
     companion object {
-        var ProductDepositoryList = mutableListOf<ProductDepository>()
+        var dbProductDepositoryList = mutableListOf<ProductDepository>()
 
         fun DocumentSnapshot.toProductDepository(): ProductDepository {
 

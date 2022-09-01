@@ -15,12 +15,11 @@ import com.giby78king.merch.Adapter.*
 import com.giby78king.merch.Model.*
 import com.giby78king.merch.Model.Group.Companion.GroupList
 import com.giby78king.merch.Model.Group.Companion.ddlGroupList
-import com.giby78king.merch.Model.Member.Companion.MemberList
+import com.giby78king.merch.Model.Member.Companion.dbMemberList
 import com.giby78king.merch.Model.Member.Companion.ddlMemberList
 import com.giby78king.merch.Model.Member.Companion.selectedMemberList
 import com.giby78king.merch.Model.Product.Companion.copyProductDetailList
 import com.giby78king.merch.Model.Product.Companion.nowEditProductId
-import com.giby78king.merch.Model.Product.Companion.productDetailList
 import com.giby78king.merch.R
 import com.giby78king.merch.ViewModel.VmProductSaveViewModel
 import java.text.DecimalFormat
@@ -53,7 +52,7 @@ class ProductSaveListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
             if (memberArr.size > 2) {
 
             } else {
-                val memberInfo = MemberList.filter { it.id == data.member }[0]
+                val memberInfo = dbMemberList.filter { it.id == data.member }[0]
 
                 val groupFirst = memberInfo.group.split(" ")
 
@@ -159,7 +158,7 @@ class ProductSaveListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         GroupList.forEach {
             ddlGroupList.add(
                 DdlNormalModel(
-                    it.chName,
+                    it.name,
                     it.id,
                     it.id
                 )
@@ -184,12 +183,12 @@ class ProductSaveListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
                     )
                 )
 
-                MemberList.filter { it.group.contains(ddlGroupList[ddlGroupPosition].id) }
+                dbMemberList.filter { it.group.contains(ddlGroupList[ddlGroupPosition].id) }
                     .forEach {
                         ddlMemberList.add(
                             DdlNormalModel(
                                 it.id,
-                                it.icon,
+                                it.imgUrl,
                                 it.id
                             )
                         )
@@ -231,7 +230,7 @@ class ProductSaveListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
             selectedMemberList.clear()
 
-            MemberList.filter {
+            dbMemberList.filter {
                 copyProductDetailList[index].member.contains(it.id)
             }.sortedBy { it.group }.sortedBy { it.number }.toMutableList().forEach { member ->
                 if (selectedMemberList.none { it.id == member.id }) {
@@ -259,7 +258,7 @@ class ProductSaveListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         btnAddMember.setOnClickListener {
             selectedMemberList.clear()
 
-            MemberList.filter {
+            dbMemberList.filter {
                 copyProductDetailList[index].member.contains(it.id)
             }.sortedBy { it.group }.sortedBy { it.number }.toMutableList().forEach { member ->
                 if (selectedMemberList.none { it.id == member.id }
@@ -271,7 +270,7 @@ class ProductSaveListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
             }
 
             if (selectedMemberList.none { it.id == ddlMemberList[ddlMemberPosition].id }) {
-                MemberList.firstOrNull { it.id == ddlMemberList[ddlMemberPosition].id }
+                dbMemberList.firstOrNull { it.id == ddlMemberList[ddlMemberPosition].id }
                     ?.let { it1 ->
                         selectedMemberList.add(
                             it1
@@ -279,7 +278,7 @@ class ProductSaveListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
                     }
             }
             if (switchGroup.isChecked) {
-                MemberList.filter { it.group.contains(ddlGroupList[ddlGroupPosition].id) }
+                dbMemberList.filter { it.group.contains(ddlGroupList[ddlGroupPosition].id) }
                     .forEach { member ->
                         if (selectedMemberList.none { it.id == member.id }) {
                             selectedMemberList.add(

@@ -26,7 +26,7 @@ data class Trade(
     val ym: String,
 ) {
     companion object {
-        var TradeList = mutableListOf<Trade>()
+        var dbTradeList = mutableListOf<Trade>()
 
         fun DocumentSnapshot.toTrade(): Trade {
 

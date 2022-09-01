@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.giby78king.merch.DataSource.FirebaseService_ProductDepository
 import com.giby78king.merch.Domain.MemberEn
 import com.giby78king.merch.Model.ProductDepository
-import com.giby78king.merch.Model.ProductDepository.Companion.ProductDepositoryList
+import com.giby78king.merch.Model.ProductDepository.Companion.dbProductDepositoryList
 import kotlinx.coroutines.launch
 
 class VmProductDepositoryViewModel : ViewModel() {
@@ -20,7 +20,7 @@ class VmProductDepositoryViewModel : ViewModel() {
     init {
         viewModelScope.launch {
             FirebaseService_ProductDepository.getDatas()
-            _productDepositoryDatas.value = ProductDepositoryList
+            _productDepositoryDatas.value = dbProductDepositoryList
         }
     }
 
@@ -29,13 +29,13 @@ class VmProductDepositoryViewModel : ViewModel() {
             FirebaseService_ProductDepository.getDatas()
             when (selection) {
                 "editProductDepositoryId" -> {
-                    _productDepositoryDatas.value = ProductDepositoryList
+                    _productDepositoryDatas.value = dbProductDepositoryList
                 }
                 "UpsertProductDepository" -> {
-                    _upsertProductDepositoryDatas.value = ProductDepositoryList
+                    _upsertProductDepositoryDatas.value = dbProductDepositoryList
                 }
                 else->{
-                    _productDepositoryDatas.value = ProductDepositoryList
+                    _productDepositoryDatas.value = dbProductDepositoryList
                 }
             }
         }

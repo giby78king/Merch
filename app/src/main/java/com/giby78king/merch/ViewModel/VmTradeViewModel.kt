@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.giby78king.merch.DataSource.FirebaseService_Trade
 import com.giby78king.merch.Domain.MemberEn
 import com.giby78king.merch.Model.Trade
-import com.giby78king.merch.Model.Trade.Companion.TradeList
+import com.giby78king.merch.Model.Trade.Companion.dbTradeList
 import kotlinx.coroutines.launch
 
 class VmTradeViewModel : ViewModel() {
@@ -20,7 +20,7 @@ class VmTradeViewModel : ViewModel() {
     init {
         viewModelScope.launch {
             FirebaseService_Trade.getDatas()
-            _tradeDatas.value = TradeList
+            _tradeDatas.value = dbTradeList
         }
     }
 
@@ -29,13 +29,13 @@ class VmTradeViewModel : ViewModel() {
             FirebaseService_Trade.getDatas()
             when (selection) {
                 "editTradeId" -> {
-                    _tradeDatas.value = TradeList
+                    _tradeDatas.value = dbTradeList
                 }
                 "UpsertTrade" -> {
-                    _upsertTradeDatas.value = TradeList
+                    _upsertTradeDatas.value = dbTradeList
                 }
                 else -> {
-                    _tradeDatas.value = TradeList
+                    _tradeDatas.value = dbTradeList
                 }
             }
         }

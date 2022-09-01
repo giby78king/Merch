@@ -7,8 +7,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.giby78king.merch.Model.Member.Companion.MemberList
-import com.giby78king.merch.Model.Product.Companion.ProductList
+import com.giby78king.merch.Model.Member.Companion.dbMemberList
+import com.giby78king.merch.Model.Product.Companion.dbProductList
 import com.giby78king.merch.Model.TextAmountSetting
 import com.giby78king.merch.Model.TradeInner
 import com.giby78king.merch.R
@@ -37,11 +37,11 @@ class TradeInnerListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 //        txtChannelDetail.text = data.channelDetail
 
 
-        val memberInfo = MemberList.filter { it.number == data.holdingMember }[0]
+        val memberInfo = dbMemberList.filter { it.number == data.holdingMember }[0]
         txtMember.text = memberInfo.id
 
 
-        val productInfo = ProductList.filter { it.id == data.product }[0]
+        val productInfo = dbProductList.filter { it.id == data.product }[0]
         txtName.text = productInfo.name
 
         itemView.setOnClickListener {

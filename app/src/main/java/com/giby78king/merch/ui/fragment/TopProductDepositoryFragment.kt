@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.giby78king.merch.Function.SpinnerSet
 import com.giby78king.merch.Model.ProductDepository
-import com.giby78king.merch.Model.ProductDepository.Companion.ProductDepositoryList
+import com.giby78king.merch.Model.ProductDepository.Companion.dbProductDepositoryList
 import com.giby78king.merch.Model.TextAmountSetting
 import com.giby78king.merch.R
 import com.giby78king.merch.ViewModel.VmTopProductDepositoryViewModel
@@ -37,7 +37,7 @@ class TopProductDepositoryFragment : Fragment() {
         vmProductDepositoryViewModel.getDatas("")
         vmProductDepositoryViewModel.productDepositoryDatas.observe(viewLifecycleOwner) { it ->
             val filterStockDepositoryList = mutableListOf<ProductDepository>()
-            ProductDepositoryList.filter { it.holdingAmount != 0 }.forEach {
+            dbProductDepositoryList.filter { it.holdingAmount != 0 }.forEach {
                 filterStockDepositoryList.add(it)
             }
 
@@ -74,11 +74,11 @@ class TopProductDepositoryFragment : Fragment() {
                         SpinnerSet().setSpinnerIcon(module, icon, imgChannel, resources)
                     }
 
-                    if (ProductDepositoryList.count() > 0) {
+                    if (dbProductDepositoryList.count() > 0) {
                         var filterList = mutableListOf<ProductDepository>()
 
                         if (selectMember.id.isNotEmpty()) {
-                            filterList = ProductDepositoryList.filter {
+                            filterList = dbProductDepositoryList.filter {
                                 it.group.contains(selectMember.belong) && it.member.contains(selectMember.id)
                             }.toMutableList()
 
@@ -90,7 +90,7 @@ class TopProductDepositoryFragment : Fragment() {
                         }
 
                         if (selectChannel.id.isNotEmpty()) {
-                            filterList = ProductDepositoryList.filter {
+                            filterList = dbProductDepositoryList.filter {
                                 it.channelDetail == selectChannel.id
                             }.toMutableList()
                             if (selectMember.id.isNotEmpty()) {
@@ -133,11 +133,11 @@ class TopProductDepositoryFragment : Fragment() {
                         SpinnerSet().setSpinnerIcon(module, icon, imgMember, resources)
                     }
 
-                    if (ProductDepositoryList.count() > 0) {
+                    if (dbProductDepositoryList.count() > 0) {
                         var filterList = mutableListOf<ProductDepository>()
 
                         if (selectMember.id.isNotEmpty()) {
-                            filterList = ProductDepositoryList.filter {
+                            filterList = dbProductDepositoryList.filter {
                                 it.group.contains(selectMember.belong) && it.member.contains(selectMember.id)
                             }.toMutableList()
 
@@ -149,7 +149,7 @@ class TopProductDepositoryFragment : Fragment() {
                         }
 
                         if (selectChannel.id.isNotEmpty()) {
-                            filterList = ProductDepositoryList.filter {
+                            filterList = dbProductDepositoryList.filter {
                                 it.channelDetail == selectChannel.id
                             }.toMutableList()
                             if (selectMember.id.isNotEmpty()) {
@@ -171,11 +171,11 @@ class TopProductDepositoryFragment : Fragment() {
                     }
                 }
 
-                if (ProductDepositoryList.count() > 0) {
+                if (dbProductDepositoryList.count() > 0) {
                     var filterList = mutableListOf<ProductDepository>()
 
                     if (selectMember.id.isNotEmpty()) {
-                        filterList = ProductDepositoryList.filter {
+                        filterList = dbProductDepositoryList.filter {
                             it.group.contains(selectMember.belong) && it.member.contains(selectMember.id)
                         }.toMutableList()
 
@@ -187,7 +187,7 @@ class TopProductDepositoryFragment : Fragment() {
                     }
 
                     if (selectChannel.id.isNotEmpty()) {
-                        filterList = ProductDepositoryList.filter {
+                        filterList = dbProductDepositoryList.filter {
                             it.channelDetail == selectChannel.id
                         }.toMutableList()
                         if (selectMember.id.isNotEmpty()) {
@@ -231,11 +231,11 @@ class TopProductDepositoryFragment : Fragment() {
                         SpinnerSet().setSpinnerIcon(module, icon, imgChannel, resources)
                     }
 
-                    if (ProductDepositoryList.count() > 0) {
+                    if (dbProductDepositoryList.count() > 0) {
                         var filterList = mutableListOf<ProductDepository>()
 
                         if (selectMember.id.isNotEmpty()) {
-                            filterList = ProductDepositoryList.filter {
+                            filterList = dbProductDepositoryList.filter {
                                 it.group.contains(selectMember.belong) && it.member.contains(selectMember.id)
                             }.toMutableList()
 
@@ -247,7 +247,7 @@ class TopProductDepositoryFragment : Fragment() {
                         }
 
                         if (selectChannel.id.isNotEmpty()) {
-                            filterList = ProductDepositoryList.filter {
+                            filterList = dbProductDepositoryList.filter {
                                 it.channelDetail == selectChannel.id
                             }.toMutableList()
                             if (selectMember.id.isNotEmpty()) {
@@ -290,11 +290,11 @@ class TopProductDepositoryFragment : Fragment() {
                         SpinnerSet().setSpinnerIcon(module, icon, imgMember, resources)
                     }
 
-                    if (ProductDepositoryList.count() > 0) {
+                    if (dbProductDepositoryList.count() > 0) {
                         var filterList = mutableListOf<ProductDepository>()
 
                         if (selectMember.id.isNotEmpty()) {
-                            filterList = ProductDepositoryList.filter {
+                            filterList = dbProductDepositoryList.filter {
                                 it.group.contains(selectMember.belong) && it.member.contains(selectMember.id)
                             }.toMutableList()
 
@@ -306,7 +306,7 @@ class TopProductDepositoryFragment : Fragment() {
                         }
 
                         if (selectChannel.id.isNotEmpty()) {
-                            filterList = ProductDepositoryList.filter {
+                            filterList = dbProductDepositoryList.filter {
                                 it.channelDetail == selectChannel.id
                             }.toMutableList()
                             if (selectMember.id.isNotEmpty()) {
@@ -328,11 +328,11 @@ class TopProductDepositoryFragment : Fragment() {
                     }
                 }
 
-                if (ProductDepositoryList.count() > 0) {
+                if (dbProductDepositoryList.count() > 0) {
                     var filterList = mutableListOf<ProductDepository>()
 
                     if (selectMember.id.isNotEmpty()) {
-                        filterList = ProductDepositoryList.filter {
+                        filterList = dbProductDepositoryList.filter {
                             it.group.contains(selectMember.belong) && it.member.contains(selectMember.id)
                         }.toMutableList()
 
@@ -344,7 +344,7 @@ class TopProductDepositoryFragment : Fragment() {
                     }
 
                     if (selectChannel.id.isNotEmpty()) {
-                        filterList = ProductDepositoryList.filter {
+                        filterList = dbProductDepositoryList.filter {
                             it.channelDetail == selectChannel.id
                         }.toMutableList()
                         if (selectMember.id.isNotEmpty()) {

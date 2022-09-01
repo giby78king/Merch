@@ -8,6 +8,7 @@
 
     <string name="title_activity_member_edit_page">成員</string>
     <string name="title_activity_channeldetail_edit_page">通路</string>
+    <string name="title_activity_activity_edit_page">活動</string>
     <string name="title_activity_product_select_page">商品</string>
     <string name="title_activity_product_edit_page">商品</string>
     <string name="title_activity_trade_edit_page">交易</string>

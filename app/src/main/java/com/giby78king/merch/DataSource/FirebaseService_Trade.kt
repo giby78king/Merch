@@ -1,7 +1,7 @@
 package com.giby78king.merch.DataSource
 
 import com.giby78king.merch.Model.Trade
-import com.giby78king.merch.Model.Trade.Companion.TradeList
+import com.giby78king.merch.Model.Trade.Companion.dbTradeList
 import com.giby78king.merch.Model.Trade.Companion.toTrade
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -33,13 +33,13 @@ object FirebaseService_Trade {
     }
 
     suspend fun getDatas(): MutableList<Trade> {
-        TradeList = db
+        dbTradeList = db
 //            .orderBy("number", Query.Direction.DESCENDING)
             .get()
             .await()
             .documents.mapNotNull { it.toTrade() }.toMutableList()
 
-        return TradeList
+        return dbTradeList
     }
 
     fun insertData(id: String, data: Map<String, Any>) {

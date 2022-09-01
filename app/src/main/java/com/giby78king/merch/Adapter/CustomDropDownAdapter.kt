@@ -37,7 +37,7 @@ class CustomDropDownAdapter(
         vh.label.text = dataSource[position].name
 
 
-        val icon = dataSource[position].icon
+        val icon = dataSource[position].imgUrl
         val imgViewIcon: ImageView = vh.img
         if (context != null) {
             SpinnerSet().setSpinnerIcon(module, icon, imgViewIcon, context.resources)

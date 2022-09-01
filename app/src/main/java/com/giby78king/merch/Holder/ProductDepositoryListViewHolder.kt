@@ -10,8 +10,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.widget.ImageViewCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.giby78king.merch.Model.Member.Companion.MemberList
-import com.giby78king.merch.Model.Product.Companion.ProductList
+import com.giby78king.merch.Model.Member.Companion.dbMemberList
+import com.giby78king.merch.Model.Product.Companion.dbProductList
 import com.giby78king.merch.Model.ProductDepository
 import com.giby78king.merch.Model.TextAmountSetting
 import com.giby78king.merch.R
@@ -42,7 +42,7 @@ class ProductDepositoryListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         txtChannelDetail.text = data.channelDetail
 
         if (data.member.split(',').size == 1) {
-            val memberInfo = MemberList.filter { it.number == data.member }[0]
+            val memberInfo = dbMemberList.filter { it.number == data.member }[0]
             txtMember.text = memberInfo.id
         }
         else
@@ -50,7 +50,7 @@ class ProductDepositoryListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
             txtMember.text = data.group[0]
         }
 
-        val productInfo = ProductList.filter { it.id == data.product }[0]
+        val productInfo = dbProductList.filter { it.id == data.product }[0]
         txtName.text = productInfo.name
 
         itemView.setOnClickListener {

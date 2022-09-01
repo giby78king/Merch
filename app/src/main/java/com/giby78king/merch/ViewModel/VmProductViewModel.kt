@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.giby78king.merch.DataSource.FirebaseService_Product
 import com.giby78king.merch.Domain.ProductEn
 import com.giby78king.merch.Model.Product
-import com.giby78king.merch.Model.Product.Companion.ProductList
+import com.giby78king.merch.Model.Product.Companion.dbProductList
 import kotlinx.coroutines.launch
 
 class VmProductViewModel : ViewModel() {
@@ -22,13 +22,13 @@ class VmProductViewModel : ViewModel() {
             FirebaseService_Product.getDatas()
             when (selection) {
                 "editProductId" -> {
-                    _productDatas.value = ProductList
+                    _productDatas.value = dbProductList
                 }
                 "UpsertProduct" -> {
-                    _upsertProductDatas.value = ProductList
+                    _upsertProductDatas.value = dbProductList
                 }
                 else -> {
-                    _productDatas.value = ProductList
+                    _productDatas.value = dbProductList
                 }
             }
         }

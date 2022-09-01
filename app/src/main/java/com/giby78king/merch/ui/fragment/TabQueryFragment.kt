@@ -1,7 +1,6 @@
 package com.giby78king.merch.ui.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnTouchListener
@@ -19,8 +18,8 @@ import com.giby78king.merch.Adapter.CustomDropDownAdapter
 import com.giby78king.merch.Adapter.MemberAdapter
 import com.giby78king.merch.Model.*
 import com.giby78king.merch.Model.Channel.Companion.ddlChannelList
-import com.giby78king.merch.Model.ChannelDetail.Companion.ChannelDetailList
-import com.giby78king.merch.Model.Member.Companion.MemberList
+import com.giby78king.merch.Model.ChannelDetail.Companion.dbChannelDetailList
+import com.giby78king.merch.Model.Member.Companion.dbMemberList
 import com.giby78king.merch.R
 import com.giby78king.merch.ViewModel.*
 
@@ -53,7 +52,7 @@ class TabQueryFragment : Fragment() {
             Group.GroupList.forEach {
                 Group.ddlGroupList.add(
                     DdlNormalModel(
-                        it.chName,
+                        it.name,
                         it.id,
                         it.id
                     )
@@ -74,11 +73,11 @@ class TabQueryFragment : Fragment() {
                     val rvChannelDetail =
                         root.findViewById<RecyclerView>(R.id.rv_list_item_channelDetail)
                     var filterList =
-                        MemberList.filter { it.group.contains(Group.ddlGroupList[position].id) }
+                        dbMemberList.filter { it.group.contains(Group.ddlGroupList[position].id) }
                             .toMutableList()
 
                     if (position == 0) {
-                        filterList = MemberList
+                        filterList = dbMemberList
                     }
 
                     setMemberRecyclerView(filterList)
@@ -120,11 +119,11 @@ class TabQueryFragment : Fragment() {
                     ""
                 )
             )
-            Channel.ChannelList.sortedBy { it.order }.forEach {
+            Channel.dbChannelList.sortedBy { it.order }.forEach {
                 Channel.ddlChannelList.add(
                     DdlNormalModel(
                         it.name,
-                        it.icon,
+                        it.imgUrl,
                         it.id
                     )
                 )
@@ -147,11 +146,11 @@ class TabQueryFragment : Fragment() {
                         root.findViewById<RecyclerView>(R.id.rv_list_item_channelDetail)
 
                     var filterList =
-                        ChannelDetailList.filter { it.belong == ddlChannelList[position].id }
+                        dbChannelDetailList.filter { it.channel == ddlChannelList[position].id }
                             .toMutableList()
 
                     if (position == 0) {
-                        filterList = ChannelDetailList
+                        filterList = dbChannelDetailList
                     }
                     setChannelDetailRecyclerView(filterList)
 
@@ -236,7 +235,7 @@ class TabQueryFragment : Fragment() {
             vmProductViewModel.getDatas("")
             vmProductViewModel.productDatas.observe(viewLifecycleOwner) {
                 //todo 依照價值排序
-                setMemberRecyclerView(MemberList)
+                setMemberRecyclerView(dbMemberList)
             }
         }
 
@@ -249,7 +248,7 @@ class TabQueryFragment : Fragment() {
                 ViewModelProvider(this)[VmProductViewModel::class.java]
             vmProductViewModel.getDatas("")
             vmProductViewModel.productDatas.observe(viewLifecycleOwner) {
-                setChannelDetailRecyclerView(ChannelDetailList)
+                setChannelDetailRecyclerView(dbChannelDetailList)
             }
 
         }

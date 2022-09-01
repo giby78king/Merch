@@ -1,7 +1,7 @@
 package com.giby78king.merch.DataSource
 
 import com.giby78king.merch.Model.Member
-import com.giby78king.merch.Model.Member.Companion.MemberList
+import com.giby78king.merch.Model.Member.Companion.dbMemberList
 import com.giby78king.merch.Model.Member.Companion.toMember
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -22,7 +22,7 @@ object FirebaseService_Member {
             group = "",
             firstBoard = "",
             height = 0,
-            icon = "",
+            imgUrl = "",
             id = "newOne",
             ig = "",
             name = "",
@@ -33,13 +33,13 @@ object FirebaseService_Member {
     }
 
     suspend fun getDatas(): MutableList<Member> {
-        MemberList = db
+        dbMemberList = db
 //            .orderBy("number", Query.Direction.DESCENDING)
             .get()
             .await()
             .documents.mapNotNull { it.toMember() }.sortedBy { it.number }.toMutableList()
 
-        return MemberList
+        return dbMemberList
     }
 
     fun insertData(id: String, data: Map<String, Any>) {

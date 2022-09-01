@@ -3,6 +3,7 @@ package com.giby78king.merch.ui
 import android.app.DatePickerDialog
 import android.content.res.Resources
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.EditText
@@ -11,20 +12,23 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.giby78king.merch.Adapter.ChannelDetailSaveAdapter
+import com.giby78king.merch.Adapter.ActivitySaveAdapter
 import com.giby78king.merch.Adapter.CustomDropDownAdapter
 import com.giby78king.merch.Domain.ChannelDetailEn
 import com.giby78king.merch.Model.Activity
-import com.giby78king.merch.Model.Channel.Companion.dbChannelList
-import com.giby78king.merch.Model.Channel.Companion.ddlChannelList
-import com.giby78king.merch.Model.ChannelDetail
+import com.giby78king.merch.Model.Activity.Companion.dbActivityList
+import com.giby78king.merch.Model.Activity.Companion.ddlActivityList
 import com.giby78king.merch.Model.ChannelDetail.Companion.dbChannelDetailList
+import com.giby78king.merch.Model.ChannelDetail.Companion.ddlChannelDetailList
 import com.giby78king.merch.Model.DdlNormalModel
 import com.giby78king.merch.R
+import com.giby78king.merch.ViewModel.VmActivitylViewModel
 import com.giby78king.merch.ViewModel.VmChannelDetailSaveViewModel
 import com.giby78king.merch.ViewModel.VmChannelDetailViewModel
-import com.giby78king.merch.ViewModel.VmChannelViewModel
+import kotlinx.android.synthetic.main.activity_activity_edit_page.*
 import kotlinx.android.synthetic.main.activity_channeldetail_edit_page.*
+import kotlinx.android.synthetic.main.activity_channeldetail_edit_page.btnAddOne
+import kotlinx.android.synthetic.main.activity_channeldetail_edit_page.btnSubmit
 import kotlinx.android.synthetic.main.activity_channeldetail_edit_page.editId
 import kotlinx.android.synthetic.main.activity_channeldetail_edit_page.editName
 import kotlinx.android.synthetic.main.activity_channeldetail_edit_page.imgDetailIcon
@@ -36,33 +40,34 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class ChannelDetailEditPage : AppCompatActivity() {
+class ActivityEditPage : AppCompatActivity() {
 
     private lateinit var nowEdit: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_channeldetail_edit_page)
+        setContentView(R.layout.activity_activity_edit_page)
 
-        var ddlChannelPosition = 0
-        var ddlQueryChannelPosition = 0
+        var ddlPositionChannelDetail = 0
+        var ddlPositionQueryChannelDetail = 0
 
-        val vmChannelViewModel =
-            ViewModelProvider(this)[VmChannelViewModel::class.java]
         val vmChannelDetailViewModel =
             ViewModelProvider(this)[VmChannelDetailViewModel::class.java]
+        val vmActivitylViewModel =
+            ViewModelProvider(this)[VmActivitylViewModel::class.java]
 
-        vmChannelViewModel.channelDatas.observe(this) {
-            ddlChannelList.clear()
-            ddlChannelList.add(
+        vmChannelDetailViewModel.getDatas("")
+        vmChannelDetailViewModel.channelDetailDatas.observe(this) {
+            ddlChannelDetailList.clear()
+            ddlChannelDetailList.add(
                 DdlNormalModel(
                     "請選擇",
                     "",
                     ""
                 )
             )
-            dbChannelList.sortedBy { it.order }.forEach {
-                ddlChannelList.add(
+            dbChannelDetailList.forEach {
+                ddlChannelDetailList.add(
                     DdlNormalModel(
                         it.name,
                         it.imgUrl,
@@ -71,26 +76,7 @@ class ChannelDetailEditPage : AppCompatActivity() {
                 )
             }
 
-            spinnerChannel.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    ddlChannelPosition = position
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>) {}
-            }
-
-            val customDropDownAdapter =
-                CustomDropDownAdapter("channel", this, ddlChannelList)
-            spinnerChannel.adapter = customDropDownAdapter
-            spinnerChannel.setSelection(ddlChannelPosition)
-
-
-            spinnerQueryChannelDetail.onItemSelectedListener =
+            spinnerChannelDetail.onItemSelectedListener =
                 object : AdapterView.OnItemSelectedListener {
                     override fun onItemSelected(
                         parent: AdapterView<*>,
@@ -98,30 +84,56 @@ class ChannelDetailEditPage : AppCompatActivity() {
                         position: Int,
                         id: Long
                     ) {
-                        ddlQueryChannelPosition = position
+                        ddlPositionChannelDetail = position
+                    }
+
+                    override fun onNothingSelected(parent: AdapterView<*>) {}
+                }
+            spinnerChannelDetail.setOnTouchListener(View.OnTouchListener { v, event ->
+                linearStartDate.isVisible = switchPeriod.isChecked
+                false
+            })
+            val customDropDownAdapter =
+                CustomDropDownAdapter("channelDetail", this, ddlChannelDetailList)
+            spinnerChannelDetail.adapter = customDropDownAdapter
+            spinnerChannelDetail.setSelection(ddlPositionChannelDetail)
 
 
-                        var filterList = dbChannelDetailList.sortedByDescending { it.channel }.toMutableList()
-                        if(ddlQueryChannelPosition != 0){
+            spinnerQueryActivity.onItemSelectedListener =
+                object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        parent: AdapterView<*>,
+                        view: View?,
+                        position: Int,
+                        id: Long
+                    ) {
+                        ddlPositionQueryChannelDetail = position
+
+                        var filterList =
+                            dbActivityList.sortedByDescending { it.endDate }.toMutableList()
+                        if (ddlPositionQueryChannelDetail != 0) {
 
                             filterList =
-                                filterList.filter { it.channel == ddlChannelList[position].id }.toMutableList()
+                                filterList.filter {
+                                    it.channelDetail.contains(
+                                        ddlChannelDetailList[position].id
+                                    )
+                                }.toMutableList()
                         }
-
-                        setChannelDetailRecyclerView(filterList)
+                        setActivityRecyclerView(filterList)
                     }
 
                     override fun onNothingSelected(parent: AdapterView<*>) {}
                 }
 
-            spinnerQueryChannelDetail.adapter = customDropDownAdapter
-            spinnerQueryChannelDetail.setSelection(ddlQueryChannelPosition)
+            spinnerQueryActivity.adapter = customDropDownAdapter
+            spinnerQueryActivity.setSelection(ddlPositionQueryChannelDetail)
 
-            vmChannelDetailViewModel.getDatas("")
-            vmChannelDetailViewModel.channelDetailDatas.observe(this) {
-                var filterList = dbChannelDetailList
-                    .sortedByDescending { it.channel }.toMutableList()
-                setChannelDetailRecyclerView(filterList)
+            vmActivitylViewModel.getDatas("")
+            vmActivitylViewModel.activityDatas.observe(this) {
+                var filterList = dbActivityList
+                    .sortedByDescending { it.endDate }.toMutableList()
+                setActivityRecyclerView(filterList)
             }
         }
 
@@ -131,29 +143,49 @@ class ChannelDetailEditPage : AppCompatActivity() {
 
         vmChannelDetailSaveViewModel.channelDetailSelectInfo.observe(this) {
             val selected = it
-            val channelDetailInfo =
-                dbChannelDetailList.filter { it.id == selected.id }
+            val activityInfo =
+                dbActivityList.filter { it.id == selected.id }
                     .toMutableList()[0]
-            editId.setText(channelDetailInfo.id)
-            editName.setText(channelDetailInfo.name)
+            editId.setText(activityInfo.id)
+            editName.setText(activityInfo.name)
 
-            val ddlIndex = ddlChannelList.indexOfFirst { it.id == channelDetailInfo.channel }
-            spinnerChannel.setSelection(ddlIndex)
+            if (activityInfo.startDate.isNotEmpty()) {
+                switchPeriod.isChecked = true
+                editStartDate.setText(activityInfo.startDate)
+            }
+            else
+            {
+                editStartDate.setText("")
+                switchPeriod.isChecked = false
+            }
+
+            editEndDate.setText(activityInfo.endDate)
+
+            val ddlIndex =
+                ddlChannelDetailList.indexOfFirst { it.id == activityInfo.channelDetail[0] }
+            spinnerChannelDetail.setSelection(ddlIndex)
 
             linearEditID.isVisible = false
             linearTxtId.isVisible = true
-            txtId.text = channelDetailInfo.id
+            txtId.text = activityInfo.id
 
 
             val res: Resources = this.resources
             //Img相關
-            var img = "img_channeldetail_" + channelDetailInfo.imgUrl.toLowerCase().replace(" ", "")
+            var img = "img_activity_" + activityInfo.imgUrl.toLowerCase().replace(" ", "")
             val resourceId: Int = res.getIdentifier(
                 img, "drawable",
                 "com.giby78king.merch"
             )
             imgDetailIcon.setImageResource(resourceId)
         }
+
+        switchPeriod.setOnCheckedChangeListener { _, _ ->
+            linearStartDate.isVisible = switchPeriod.isChecked
+        }
+
+        editEndDate.setOnClickListener(listener)
+        editStartDate.setOnClickListener(listener)
 
         btnAddOne.setOnClickListener {
             linearEditID.isVisible = true
@@ -179,7 +211,7 @@ class ChannelDetailEditPage : AppCompatActivity() {
                     btnSubmit.loadingFailed()
                     return@setOnClickListener
                 }
-                if (ddlChannelList[ddlChannelPosition].id == "") {
+                if (ddlChannelDetailList[ddlPositionChannelDetail].id == "") {
                     Toast.makeText(applicationContext, "通路主類別不得為空！！", Toast.LENGTH_SHORT)
                         .show()
                     btnSubmit.loadingFailed()
@@ -188,17 +220,34 @@ class ChannelDetailEditPage : AppCompatActivity() {
 
                 var formatId = editId.text.toString()
 
+                if (ddlChannelDetailList[ddlPositionChannelDetail].id == "Activity" || ddlChannelDetailList[ddlPositionChannelDetail].id == "Seller") {
+                    if (editEndDate.text.isEmpty()) {
+                        Toast.makeText(applicationContext, "迄止時間不得為空！！", Toast.LENGTH_SHORT)
+                            .show()
+                        btnSubmit.loadingFailed()
+                        return@setOnClickListener
+                    }
+                    if (switchPeriod.isChecked && editStartDate.text.isEmpty()) {
+                        Toast.makeText(applicationContext, "起始時間不得為空！！", Toast.LENGTH_SHORT)
+                            .show()
+                        btnSubmit.loadingFailed()
+                        return@setOnClickListener
+                    }
 
-                if(txtId.text.isNotEmpty())
-                {
+                    formatId = editEndDate.text.toString() + " " + editId.text.toString()
+                }
+
+                if (txtId.text.isNotEmpty()) {
                     formatId = txtId.text.toString()
                 }
 
                 val channelDetailData = ChannelDetailEn(
-                    channel = ddlChannelList[ddlChannelPosition].id,
+//                    endDate = editEndDate.text.toString(),
+                    channel = ddlChannelDetailList[ddlPositionChannelDetail].id,
                     id = formatId,
                     imgUrl = formatId,
                     name = editName.text.toString(),
+//                    startDate = if (switchPeriod.isChecked) editStartDate.text.toString() else "",
                 )
                 vmChannelDetailViewModel.upsertOne(channelDetailData)
 
@@ -216,16 +265,29 @@ class ChannelDetailEditPage : AppCompatActivity() {
         }
     }
 
-    fun setChannelDetailRecyclerView(list: MutableList<ChannelDetail>) {
+    fun setActivityRecyclerView(list: MutableList<Activity>) {
         val vmChannelDetailSaveViewModel: VmChannelDetailSaveViewModel =
             ViewModelProvider(this)[VmChannelDetailSaveViewModel::class.java]
         val layoutManager = LinearLayoutManager(this)
         layoutManager.orientation = LinearLayoutManager.HORIZONTAL
         rvListItem.layoutManager = layoutManager
-        rvListItem.adapter = ChannelDetailSaveAdapter(list, vmChannelDetailSaveViewModel)
+        rvListItem.adapter = ActivitySaveAdapter(list, vmChannelDetailSaveViewModel)
     }
 
     val calender = Calendar.getInstance()
+
+    private val listener = View.OnClickListener {
+        when (it) {
+            editEndDate -> {
+                nowEdit = editEndDate
+                datePicker()
+            }
+            editStartDate -> {
+                nowEdit = editStartDate
+                datePicker()
+            }
+        }
+    }
 
     private fun datePicker() {
         DatePickerDialog(

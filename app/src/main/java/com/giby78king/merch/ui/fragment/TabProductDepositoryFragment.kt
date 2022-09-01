@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.giby78king.merch.Adapter.ProductDepositoryAdapter
 import com.giby78king.merch.Model.ProductDepository
-import com.giby78king.merch.Model.ProductDepository.Companion.ProductDepositoryList
+import com.giby78king.merch.Model.ProductDepository.Companion.dbProductDepositoryList
 import com.giby78king.merch.R
 import com.giby78king.merch.ViewModel.*
 import com.giby78king.merch.ViewModel.VmTopProductDepositoryViewModel.Companion.selectChannel
@@ -41,7 +41,7 @@ class TabProductDepositoryFragment : Fragment() {
                     ViewModelProvider(this)[VmMemberViewModel::class.java]
                 vmMemberViewModel.getDatas("")
                 vmMemberViewModel.memberDatas.observe(viewLifecycleOwner) {
-                    setProductDepositoryRecyclerView(ProductDepositoryList)
+                    setProductDepositoryRecyclerView(dbProductDepositoryList)
                 }
             }
 
@@ -52,7 +52,7 @@ class TabProductDepositoryFragment : Fragment() {
                 var filterList = mutableListOf<ProductDepository>()
 
                 if (selectMember.id.isNotEmpty()) {
-                    filterList = ProductDepositoryList.filter {
+                    filterList = dbProductDepositoryList.filter {
                         it.group.contains(selectMember.belong) && it.member.contains(
                             selectMember.id
                         )
@@ -66,7 +66,7 @@ class TabProductDepositoryFragment : Fragment() {
                 }
 
                 if (selectChannel.id.isNotEmpty()) {
-                    filterList = ProductDepositoryList.filter {
+                    filterList = dbProductDepositoryList.filter {
                         it.channelDetail == selectChannel.id
                     }.toMutableList()
                     if (selectMember.id.isNotEmpty()) {
@@ -79,7 +79,7 @@ class TabProductDepositoryFragment : Fragment() {
                 }
 
                 if (selectMember.id.isEmpty() && selectChannel.id.isEmpty()) {
-                    filterList = ProductDepositoryList
+                    filterList = dbProductDepositoryList
                 }
 
                 setProductDepositoryRecyclerView(filterList)

@@ -1,7 +1,7 @@
 package com.giby78king.merch.DataSource
 
 import com.giby78king.merch.Model.ChannelDetail
-import com.giby78king.merch.Model.ChannelDetail.Companion.ChannelDetailList
+import com.giby78king.merch.Model.ChannelDetail.Companion.dbChannelDetailList
 import com.giby78king.merch.Model.ChannelDetail.Companion.toChannelDetail
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -17,23 +17,21 @@ object FirebaseService_ChannelDetail {
             return data.toChannelDetail()
         }
         return ChannelDetail(
-            belong = "",
-            endDate ="",
+            channel = "",
             id = "newOne",
             imgUrl = "",
             name = "",
-            startDate = "",
         )
     }
 
     suspend fun getDatas(): MutableList<ChannelDetail> {
-        ChannelDetailList = db
+        dbChannelDetailList = db
 //            .orderBy("number", Query.Direction.DESCENDING)
             .get()
             .await()
             .documents.mapNotNull { it.toChannelDetail() }.toMutableList()
 
-        return ChannelDetailList
+        return dbChannelDetailList
     }
 
     fun insertData(id: String, data: Map<String, Any>) {

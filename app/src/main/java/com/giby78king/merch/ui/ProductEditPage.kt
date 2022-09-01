@@ -5,7 +5,6 @@ import android.content.res.Resources
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.Window
@@ -20,18 +19,17 @@ import com.giby78king.merch.Adapter.CustomDropDownAdapter
 import com.giby78king.merch.Adapter.ProductSaveAdapter
 import com.giby78king.merch.Domain.ProductEn
 import com.giby78king.merch.Model.*
-import com.giby78king.merch.Model.Channel.Companion.ChannelList
+import com.giby78king.merch.Model.Channel.Companion.dbChannelList
 import com.giby78king.merch.Model.Channel.Companion.ddlChannelList
-import com.giby78king.merch.Model.ChannelDetail.Companion.ChannelDetailList
+import com.giby78king.merch.Model.ChannelDetail.Companion.dbChannelDetailList
 import com.giby78king.merch.Model.ChannelDetail.Companion.ddlChannelDetailList
-import com.giby78king.merch.Model.Member.Companion.MemberList
-import com.giby78king.merch.Model.Product.Companion.ProductList
+import com.giby78king.merch.Model.Member.Companion.dbMemberList
+import com.giby78king.merch.Model.Product.Companion.dbProductList
 import com.giby78king.merch.Model.Product.Companion.copyProductDetailList
 import com.giby78king.merch.Model.Product.Companion.nowEditProductId
 import com.giby78king.merch.Model.Product.Companion.productDetailList
 import com.giby78king.merch.R
 import com.giby78king.merch.ViewModel.*
-import kotlinx.android.synthetic.main.activity_channeldetail_edit_page.*
 import kotlinx.android.synthetic.main.activity_channeldetail_edit_page.spinnerChannel
 import kotlinx.android.synthetic.main.activity_member_edit_page.btnSubmit
 import kotlinx.android.synthetic.main.activity_member_edit_page.editId
@@ -82,11 +80,11 @@ class ProductEditPage : AppCompatActivity() {
                     ""
                 )
             )
-            ChannelList.sortedBy { it.order }.forEach {
+            dbChannelList.sortedBy { it.order }.forEach {
                 ddlChannelList.add(
                     DdlNormalModel(
                         it.name,
-                        it.icon,
+                        it.imgUrl,
                         it.id
                     )
                 )
@@ -113,7 +111,7 @@ class ProductEditPage : AppCompatActivity() {
                                 )
                             )
 
-                            ChannelDetailList.filter { it.belong == ddlChannelList[ddlChannelPosition].id }
+                            dbChannelDetailList.filter { it.channel == ddlChannelList[ddlChannelPosition].id }
                                 .forEach {
                                     ddlChannelDetailList.add(
                                         DdlNormalModel(
@@ -170,27 +168,27 @@ class ProductEditPage : AppCompatActivity() {
         vmChannelDetailSaveViewModel.channelDetailSelectInfo.observe(this) {
             val selected = it
             val channelDetailInfo =
-                ChannelDetailList.filter { it.id == selected.id }
+                dbChannelDetailList.filter { it.id == selected.id }
                     .toMutableList()[0]
             editId.setText(channelDetailInfo.id)
             editName.setText(channelDetailInfo.name)
 
-            if (channelDetailInfo.belong == "Activity" || channelDetailInfo.belong == "Seller") {
-                if (channelDetailInfo.startDate.isNotEmpty()) {
-                    linearStartDate.isVisible = true
-                    switchPeriod.isChecked = true
-                    editStartDate.setText(channelDetailInfo.startDate)
-                }
-                linearEndDate.isVisible = true
-                editEndDate.setText(channelDetailInfo.endDate)
-            } else {
-                linearStartDate.isVisible = false
-                linearEndDate.isVisible = false
-                editStartDate.setText("")
-                editEndDate.setText("")
-            }
+//            if (channelDetailInfo.channel == "Activity" || channelDetailInfo.channel == "Seller") {
+//                if (channelDetailInfo.startDate.isNotEmpty()) {
+//                    linearStartDate.isVisible = true
+//                    switchPeriod.isChecked = true
+//                    editStartDate.setText(channelDetailInfo.startDate)
+//                }
+//                linearEndDate.isVisible = true
+//                editEndDate.setText(channelDetailInfo.endDate)
+//            } else {
+//                linearStartDate.isVisible = false
+//                linearEndDate.isVisible = false
+//                editStartDate.setText("")
+//                editEndDate.setText("")
+//            }
 
-            val ddlIndex = ddlChannelList.indexOfFirst { it.id == channelDetailInfo.belong }
+            val ddlIndex = ddlChannelList.indexOfFirst { it.id == channelDetailInfo.channel }
             spinnerChannel.setSelection(ddlIndex)
 
             linearEditID.isVisible = false
@@ -432,7 +430,7 @@ class ProductEditPage : AppCompatActivity() {
                 val price = arrayOfNulls<Int>(size = copyProductDetailList.size)
 
                 var orderList = mutableListOf<OrderProductDetail>()
-                MemberList.forEach { mem ->
+                dbMemberList.forEach { mem ->
                     copyProductDetailList.forEach { pro ->
                         if (mem.id == pro.member) {
                             orderList.add(
@@ -543,7 +541,7 @@ class ProductEditPage : AppCompatActivity() {
         btnAddProduct.text = "NEW PRODUCT"
         linearDetail.isVisible = true
 
-        val productInfo = ProductList.filter { it.id == selectedProduct }.toMutableList()[0]
+        val productInfo = dbProductList.filter { it.id == selectedProduct }.toMutableList()[0]
 
         val res: Resources = this.resources
         //Img相關
@@ -565,12 +563,12 @@ class ProductEditPage : AppCompatActivity() {
         switchOnSell.isChecked = productInfo.onSell
         switchPreOrder.isChecked = productInfo.preOrder
 
-        val channelDetailInfo = ChannelDetailList.filter { it.id == productInfo.channelDetail }[0]
-        val channelInfo = ChannelList.filter { it.id == channelDetailInfo.belong }[0]
+        val channelDetailInfo = dbChannelDetailList.filter { it.id == productInfo.channelDetail[0] }[0]
+        val channelInfo = dbChannelList.filter { it.id == channelDetailInfo.channel }[0]
 
-        spinnerChannel.setSelection(ChannelList.sortedBy { it.order }.indexOf(channelInfo) + 1)
+        spinnerChannel.setSelection(dbChannelList.sortedBy { it.order }.indexOf(channelInfo) + 1)
         ddlChannelDetailPosition =
-            ChannelDetailList.filter { it.belong == channelInfo.id }.indexOf(channelDetailInfo) + 1
+            dbChannelDetailList.filter { it.channel == channelInfo.id }.indexOf(channelDetailInfo) + 1
 
         copyProductDetailList.clear()
         for (i in 0 until productInfo.member.size) {

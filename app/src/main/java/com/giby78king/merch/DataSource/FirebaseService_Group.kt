@@ -3,8 +3,6 @@ package com.giby78king.merch.DataSource
 import com.giby78king.merch.Model.Group
 import com.giby78king.merch.Model.Group.Companion.GroupList
 import com.giby78king.merch.Model.Group.Companion.toGroup
-import com.giby78king.merch.Model.Member.Companion.MemberList
-import com.giby78king.merch.Model.Member.Companion.toMember
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
@@ -19,8 +17,9 @@ object FirebaseService_Group {
             return data.toGroup()
         }
         return Group(
-            chName = "",
             id = "",
+            imgUrl = "",
+            league = arrayOf(),
             name = ""
         )
     }

@@ -30,16 +30,16 @@ class ChannelDetailListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         vmTopProductDepositoryViewModel: VmTopProductDepositoryViewModel
     ) {
 
-        if (data.belong == "Activity") {
-            linearDuration.isVisible = true
-
-            var dateText = ""
-            if (data.startDate.isNotEmpty()) {
-                dateText = data.startDate + "－"
-            }
-            dateText += data.endDate
-            txtDuration.text = dateText
-        }
+//        if (data.channel == "Activity") {
+//            linearDuration.isVisible = true
+//
+//            var dateText = ""
+//            if (data.startDate.isNotEmpty()) {
+//                dateText = data.startDate + "－"
+//            }
+//            dateText += data.endDate
+//            txtDuration.text = dateText
+//        }
         txtName.text = data.name
 
         itemView.setOnClickListener {

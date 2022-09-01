@@ -19,7 +19,7 @@ class OrderProductDetail(
 )
 
 data class Product(
-    val channelDetail: String,
+    val channelDetail: Array<String>,
     val id: String,
     val limit: Array<Int?>,
     val member: Array<String>,
@@ -30,14 +30,15 @@ data class Product(
     val publish: String,
 ) {
     companion object {
-        var ProductList = mutableListOf<Product>()
+        var dbProductList = mutableListOf<Product>()
         var productDetailList = mutableListOf<ProductDetail>()
         val copyProductDetailList= mutableListOf<ProductDetail>()
         var nowEditProductId = ""
 
         fun DocumentSnapshot.toProduct(): Product {
 
-            val channelDetail = getString("channelDetail")!!
+            val channelDetail = get("channelDetail").toString().replace("[", "").replace("]", "").split(", ")
+                .toTypedArray()
             val id = getString("id")!!
             val limitA =
                 get("limit").toString().replace("[", "").replace("]", "").split(", ")

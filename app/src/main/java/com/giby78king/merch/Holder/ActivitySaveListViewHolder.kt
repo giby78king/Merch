@@ -8,14 +8,16 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.giby78king.merch.ImgSetting
+import com.giby78king.merch.Model.Activity
 import com.giby78king.merch.Model.ChannelDetail
 import com.giby78king.merch.R
 import com.giby78king.merch.ViewModel.VmChannelDetailSaveViewModel
 
 
-class ChannelDetailSaveListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
+class ActivitySaveListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
     private val parentView = v
-    private val linearDuration:LinearLayout=v.findViewById(R.id.linearDuration)
+    private val linearDuration: LinearLayout = v.findViewById(R.id.linearDuration)
     private val txtDuration: TextView = v.findViewById(R.id.txtDuration)
 
     private val imgChannelDetail: ImageView = v.findViewById(R.id.imgChannelDetail)
@@ -26,33 +28,26 @@ class ChannelDetailSaveListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
     @SuppressLint("SetTextI18n")
     fun bind(
-        data: ChannelDetail,
+        data: Activity,
         vmChannelDetailSaveViewModel: VmChannelDetailSaveViewModel
     ) {
 
-//        if (data.channel == "Activity") {
-//            linearDuration.isVisible = true
-//
-//            var dateText = ""
-//            if (data.startDate.isNotEmpty()) {
-//                dateText = data.startDate + "－"
-//            }
-//            dateText += data.endDate
-//            txtDuration.text = dateText
-//        }
+        linearDuration.isVisible = true
+
+        var dateText = ""
+        if (data.startDate.isNotEmpty()) {
+            dateText = data.startDate + "－"
+        }
+        dateText += data.endDate
+        txtDuration.text = dateText
+
         txtName.text = data.name
 
         itemView.setOnClickListener {
             vmChannelDetailSaveViewModel.setSelectChannelDetailDatas(data.id, data.imgUrl)
         }
 
-        //Img相關
-        var img = "img_channeldetail_" + data.imgUrl.toLowerCase().replace(" ", "")
-        val resourceId: Int = res.getIdentifier(
-            img, "drawable",
-            "com.giby78king.merch"
-        )
+        ImgSetting().setImage("activity", res, imgChannelDetail, data.imgUrl)
 
-        imgChannelDetail.setImageResource(resourceId)
     }
 }
