@@ -1,10 +1,8 @@
 package com.giby78king.merch.Holder
 
-import android.annotation.SuppressLint
 import android.content.res.Resources
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
@@ -27,9 +25,7 @@ class PriceEditListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
     fun bind(data: String, index: Int, productEditPage: ProductEditPage) {
 
-        Log.d("price",":"+tempSpecificationList[index].price[productChannelDetailList.indexOf(data)].toString())
-        Log.d("limit",":"+tempSpecificationList[index].limit[productChannelDetailList.indexOf(data)].toString())
-
+        ImgSetting().setImage("channeldetail", res, imgChannelDetail, data)
 
         editPrice.setText(TextAmountSetting().formatAmountNoDollar(tempSpecificationList[index].price[productChannelDetailList.indexOf(data)].toString()))
         editLimit.setText(TextAmountSetting().formatAmountNoDollar(tempSpecificationList[index].limit[productChannelDetailList.indexOf(data)].toString()))
@@ -52,19 +48,13 @@ class PriceEditListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
             }
 
             override fun afterTextChanged(editable: Editable) {
-                Log.d("price11111111",":"+tempSpecificationList[index].price[productChannelDetailList.indexOf(data)].toString())
-                Log.d("limit11111111",":"+tempSpecificationList[index].limit[productChannelDetailList.indexOf(data)].toString())
-
-                EditAmountSetting().editNoDollarRule(editPrice, this)
+             EditAmountSetting().editNoDollarRule(editPrice, this)
                 if (editPrice.text.toString().isEmpty()) {
                     tempSpecificationList[index].price[productChannelDetailList.indexOf(data)] = 0
                 } else {
                     tempSpecificationList[index].price[productChannelDetailList.indexOf(data)] =
                         editPrice.text.toString().replace(",", "").toInt()
                 }
-
-                Log.d("price",":"+tempSpecificationList[index].price[productChannelDetailList.indexOf(data)].toString())
-                Log.d("limit",":"+tempSpecificationList[index].limit[productChannelDetailList.indexOf(data)].toString())
             }
         })
 
@@ -86,9 +76,6 @@ class PriceEditListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
             }
 
             override fun afterTextChanged(editable: Editable) {
-                Log.d("price11111111",":"+tempSpecificationList[index].price[productChannelDetailList.indexOf(data)].toString())
-                Log.d("limit11111111",":"+tempSpecificationList[index].limit[productChannelDetailList.indexOf(data)].toString())
-
                 EditAmountSetting().editNoDollarRule(editLimit, this)
                 if (editLimit.text.toString().isEmpty()) {
                     tempSpecificationList[index].limit[productChannelDetailList.indexOf(data)] = 0
@@ -96,14 +83,7 @@ class PriceEditListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
                     tempSpecificationList[index].limit[productChannelDetailList.indexOf(data)] =
                         editLimit.text.toString().replace(",", "").toInt()
                 }
-
-                tempSpecificationList[index].price[productChannelDetailList.indexOf(data)] =100
-
-                Log.d("price",":"+tempSpecificationList[index].price[productChannelDetailList.indexOf(data)].toString())
-                Log.d("limit",":"+tempSpecificationList[index].limit[productChannelDetailList.indexOf(data)].toString())
             }
         })
-
-        ImgSetting().setImage("channeldetail", res, imgChannelDetail, data)
     }
 }

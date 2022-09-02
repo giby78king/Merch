@@ -327,19 +327,23 @@ class ProductEditPage : AppCompatActivity() {
             val uuidTimestamp = TimeFormat().TodayDate().yyyyMMddHHmmssSSS()
             val formatId = editId.text.toString()+uuidTimestamp
 
-            var arrNumberInit = arrayOfNulls<Int>(size = productChannelDetailList.size)
+            var arrLimit = arrayOfNulls<Int>(size = productChannelDetailList.size)
             for (i in productChannelDetailList.indices) {
-                arrNumberInit[i] = 0
+                arrLimit[i] = 0
+            }
+            var arrPrice = arrayOfNulls<Int>(size = productChannelDetailList.size)
+            for (i in productChannelDetailList.indices) {
+                arrPrice[i] = 0
             }
 
             tempSpecificationList.add(0,
                 Specification(
                     id = formatId,
                     imgUrl = "",
-                    limit = arrNumberInit,
+                    limit = arrLimit,
                     member = arrayOf(),
                     order = 1,
-                    price = arrNumberInit,
+                    price = arrPrice,
                     product = editId.text.toString(),
                     specificationType = "",
                     title = "",
