@@ -8,16 +8,15 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.widget.ImageViewCompat
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
-import com.giby78king.merch.Adapter.MemberSelectedAdapter
+import com.giby78king.merch.ImgSetting
 import com.giby78king.merch.Model.Member
 import com.giby78king.merch.Model.Member.Companion.dbMemberList
-import com.giby78king.merch.Model.Member.Companion.selectedMemberList
-import com.giby78king.merch.Model.Product.Companion.copyProductDetailList
-import com.giby78king.merch.Model.ProductDetail
+import com.giby78king.merch.Model.Specification.Companion.tempSpecificationList
 import com.giby78king.merch.R
+import com.giby78king.merch.ViewModel.VmSpecificationViewModel
+import com.giby78king.merch.ui.ProductEditPage
 
 
 class MemberSelectedListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
@@ -31,9 +30,8 @@ class MemberSelectedListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
     val res: Resources = v.context.resources
 
     @SuppressLint("SetTextI18n")
-    fun bind(data: Member, productDetail: ProductDetail) {
+    fun bind(data: Member, index: Int, productEditPage: ProductEditPage) {
 
-        var indexCopy = productDetail.count - 1
         txtGroup.text = data.group
         txtNumber.text = data.number
 
@@ -47,54 +45,37 @@ class MemberSelectedListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
             )
         }
 
-
         itemView.setOnClickListener {
 
+            var selectedMemberList = mutableListOf<Member>()
+
             dbMemberList.filter {
-                productDetail.member.contains(it.id)
-            }.toMutableList().forEach { member ->
-                if (selectedMemberList.none { it.id == member.id }) {
+                tempSpecificationList[index].member.contains(it.id)
+            }.sortedBy { it.group }.sortedBy { it.number }.toMutableList().forEach { member ->
+                if (selectedMemberList.none { it.id == member.id }
+                ) {
                     selectedMemberList.add(
                         member
                     )
                 }
             }
 
+            selectedMemberList.remove(selectedMemberList.find {
+                it.id == data.id
+            })
 
-            if (productDetail.member.contains(data.id))            //排除重複點選
-            {
-                selectedMemberList.remove(selectedMemberList.find {
-                    it.id == data.id
-                })
-
-                copyProductDetailList[indexCopy].member = ""
-                if (selectedMemberList.size > 0) {
-                    selectedMemberList.forEach {
-                        copyProductDetailList[indexCopy].member += "," + it.id
-                    }
-                    copyProductDetailList[indexCopy].member =
-                        copyProductDetailList[indexCopy].member.substring(1)
-                }
-                val rvAddPoolMember =
-                    itemView.rootView.findViewById<RecyclerView>(R.id.rvAddPoolMember)
-                val layoutManager = LinearLayoutManager(parentView.context)
-                layoutManager.orientation = LinearLayoutManager.HORIZONTAL
-                val numberOfColumns = 3
-                rvAddPoolMember.layoutManager =
-                    GridLayoutManager(parentView.context, numberOfColumns)
-                rvAddPoolMember.adapter = MemberSelectedAdapter(
-                    selectedMemberList,
-                    copyProductDetailList[indexCopy]
-                )
+            var list = arrayListOf<String>()
+            selectedMemberList.forEach {
+                list.add(it.id)
             }
+            tempSpecificationList[index].member = list.toTypedArray()
+
+            val vmSpecificationViewModel =
+                ViewModelProvider(productEditPage)[VmSpecificationViewModel::class.java]
+
+            vmSpecificationViewModel.setSelectedMember(tempSpecificationList)
         }
 
-        //Img相關
-        var img = "img_member_" + data.imgUrl.toLowerCase()
-        val resourceId: Int = res.getIdentifier(
-            img, "drawable",
-            "com.giby78king.merch"
-        )
-        imgMember.setImageResource(resourceId)
+        ImgSetting().setImage("member", res, imgMember, data.imgUrl)
     }
 }

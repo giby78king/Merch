@@ -20,7 +20,7 @@ data class Member(
         var dbMemberList = mutableListOf<Member>()
         var SelectGroupList = mutableListOf<String>()
         var ddlMemberList = mutableListOf<DdlNormalModel>()
-        var selectedMemberList = mutableListOf<Member>()
+
 
         fun DocumentSnapshot.toMember(): Member {
 

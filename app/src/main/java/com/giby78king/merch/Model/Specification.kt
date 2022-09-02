@@ -6,16 +6,16 @@ data class Specification(
     val id: String,
     val imgUrl: String,
     val limit: Array<Int?>,
-    val member: Array<String>,
+    var member: Array<String>,
     val order: Int,
     val price: Array<Int?>,
     val product: String,
-    val specificationId: String,
     val specificationType: String,
-    val title: String,
+    var title: String,
 ) {
     companion object {
         var dbSpecificationList = mutableListOf<Specification>()
+        var tempSpecificationList = mutableListOf<Specification>()
 
         fun DocumentSnapshot.toSpecification(): Specification {
 
@@ -42,7 +42,6 @@ data class Specification(
             }
 
             val product = getString("product")!!
-            val specificationId = getString("specificationId")!!
             val specificationType = getString("specificationType")!!
             val title = getString("title")!!
 
@@ -54,7 +53,6 @@ data class Specification(
                 order,
                 price,
                 product,
-                specificationId,
                 specificationType,
                 title,
             )

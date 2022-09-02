@@ -14,6 +14,8 @@ class ImgSetting {
             "channeldetail" -> img += module
             "group" -> img += module
             "product" -> img += module
+            "member" -> img += module
+            "specification" -> img += module
         }
 
         img = img + "_" + imgUrl.toLowerCase().replace(" ", "")

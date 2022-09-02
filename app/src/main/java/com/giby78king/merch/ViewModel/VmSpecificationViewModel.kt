@@ -6,8 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.giby78king.merch.DataSource.FirebaseService_Specification
 import com.giby78king.merch.Domain.SpecificationEn
+import com.giby78king.merch.Model.ChannelDetail
+import com.giby78king.merch.Model.Member
 import com.giby78king.merch.Model.Specification
 import com.giby78king.merch.Model.Specification.Companion.dbSpecificationList
+import com.giby78king.merch.Model.Specification.Companion.tempSpecificationList
 import kotlinx.coroutines.launch
 
 class VmSpecificationViewModel : ViewModel() {
@@ -50,5 +53,11 @@ class VmSpecificationViewModel : ViewModel() {
         viewModelScope.launch {
             data.delete()
         }
+    }
+
+    private val _selectedMemberDatas = MutableLiveData<MutableList<Specification>>()
+    val SelectedMemberDatas: LiveData<MutableList<Specification>> = _selectedMemberDatas
+    fun setSelectedMember(list: MutableList<Specification>) {
+        _selectedMemberDatas.value = list
     }
 }

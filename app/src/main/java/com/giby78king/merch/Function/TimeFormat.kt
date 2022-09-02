@@ -81,6 +81,15 @@ class TimeFormat {
         }
 
         @SuppressLint("SimpleDateFormat")
+        fun yyyyMMddHHmmssSSS(): String {
+            val calendar = Calendar.getInstance()
+            val timeFormat = SimpleDateFormat("yyyyMMddHHmmssSSS")
+
+            timeFormat.timeZone = TimeZone.getTimeZone("Asia/Taipei")
+            return timeFormat.format(calendar.time)
+        }
+
+        @SuppressLint("SimpleDateFormat")
         fun yyyyMMddHHmmss(addSecond: Int): String {
             val calendar = Calendar.getInstance()
             val timeFormat = SimpleDateFormat("yyyyMMddHHmmss")

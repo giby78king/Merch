@@ -49,8 +49,8 @@
                 android:id="@+id/imgMember"
                 android:adjustViewBounds="true"
                 android:scaleType="fitXY"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 app:shapeAppearance="@android:color/transparent"
                 app:shapeAppearanceOverlay="@style/roundedCorner" />
         </LinearLayout>
@@ -85,7 +85,7 @@
                         android:layout_toRightOf="@+id/imgEmployed"
                         android:gravity="left|center_vertical"
                         android:text=""
-                        android:textSize="16dp"
+                        android:textSize="14dp"
                         android:textStyle="bold" />
 
                 </RelativeLayout>

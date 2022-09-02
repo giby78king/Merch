@@ -3,9 +3,15 @@ package com.giby78king.merch.ui
 import android.app.DatePickerDialog
 import android.content.res.Resources
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.Window
+import android.view.WindowManager
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
@@ -25,7 +31,11 @@ import com.giby78king.merch.Model.Group.Companion.productGroupList
 import com.giby78king.merch.Model.Product.Companion.copyProductDetailList
 import com.giby78king.merch.Model.Product.Companion.dbProductList
 import com.giby78king.merch.Model.Product.Companion.nowEditProductId
+import com.giby78king.merch.Model.Product.Companion.productDetailList
+import com.giby78king.merch.Model.Specification.Companion.dbSpecificationList
+import com.giby78king.merch.Model.Specification.Companion.tempSpecificationList
 import com.giby78king.merch.R
+import com.giby78king.merch.TimeFormat
 import com.giby78king.merch.ViewModel.*
 import kotlinx.android.synthetic.main.activity_product_edit_page.*
 import kotlinx.android.synthetic.main.activity_product_edit_page.btnAddChannelDetail
@@ -311,66 +321,50 @@ class ProductEditPage : AppCompatActivity() {
                 linearDetail.isVisible = true
             }
         }
-//
-//        btnAddSpecification.setOnClickListener {
-//
-//
-//            productDetailList.clear()
-//
-//            productDetailList.add(
-//                ProductDetail(
-//                    count = 1,
-//                    limit = 0,
-//                    member = "",
-//                    price = 0
-//                )
-//            )
-//
-//            copyProductDetailList.forEach {
-//                productDetailList.add(
-//                    ProductDetail(
-//                        count = it.count + 1,
-//                        limit = it.limit,
-//                        member = it.member,
-//                        price = it.price
-//                    )
-//                )
-//            }
-//
-//
-//            copyProductDetailList.clear()
-//            productDetailList.forEach {
-//                copyProductDetailList.add(
-//                    ProductDetail(
-//                        count = it.count,
-//                        limit = it.limit,
-//                        member = it.member,
-//                        price = it.price
-//                    )
-//                )
-//            }
-//
-//            setProductDetailRecyclerView(productDetailList)
-//        }
+
+        btnAddSpecification.setOnClickListener {
+
+            val uuidTimestamp = TimeFormat().TodayDate().yyyyMMddHHmmssSSS()
+            val formatId = editId.text.toString()+uuidTimestamp
+
+            var arrNumberInit = arrayOfNulls<Int>(size = productChannelDetailList.size)
+            for (i in productChannelDetailList.indices) {
+                arrNumberInit[i] = 0
+            }
+
+            tempSpecificationList.add(0,
+                Specification(
+                    id = formatId,
+                    imgUrl = "",
+                    limit = arrNumberInit,
+                    member = arrayOf(),
+                    order = 1,
+                    price = arrNumberInit,
+                    product = editId.text.toString(),
+                    specificationType = "",
+                    title = "",
+                )
+            )
+
+            setProductDetailRecyclerView(tempSpecificationList)
+        }
 
 
-//
-//        val vmProductSaveViewModel =
-//            ViewModelProvider(this)[VmProductSaveViewModel::class.java]
-//
-//        vmProductSaveViewModel.specificationSelectInfo.observe(this) {
-//
-//            copyProductDetailList.removeAt(it)
-//
-//            var index = 0
-//            copyProductDetailList.forEach { _ ->
-//                copyProductDetailList[index].count = index + 1
-//                index++
-//            }
-//
-//            setProductDetailRecyclerView(copyProductDetailList)
-//        }
-//
+        val vmProductSaveViewModel =
+            ViewModelProvider(this)[VmProductSaveViewModel::class.java]
+
+        vmProductSaveViewModel.specificationSelectInfo.observe(this) {
+            tempSpecificationList.removeAt(it)
+            setProductDetailRecyclerView(tempSpecificationList)
+        }
+
+        val vmSpecificationViewModel =
+            ViewModelProvider(this)[VmSpecificationViewModel::class.java]
+
+        vmSpecificationViewModel.SelectedMemberDatas.observe(page) { data ->
+            setProductDetailRecyclerView(tempSpecificationList)
+        }
+
 //        txtFixAll.setOnClickListener {
 //            if (copyProductDetailList.size < 1) {
 //                return@setOnClickListener
@@ -548,14 +542,11 @@ class ProductEditPage : AppCompatActivity() {
 //        }
     }
 
-    private fun setProductDetailRecyclerView(list: MutableList<ProductDetail>) {
-        val vmProductSaveViewModel =
-            ViewModelProvider(this)[VmProductSaveViewModel::class.java]
-
+    private fun setProductDetailRecyclerView(list: MutableList<Specification>) {
         val layoutManager = LinearLayoutManager(this)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         rvAddPoolProduct.layoutManager = layoutManager
-        rvAddPoolProduct.adapter = ProductSaveAdapter(list, vmProductSaveViewModel)
+        rvAddPoolProduct.adapter = ProductSaveAdapter(list, this)
     }
 
     val calender = Calendar.getInstance()
@@ -634,18 +625,18 @@ class ProductEditPage : AppCompatActivity() {
         rvAddPoolGroup.adapter = PoolProductEditGroupAdapter(productGroupList)
 
 
-//        copyProductDetailList.clear()
-//        for (i in 0 until productInfo.member.size) {
-//            copyProductDetailList.add(
-//                ProductDetail(
-//                    count = i + 1,
-//                    limit = productInfo.limit[i]!!.toInt(),
-//                    member = productInfo.member[i],
-//                    price = productInfo.price[i]!!.toInt()
-//                )
-//            )
-//        }
-//
-//        setProductDetailRecyclerView(copyProductDetailList)
+        tempSpecificationList.clear()
+
+        dbSpecificationList.forEach { dbsp ->
+            productInfo.specification.forEach { sp->
+                if(sp == dbsp.id)
+                {
+                    tempSpecificationList.add(dbsp)
+                }
+            }
+
+        }
+        setProductDetailRecyclerView(tempSpecificationList)
+
     }
 }

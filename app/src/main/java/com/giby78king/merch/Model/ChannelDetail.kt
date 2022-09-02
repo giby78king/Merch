@@ -12,7 +12,7 @@ data class ChannelDetail(
     companion object {
 
         var dbChannelDetailList = mutableListOf<ChannelDetail>()
-        var ddlChannelDetailList = java.util.ArrayList<DdlNormalModel>()
+        var ddlChannelDetailList = arrayListOf<DdlNormalModel>()
         var productChannelDetailList = mutableListOf<String>()
 
         fun DocumentSnapshot.toChannelDetail(): ChannelDetail {

@@ -8,87 +8,76 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.giby78king.merch.Adapter.*
-import com.giby78king.merch.Model.*
+import com.giby78king.merch.Adapter.CustomDropDownAdapter
+import com.giby78king.merch.Adapter.MemberSelectedAdapter
+import com.giby78king.merch.Adapter.PriceEditAdapter
+import com.giby78king.merch.ImgSetting
+import com.giby78king.merch.Model.ChannelDetail
+import com.giby78king.merch.Model.ChannelDetail.Companion.ddlChannelDetailList
+import com.giby78king.merch.Model.ChannelDetail.Companion.productChannelDetailList
+import com.giby78king.merch.Model.DdlNormalModel
 import com.giby78king.merch.Model.Group.Companion.dbGroupList
 import com.giby78king.merch.Model.Group.Companion.ddlGroupList
+import com.giby78king.merch.Model.Member
 import com.giby78king.merch.Model.Member.Companion.dbMemberList
 import com.giby78king.merch.Model.Member.Companion.ddlMemberList
-import com.giby78king.merch.Model.Member.Companion.selectedMemberList
-import com.giby78king.merch.Model.Product.Companion.copyProductDetailList
-import com.giby78king.merch.Model.Product.Companion.nowEditProductId
+import com.giby78king.merch.Model.Specification
+import com.giby78king.merch.Model.Specification.Companion.tempSpecificationList
 import com.giby78king.merch.R
 import com.giby78king.merch.ViewModel.VmProductSaveViewModel
+import com.giby78king.merch.ViewModel.VmSpecificationViewModel
+import com.giby78king.merch.ui.ProductEditPage
+import kotlinx.android.synthetic.main.activity_channeldetail_edit_page.*
 import java.text.DecimalFormat
 
 class ProductSaveListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
     private val parentView = v
 
-    private val imgProductDetail: ImageView = v.findViewById(R.id.imgProductDetail)
+    private val imgSpecification: ImageView = v.findViewById(R.id.imgSpecification)
     private val linearDelete: LinearLayout = v.findViewById(R.id.linearDelete)
     private val txtCount: TextView = v.findViewById(R.id.txtCount)
-    private val editPrice: EditText = v.findViewById(R.id.editPrice)
-    private val editLimit: EditText = v.findViewById(R.id.editLimit)
+    private val editTitle: EditText = v.findViewById(R.id.editTitle)
     private val spinnerGroup: Spinner = v.findViewById(R.id.spinnerGroup)
     private val spinnerMember: Spinner = v.findViewById(R.id.spinnerMember)
     private val btnAddMember: Button = v.findViewById(R.id.btnAddMember)
     private val switchGroup: Switch = v.findViewById(R.id.switchGroup)
+    private val rvAddPoolChannelDetailPrice: RecyclerView =
+        v.findViewById(R.id.rvAddPoolChannelDetailPrice)
     private val rvAddPoolMember: RecyclerView = v.findViewById(R.id.rvAddPoolMember)
 
     val res: Resources = v.context.resources
+    private lateinit var page: ProductEditPage
+
 
     @SuppressLint("SetTextI18n")
-    fun bind(data: ProductDetail, vmProductSaveViewModel: VmProductSaveViewModel) {
-        val index = data.count - 1
+    fun bind(data: Specification, productEditPage: ProductEditPage, position: Int) {
+        page = productEditPage
+        val index = tempSpecificationList.indexOf(data)
 
         var iconId = ""
 
-        if (data.member.isNotEmpty()) {
-            val memberArr = data.member.split(",")
-            var productImg = ""
-            if (memberArr.size > 2) {
-
-            } else {
-                val memberInfo = dbMemberList.filter { it.id == data.member }[0]
-
-                val groupFirst = memberInfo.group.split(" ")
-
-                groupFirst.forEach {
-                    iconId += it.substring(0, 1)
-                }
-
-                productImg =
-                    nowEditProductId.toLowerCase() + "_" + iconId.toLowerCase() + memberInfo.number
-
-            }
-            Log.d("", ":::" + productImg)
-            //Img相關
-            var img = "img_product_$productImg"
-            val resourceId: Int = res.getIdentifier(
-                img, "drawable",
-                "com.giby78king.merch"
-            )
-            imgProductDetail.setBackgroundColor(Color.parseColor("#00ff0000"))
-            imgProductDetail.setImageResource(resourceId)
+        if (data.imgUrl.isNotEmpty()) {
+            imgSpecification.setBackgroundColor(Color.parseColor("#00ff0000"))
+            ImgSetting().setImage("specification", res, imgSpecification, data.imgUrl)
         }
 
-
-
         linearDelete.setOnClickListener {
+            val vmProductSaveViewModel =
+                ViewModelProvider(productEditPage)[VmProductSaveViewModel::class.java]
             vmProductSaveViewModel.setSelectSpecificationInfo(index)
         }
 
         txtCount.text =
-            DecimalFormat("00").format(data.count) + "/" + DecimalFormat("00").format(
-                copyProductDetailList.size
+            DecimalFormat("00").format(index + 1) + "/" + DecimalFormat("00").format(
+                tempSpecificationList.size
             )
-        editPrice.setText(TextAmountSetting().formatAmountNoDollar(data.price.toString()))
-        editLimit.setText(TextAmountSetting().formatAmountNoDollar(data.limit.toString()))
 
-        editPrice.addTextChangedListener(object : TextWatcher {
+        editTitle.setText(data.title)
+        editTitle.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(
                 charSequence: CharSequence,
                 i: Int,
@@ -106,41 +95,9 @@ class ProductSaveListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
             }
 
             override fun afterTextChanged(editable: Editable) {
-                EditAmountSetting().editNoDollarRule(editPrice, this)
-                if (editPrice.text.toString().isEmpty()) {
-                    copyProductDetailList[index].price = 0
-                } else {
-                    copyProductDetailList[index].price =
-                        editPrice.text.toString().replace(",", "").toInt()
-                }
-            }
-        })
 
-        editLimit.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(
-                charSequence: CharSequence,
-                i: Int,
-                i1: Int,
-                i2: Int
-            ) {
-            }
+                tempSpecificationList[index].title = editTitle.text.toString()
 
-            override fun onTextChanged(
-                charSequence: CharSequence,
-                i: Int,
-                i1: Int,
-                i2: Int
-            ) {
-            }
-
-            override fun afterTextChanged(editable: Editable) {
-                EditAmountSetting().editNoDollarRule(editLimit, this)
-                if (editLimit.text.toString().isEmpty()) {
-                    copyProductDetailList[index].limit = 0
-                } else {
-                    copyProductDetailList[index].limit =
-                        editLimit.text.toString().replace(",", "").toInt()
-                }
             }
         })
 
@@ -228,10 +185,10 @@ class ProductSaveListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
         if (data.member.isNotEmpty()) {
 
-            selectedMemberList.clear()
+            var selectedMemberList = mutableListOf<Member>()
 
             dbMemberList.filter {
-                copyProductDetailList[index].member.contains(it.id)
+                tempSpecificationList[index].member.contains(it.id)
             }.sortedBy { it.group }.sortedBy { it.number }.toMutableList().forEach { member ->
                 if (selectedMemberList.none { it.id == member.id }) {
                     selectedMemberList.add(
@@ -240,26 +197,21 @@ class ProductSaveListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
                 }
             }
 
-
-            copyProductDetailList[index].member = ""
-            selectedMemberList.forEach {
-                copyProductDetailList[index].member += "," + it.id
-            }
-
-            copyProductDetailList[index].member =
-                copyProductDetailList[index].member.substring(1)
-
             selectedMemberList =
                 selectedMemberList.sortedBy { it.number }.sortedBy { it.group }.toMutableList()
-            setMemberSelectedRecyclerView(selectedMemberList, copyProductDetailList[index])
+            setMemberSelectedRecyclerView(selectedMemberList, index, productEditPage)
 
         }
 
+        if (productChannelDetailList.size > 0) {
+            setPriceEditRecyclerView(productChannelDetailList, index, productEditPage)
+        }
+
         btnAddMember.setOnClickListener {
-            selectedMemberList.clear()
+            var selectedMemberList = mutableListOf<Member>()
 
             dbMemberList.filter {
-                copyProductDetailList[index].member.contains(it.id)
+                tempSpecificationList[index].member.contains(it.id)
             }.sortedBy { it.group }.sortedBy { it.number }.toMutableList().forEach { member ->
                 if (selectedMemberList.none { it.id == member.id }
                 ) {
@@ -292,25 +244,46 @@ class ProductSaveListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
                 selectedMemberList.sortedBy { it.number }.sortedBy { it.group }.toMutableList()
 
             if (selectedMemberList.isNotEmpty()) {
-                copyProductDetailList[index].member = ""
+                var count = 0
+
+                var list = arrayListOf<String>()
+
                 selectedMemberList.forEach {
-                    copyProductDetailList[index].member += "," + it.id
+                    list.add(it.id)
+                    count++
                 }
-                copyProductDetailList[index].member =
-                    copyProductDetailList[index].member.substring(1)
 
-                setMemberSelectedRecyclerView(selectedMemberList, copyProductDetailList[index])
+                tempSpecificationList[index].member = list.toTypedArray()
+
+                setMemberSelectedRecyclerView(selectedMemberList, index, productEditPage)
+
+                if (productChannelDetailList.size > 0) {
+                    setPriceEditRecyclerView(productChannelDetailList, index, productEditPage)
+                }
             }
-
         }
-
     }
 
-    private fun setMemberSelectedRecyclerView(list: MutableList<Member>, member: ProductDetail) {
+    private fun setMemberSelectedRecyclerView(
+        list: MutableList<Member>,
+        index: Int,
+        productEditPage: ProductEditPage
+    ) {
         val layoutManager = LinearLayoutManager(parentView.context)
         layoutManager.orientation = LinearLayoutManager.HORIZONTAL
         val numberOfColumns = 3
         rvAddPoolMember.layoutManager = GridLayoutManager(parentView.context, numberOfColumns)
-        rvAddPoolMember.adapter = MemberSelectedAdapter(list, member)
+        rvAddPoolMember.adapter = MemberSelectedAdapter(list, index, productEditPage)
+    }
+
+    private fun setPriceEditRecyclerView(
+        list: MutableList<String>,
+        index: Int,
+        productEditPage: ProductEditPage
+    ) {
+        val layoutManager = LinearLayoutManager(parentView.context)
+        layoutManager.orientation = LinearLayoutManager.VERTICAL
+        rvAddPoolChannelDetailPrice.layoutManager = layoutManager
+        rvAddPoolChannelDetailPrice.adapter = PriceEditAdapter(list, index, productEditPage)
     }
 }

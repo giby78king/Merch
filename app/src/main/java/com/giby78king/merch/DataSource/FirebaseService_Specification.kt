@@ -27,7 +27,6 @@ object FirebaseService_Specification {
             order = 0,
             price = arrayOf(),
             product = "",
-            specificationId = "",
             specificationType = "",
             title = "",
         )

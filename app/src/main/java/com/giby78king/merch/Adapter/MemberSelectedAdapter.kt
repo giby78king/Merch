@@ -9,8 +9,9 @@ import com.giby78king.merch.Model.Member
 import com.giby78king.merch.Model.ProductDetail
 import com.giby78king.merch.R
 import com.giby78king.merch.ViewModel.VmTopProductDepositoryViewModel
+import com.giby78king.merch.ui.ProductEditPage
 
-class MemberSelectedAdapter(private var inputData: MutableList<Member>,private var member:ProductDetail) :
+class MemberSelectedAdapter(private var inputData: MutableList<Member>,private var index:Int,private var productEditPage: ProductEditPage) :
     RecyclerView.Adapter<MemberSelectedListViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MemberSelectedListViewHolder {
@@ -26,7 +27,7 @@ class MemberSelectedAdapter(private var inputData: MutableList<Member>,private v
     }
 
     override fun onBindViewHolder(holder: MemberSelectedListViewHolder, position: Int) {
-        holder.bind(inputData[position],member)
+        holder.bind(inputData[position],index,productEditPage)
     }
 
     override fun getItemViewType(position: Int): Int {
