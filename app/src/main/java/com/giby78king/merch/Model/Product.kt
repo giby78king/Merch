@@ -33,9 +33,6 @@ data class Product(
 ) {
     companion object {
         var dbProductList = mutableListOf<Product>()
-        var productDetailList = mutableListOf<ProductDetail>()
-        val copyProductDetailList = mutableListOf<ProductDetail>()
-        var nowEditProductId = ""
 
         fun DocumentSnapshot.toProduct(): Product {
 

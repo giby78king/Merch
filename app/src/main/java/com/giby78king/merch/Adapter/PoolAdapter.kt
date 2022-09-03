@@ -8,6 +8,7 @@ import com.giby78king.merch.Holder.ChannelDetailPoolProductEditViewHolder
 import com.giby78king.merch.Holder.ChannelDetailPoolViewHolder
 import com.giby78king.merch.Holder.GroupPoolViewHolder
 import com.giby78king.merch.R
+import com.giby78king.merch.ui.ProductEditPage
 
 
 //class PoolGroupAdapter(private var inputData: MutableList<String>) :
@@ -48,16 +49,6 @@ class PoolChannelDetailAdapter(private var inputData: MutableList<String>) :
 
     private var context: Context? = null
 
-    interface IOnItemClickListener<T> {
-        fun onItemClick(t: T)
-    }
-
-    private lateinit var itemClickListener: IOnItemClickListener<String>
-
-    fun setOnItemClickListener(itemClickListener: IOnItemClickListener<String>) {
-        this.itemClickListener = itemClickListener
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChannelDetailPoolViewHolder {
         this.context = parent.context
         return ChannelDetailPoolViewHolder(
@@ -81,16 +72,6 @@ class PoolProductEditGroupAdapter(private var inputData: MutableList<String>) :
 
     private var context: Context? = null
 
-    interface IOnItemClickListener<T> {
-        fun onItemClick(t: T)
-    }
-
-    private lateinit var itemClickListener: IOnItemClickListener<String>
-
-    fun setOnItemClickListener(itemClickListener: IOnItemClickListener<String>) {
-        this.itemClickListener = itemClickListener
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GroupPoolViewHolder {
         this.context = parent.context
         return GroupPoolViewHolder(
@@ -109,20 +90,10 @@ class PoolProductEditGroupAdapter(private var inputData: MutableList<String>) :
     }
 }
 
-class PoolProductEditChannelDetailAdapter(private var inputData: MutableList<String>) :
+class PoolProductEditChannelDetailAdapter(private var inputData: MutableList<String>,private var page: ProductEditPage) :
     RecyclerView.Adapter<ChannelDetailPoolProductEditViewHolder>() {
 
     private var context: Context? = null
-
-    interface IOnItemClickListener<T> {
-        fun onItemClick(t: T)
-    }
-
-    private lateinit var itemClickListener: IOnItemClickListener<String>
-
-    fun setOnItemClickListener(itemClickListener: IOnItemClickListener<String>) {
-        this.itemClickListener = itemClickListener
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChannelDetailPoolProductEditViewHolder {
         this.context = parent.context
@@ -138,6 +109,6 @@ class PoolProductEditChannelDetailAdapter(private var inputData: MutableList<Str
     }
 
     override fun onBindViewHolder(holder: ChannelDetailPoolProductEditViewHolder, position: Int) {
-        holder.bind(inputData[position])
+        holder.bind(inputData[position],page)
     }
 }

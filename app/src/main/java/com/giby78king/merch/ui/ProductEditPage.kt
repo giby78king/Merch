@@ -10,38 +10,44 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.giby78king.merch.Adapter.*
+import com.giby78king.merch.Adapter.CustomDropDownAdapter
+import com.giby78king.merch.Adapter.PoolProductEditChannelDetailAdapter
+import com.giby78king.merch.Adapter.PoolProductEditGroupAdapter
+import com.giby78king.merch.Adapter.ProductSaveAdapter
 import com.giby78king.merch.ImgSetting
-import com.giby78king.merch.Model.*
 import com.giby78king.merch.Model.Activity.Companion.dbActivityList
 import com.giby78king.merch.Model.Activity.Companion.ddlActivityList
+import com.giby78king.merch.Model.ChannelDetail
 import com.giby78king.merch.Model.ChannelDetail.Companion.dbChannelDetailList
 import com.giby78king.merch.Model.ChannelDetail.Companion.ddlChannelDetailList
 import com.giby78king.merch.Model.ChannelDetail.Companion.productChannelDetailList
+import com.giby78king.merch.Model.DdlNormalModel
+import com.giby78king.merch.Model.EditAmountSetting
 import com.giby78king.merch.Model.Group.Companion.dbGroupList
 import com.giby78king.merch.Model.Group.Companion.ddlGroupList
 import com.giby78king.merch.Model.Group.Companion.productGroupList
-import com.giby78king.merch.Model.Product.Companion.copyProductDetailList
 import com.giby78king.merch.Model.Product.Companion.dbProductList
-import com.giby78king.merch.Model.Product.Companion.nowEditProductId
-import com.giby78king.merch.Model.Product.Companion.productDetailList
+import com.giby78king.merch.Model.Specification
 import com.giby78king.merch.Model.Specification.Companion.dbSpecificationList
 import com.giby78king.merch.Model.Specification.Companion.tempSpecificationList
 import com.giby78king.merch.R
 import com.giby78king.merch.TimeFormat
 import com.giby78king.merch.ViewModel.*
 import kotlinx.android.synthetic.main.activity_product_edit_page.*
-import kotlinx.android.synthetic.main.activity_product_edit_page.btnAddChannelDetail
-import kotlinx.android.synthetic.main.activity_product_edit_page.spinnerChannelDetail
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.Calendar.getInstance
+import kotlin.math.abs
 
 
 class ProductEditPage : AppCompatActivity() {
@@ -59,15 +65,10 @@ class ProductEditPage : AppCompatActivity() {
         val selectedProduct = bundle?.getString("selectedProduct").toString()
         page = this
 
-        copyProductDetailList.clear()
-
-
         val vmActivitylViewModel =
             ViewModelProvider(this)[VmActivitylViewModel::class.java]
         val vmGroupViewModel =
             ViewModelProvider(this)[VmGroupViewModel::class.java]
-        val vmChannelViewModel =
-            ViewModelProvider(this)[VmChannelViewModel::class.java]
         val vmChannelDetailViewModel =
             ViewModelProvider(this)[VmChannelDetailViewModel::class.java]
         val vmProductViewModel =
@@ -103,11 +104,14 @@ class ProductEditPage : AppCompatActivity() {
                         ) {
                             ddlPositionActivity = position
 
-                            if(!init) {
+                            if (!init) {
                                 productChannelDetailList.clear()
 
                                 rvAddPoolChannelDetail.adapter =
-                                    PoolProductEditChannelDetailAdapter(productChannelDetailList)
+                                    PoolProductEditChannelDetailAdapter(
+                                        productChannelDetailList,
+                                        page
+                                    )
                             }
                             init = false
 
@@ -201,7 +205,30 @@ class ProductEditPage : AppCompatActivity() {
                             }
                         productChannelDetailList = sortList
 
-                        vmChannelDetailViewModel.setSelectedChannelDetail()
+                        val padding =
+                            productChannelDetailList.size - tempSpecificationList[0].limit.size
+
+                        if (padding > 0) {
+                            for (i in 1..padding) {
+                                tempSpecificationList.forEach { sp ->
+                                    sp.price.add(0)
+                                    sp.limit.add(0)
+                                }
+                            }
+                        }
+                        if (padding < 0) {
+                            for (i in 1..abs(padding)) {
+                                tempSpecificationList.forEach { sp ->
+                                    sp.price.removeLast()
+                                    sp.limit.removeLast()
+                                }
+                            }
+                        }
+
+                        if (tempSpecificationList[0].limit.size != 0) {
+                            vmChannelDetailViewModel.setSelectedChannelDetail()
+                        }
+
                     }
                 }
 
@@ -212,7 +239,8 @@ class ProductEditPage : AppCompatActivity() {
                     rvAddPoolChannelDetail.layoutManager =
                         GridLayoutManager(this, numberOfColumns)
                     rvAddPoolChannelDetail.adapter =
-                        PoolProductEditChannelDetailAdapter(productChannelDetailList)
+                        PoolProductEditChannelDetailAdapter(productChannelDetailList, page)
+                    setProductDetailRecyclerView(tempSpecificationList)
                 }
             }
         }
@@ -253,6 +281,7 @@ class ProductEditPage : AppCompatActivity() {
             spinnerGroup.adapter = customDropDownAdapter
             spinnerGroup.setSelection(0)
         }
+
         btnAddGroup.setOnClickListener {
             if (ddlPositionGroup != 0) {
                 if (!productGroupList.contains(ddlGroupList[ddlPositionGroup].id))            //排除重複點選
@@ -284,6 +313,8 @@ class ProductEditPage : AppCompatActivity() {
 
         editPublish.setOnClickListener(listener)
 
+
+
         btnAddProduct.setOnClickListener {
             if (btnAddProduct.text == "NEW PRODUCT") {
                 btnAddProduct.text = "INSERT ID"
@@ -314,7 +345,7 @@ class ProductEditPage : AppCompatActivity() {
                         .show()
                     return@setOnClickListener
                 }
-                nowEditProductId = editId.text.toString()
+
                 btnAddProduct.text = "NEW PRODUCT"
                 linearEditID.isVisible = false
                 linearTxtId.isVisible = true
@@ -325,18 +356,16 @@ class ProductEditPage : AppCompatActivity() {
         btnAddSpecification.setOnClickListener {
 
             val uuidTimestamp = TimeFormat().TodayDate().yyyyMMddHHmmssSSS()
-            val formatId = editId.text.toString()+uuidTimestamp
+            val formatId = editId.text.toString() + uuidTimestamp
 
-            var arrLimit = arrayOfNulls<Int>(size = productChannelDetailList.size)
-            for (i in productChannelDetailList.indices) {
-                arrLimit[i] = 0
-            }
-            var arrPrice = arrayOfNulls<Int>(size = productChannelDetailList.size)
-            for (i in productChannelDetailList.indices) {
-                arrPrice[i] = 0
-            }
+            var arrLimit = arrayListOf<Int>()
+            productChannelDetailList.indices.forEach { arrLimit.add(0) }
 
-            tempSpecificationList.add(0,
+            var arrPrice = arrayListOf<Int>()
+            productChannelDetailList.indices.forEach { arrPrice.add(0) }
+
+            tempSpecificationList.add(
+                0,
                 Specification(
                     id = formatId,
                     imgUrl = "",
@@ -365,87 +394,94 @@ class ProductEditPage : AppCompatActivity() {
         val vmSpecificationViewModel =
             ViewModelProvider(this)[VmSpecificationViewModel::class.java]
 
-        vmSpecificationViewModel.SelectedMemberDatas.observe(page) { data ->
+        vmSpecificationViewModel.SelectedMemberDatas.observe(page) {
             setProductDetailRecyclerView(tempSpecificationList)
         }
 
-//        txtFixAll.setOnClickListener {
-//            if (copyProductDetailList.size < 1) {
-//                return@setOnClickListener
-//            }
-//
-//            val inflater =
-//                LayoutInflater.from(this).inflate(R.layout.fragment_dialog_product_edit_all, null)
-//
-//            val dialog = AlertDialog.Builder(this)
-//                .setView(inflater)
-//                .show()
-//
-//            val lp = WindowManager.LayoutParams()
-//            val window: Window = dialog.window!!
-//            lp.copyFrom(window.attributes)
-//            lp.width = 800
-//            lp.height = 710
-//            window.attributes = lp
-//
-//            val btnEditAll = inflater.findViewById<Button>(R.id.btnEditAll)
-//            val editPrice = inflater.findViewById<EditText>(R.id.editPrice)
-//            val editLimit = inflater.findViewById<EditText>(R.id.editLimit)
-//
-//            editPrice.addTextChangedListener(object : TextWatcher {
-//                override fun beforeTextChanged(
-//                    charSequence: CharSequence,
-//                    i: Int,
-//                    i1: Int,
-//                    i2: Int
-//                ) {
-//                }
-//
-//                override fun onTextChanged(
-//                    charSequence: CharSequence,
-//                    i: Int,
-//                    i1: Int,
-//                    i2: Int
-//                ) {
-//                }
-//
-//                override fun afterTextChanged(editable: Editable) {
-//                    EditAmountSetting().editNoDollarRule(editPrice, this)
-//                }
-//            })
-//
-//            editLimit.addTextChangedListener(object : TextWatcher {
-//                override fun beforeTextChanged(
-//                    charSequence: CharSequence,
-//                    i: Int,
-//                    i1: Int,
-//                    i2: Int
-//                ) {
-//                }
-//
-//                override fun onTextChanged(
-//                    charSequence: CharSequence,
-//                    i: Int,
-//                    i1: Int,
-//                    i2: Int
-//                ) {
-//                }
-//
-//                override fun afterTextChanged(editable: Editable) {
-//                    EditAmountSetting().editNoDollarRule(editLimit, this)
-//                }
-//            })
-//
-//            btnEditAll.setOnClickListener {
-//
-//                copyProductDetailList.forEach {
-//                    it.price = editPrice.text.toString().replace(",", "").toInt()
-//                    it.limit = editLimit.text.toString().replace(",", "").toInt()
-//                }
-//
-//                setProductDetailRecyclerView(copyProductDetailList)
-//            }
-//        }
+        txtFixAll.setOnClickListener {
+            if (productChannelDetailList.size < 1) {
+                return@setOnClickListener
+            }
+
+            val inflater =
+                LayoutInflater.from(this).inflate(R.layout.fragment_dialog_product_edit_all, null)
+
+            val dialog = AlertDialog.Builder(this)
+                .setView(inflater)
+                .show()
+
+            val lp = WindowManager.LayoutParams()
+            val window: Window = dialog.window!!
+            lp.copyFrom(window.attributes)
+            lp.width = 800
+            lp.height = 710
+            window.attributes = lp
+
+            val btnEditAll = inflater.findViewById<Button>(R.id.btnEditAll)
+            val editPrice = inflater.findViewById<EditText>(R.id.editPrice)
+            val editLimit = inflater.findViewById<EditText>(R.id.editLimit)
+
+            editPrice.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    charSequence: CharSequence,
+                    i: Int,
+                    i1: Int,
+                    i2: Int
+                ) {
+                }
+
+                override fun onTextChanged(
+                    charSequence: CharSequence,
+                    i: Int,
+                    i1: Int,
+                    i2: Int
+                ) {
+                }
+
+                override fun afterTextChanged(editable: Editable) {
+                    EditAmountSetting().editNoDollarRule(editPrice, this)
+                }
+            })
+
+            editLimit.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    charSequence: CharSequence,
+                    i: Int,
+                    i1: Int,
+                    i2: Int
+                ) {
+                }
+
+                override fun onTextChanged(
+                    charSequence: CharSequence,
+                    i: Int,
+                    i1: Int,
+                    i2: Int
+                ) {
+                }
+
+                override fun afterTextChanged(editable: Editable) {
+                    EditAmountSetting().editNoDollarRule(editLimit, this)
+                }
+            })
+
+            if (tempSpecificationList.size > 0 && tempSpecificationList[0].price.size > 0) {
+                editPrice.setText(tempSpecificationList[tempSpecificationList.size - 1].price[productChannelDetailList.size - 1].toString())
+            }
+            if (tempSpecificationList.size > 0 && tempSpecificationList[0].limit.size > 0) {
+                editLimit.setText(tempSpecificationList[tempSpecificationList.size - 1].limit[productChannelDetailList.size - 1].toString())
+            }
+
+            btnEditAll.setOnClickListener {
+                tempSpecificationList.forEach {
+                    for (i in it.price.indices) {
+                        it.price[i] = editPrice.text.toString().replace(",", "").toInt()
+                        it.limit[i] = editLimit.text.toString().replace(",", "").toInt()
+                    }
+                }
+                setProductDetailRecyclerView(tempSpecificationList)
+            }
+        }
 //
 //        btnSubmit.setOnClickListener {
 //            try {
@@ -553,7 +589,7 @@ class ProductEditPage : AppCompatActivity() {
         rvAddPoolProduct.adapter = ProductSaveAdapter(list, this)
     }
 
-    val calender = Calendar.getInstance()
+    private val calender: Calendar = getInstance()
 
     private val listener = View.OnClickListener {
         when (it) {
@@ -584,11 +620,10 @@ class ProductEditPage : AppCompatActivity() {
 
     private fun setEditPageData(selectedProduct: String) {
 
-        nowEditProductId = selectedProduct
         btnAddProduct.text = "NEW PRODUCT"
         linearDetail.isVisible = true
 
-        val productInfo = dbProductList.filter { it.id == nowEditProductId }.toMutableList()[0]
+        val productInfo = dbProductList.filter { it.id == selectedProduct }.toMutableList()[0]
 
         val res: Resources = this.resources
         ImgSetting().setImage("product", res, imgDetailIcon, productInfo.id)
@@ -618,7 +653,7 @@ class ProductEditPage : AppCompatActivity() {
             }
         }
         rvAddPoolChannelDetail.adapter =
-            PoolProductEditChannelDetailAdapter(productChannelDetailList)
+            PoolProductEditChannelDetailAdapter(productChannelDetailList, page)
 
         productGroupList.clear()
         dbGroupList.forEach {
@@ -632,9 +667,8 @@ class ProductEditPage : AppCompatActivity() {
         tempSpecificationList.clear()
 
         dbSpecificationList.forEach { dbsp ->
-            productInfo.specification.forEach { sp->
-                if(sp == dbsp.id)
-                {
+            productInfo.specification.forEach { sp ->
+                if (sp == dbsp.id) {
                     tempSpecificationList.add(dbsp)
                 }
             }

@@ -18,7 +18,6 @@ import com.giby78king.merch.Model.Group.Companion.ddlGroupList
 import com.giby78king.merch.Model.Member.Companion.dbMemberList
 import com.giby78king.merch.Model.Member.Companion.ddlMemberList
 import com.giby78king.merch.Model.Product
-import com.giby78king.merch.Model.Product.Companion.copyProductDetailList
 import com.giby78king.merch.Model.Product.Companion.dbProductList
 import com.giby78king.merch.Model.Specification.Companion.dbSpecificationList
 import com.giby78king.merch.R
@@ -38,9 +37,6 @@ class ProductSelectPage : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product_select_page)
-
-        copyProductDetailList.clear()
-
 
         val vmChannelDetailViewModel =
             ViewModelProvider(this)[VmChannelDetailViewModel::class.java]

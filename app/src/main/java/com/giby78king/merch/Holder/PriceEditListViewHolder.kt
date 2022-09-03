@@ -27,8 +27,22 @@ class PriceEditListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
         ImgSetting().setImage("channeldetail", res, imgChannelDetail, data)
 
-        editPrice.setText(TextAmountSetting().formatAmountNoDollar(tempSpecificationList[index].price[productChannelDetailList.indexOf(data)].toString()))
-        editLimit.setText(TextAmountSetting().formatAmountNoDollar(tempSpecificationList[index].limit[productChannelDetailList.indexOf(data)].toString()))
+        if (tempSpecificationList[index].limit.size > 0) {
+            editPrice.setText(
+                TextAmountSetting().formatAmountNoDollar(
+                    tempSpecificationList[index].price[productChannelDetailList.indexOf(
+                        data
+                    )].toString()
+                )
+            )
+            editLimit.setText(
+                TextAmountSetting().formatAmountNoDollar(
+                    tempSpecificationList[index].limit[productChannelDetailList.indexOf(
+                        data
+                    )].toString()
+                )
+            )
+        }
 
         editPrice.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(
@@ -48,7 +62,7 @@ class PriceEditListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
             }
 
             override fun afterTextChanged(editable: Editable) {
-             EditAmountSetting().editNoDollarRule(editPrice, this)
+                EditAmountSetting().editNoDollarRule(editPrice, this)
                 if (editPrice.text.toString().isEmpty()) {
                     tempSpecificationList[index].price[productChannelDetailList.indexOf(data)] = 0
                 } else {

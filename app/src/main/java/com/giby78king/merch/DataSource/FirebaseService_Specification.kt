@@ -22,10 +22,10 @@ object FirebaseService_Specification {
         return Specification(
             id = "newOne",
             imgUrl = "",
-            limit = arrayOf(),
+            limit = arrayListOf(),
             member = arrayOf(),
             order = 0,
-            price = arrayOf(),
+            price = arrayListOf(),
             product = "",
             specificationType = "",
             title = "",

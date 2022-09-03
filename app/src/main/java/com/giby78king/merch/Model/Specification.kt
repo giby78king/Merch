@@ -5,10 +5,10 @@ import com.google.firebase.firestore.DocumentSnapshot
 data class Specification(
     val id: String,
     val imgUrl: String,
-    val limit: Array<Int?>,
+    var limit: ArrayList<Int>,
     var member: Array<String>,
     val order: Int,
-    val price: Array<Int?>,
+    val price: ArrayList<Int>,
     val product: String,
     val specificationType: String,
     var title: String,
@@ -25,9 +25,9 @@ data class Specification(
             val limitA =
                 get("limit").toString().replace("[", "").replace("]", "").split(", ")
                     .toTypedArray()
-            val limit = arrayOfNulls<Int>(size = limitA.size)
+            val limit = arrayListOf<Int>()
             for (i in limitA.indices) {
-                limit[i] = limitA[i].toInt()
+                limit.add(limitA[i].toInt())
             }
 
             val member = get("member").toString().replace("[", "").replace("]", "").split(", ")
@@ -36,9 +36,9 @@ data class Specification(
             val priceA =
                 get("price").toString().replace("[", "").replace("]", "").split(", ")
                     .toTypedArray()
-            val price = arrayOfNulls<Int>(size = priceA.size)
+            val price = arrayListOf<Int>()
             for (i in priceA.indices) {
-                price[i] = priceA[i].toInt()
+                price.add(priceA[i].toInt())
             }
 
             val product = getString("product")!!

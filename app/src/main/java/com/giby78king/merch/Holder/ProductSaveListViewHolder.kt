@@ -5,7 +5,6 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.lifecycle.ViewModelProvider
@@ -16,8 +15,6 @@ import com.giby78king.merch.Adapter.CustomDropDownAdapter
 import com.giby78king.merch.Adapter.MemberSelectedAdapter
 import com.giby78king.merch.Adapter.PriceEditAdapter
 import com.giby78king.merch.ImgSetting
-import com.giby78king.merch.Model.ChannelDetail
-import com.giby78king.merch.Model.ChannelDetail.Companion.ddlChannelDetailList
 import com.giby78king.merch.Model.ChannelDetail.Companion.productChannelDetailList
 import com.giby78king.merch.Model.DdlNormalModel
 import com.giby78king.merch.Model.Group.Companion.dbGroupList
@@ -29,9 +26,7 @@ import com.giby78king.merch.Model.Specification
 import com.giby78king.merch.Model.Specification.Companion.tempSpecificationList
 import com.giby78king.merch.R
 import com.giby78king.merch.ViewModel.VmProductSaveViewModel
-import com.giby78king.merch.ViewModel.VmSpecificationViewModel
 import com.giby78king.merch.ui.ProductEditPage
-import kotlinx.android.synthetic.main.activity_channeldetail_edit_page.*
 import java.text.DecimalFormat
 
 class ProductSaveListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
@@ -162,7 +157,6 @@ class ProductSaveListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
-
 
         val customDropDownAdapter =
             CustomDropDownAdapter("group", parentView.context, ddlGroupList)
