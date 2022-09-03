@@ -3,7 +3,7 @@ package com.giby78king.merch.Model
 import com.google.firebase.firestore.DocumentSnapshot
 
 data class Specification(
-    val id: String,
+    var id: String,
     val imgUrl: String,
     var limit: ArrayList<Int>,
     var member: Array<String>,

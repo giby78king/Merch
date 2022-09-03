@@ -90,7 +90,7 @@ class TimeFormat {
         }
 
         @SuppressLint("SimpleDateFormat")
-        fun yyyyMMddHHmmss(addSecond: Int): String {
+        fun yyyyMMddHHmmssSSS(addSecond: Int): String {
             val calendar = Calendar.getInstance()
             val timeFormat = SimpleDateFormat("yyyyMMddHHmmss")
             timeFormat.timeZone = TimeZone.getTimeZone("Asia/Taipei")

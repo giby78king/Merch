@@ -5,7 +5,6 @@ import android.content.res.Resources
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.Window
@@ -24,6 +23,8 @@ import com.giby78king.merch.Adapter.CustomDropDownAdapter
 import com.giby78king.merch.Adapter.PoolProductEditChannelDetailAdapter
 import com.giby78king.merch.Adapter.PoolProductEditGroupAdapter
 import com.giby78king.merch.Adapter.ProductSaveAdapter
+import com.giby78king.merch.Domain.ProductEn
+import com.giby78king.merch.Domain.SpecificationEn
 import com.giby78king.merch.ImgSetting
 import com.giby78king.merch.Model.Activity.Companion.dbActivityList
 import com.giby78king.merch.Model.Activity.Companion.ddlActivityList
@@ -37,6 +38,7 @@ import com.giby78king.merch.Model.Group.Companion.dbGroupList
 import com.giby78king.merch.Model.Group.Companion.ddlGroupList
 import com.giby78king.merch.Model.Group.Companion.productGroupList
 import com.giby78king.merch.Model.Product.Companion.dbProductList
+import com.giby78king.merch.Model.ProductType.Companion.ddlProductTypeList
 import com.giby78king.merch.Model.Specification
 import com.giby78king.merch.Model.Specification.Companion.dbSpecificationList
 import com.giby78king.merch.Model.Specification.Companion.tempSpecificationList
@@ -76,7 +78,18 @@ class ProductEditPage : AppCompatActivity() {
 
         var ddlPositionActivity = 0
         var ddlPositionGroup = 0
+        var ddlPostitionProductType = 0
 
+        ddlProductTypeList.clear()
+        ddlProductTypeList.add(DdlNormalModel("應援毛巾", "", "Cheer Towels"))
+        ddlProductTypeList.add(DdlNormalModel("紀念球", "", "Ball"))
+        ddlProductTypeList.add(DdlNormalModel("服飾", "", "Clothes"))
+        ddlProductTypeList.add(DdlNormalModel("用品", "", "Supplies"))
+        val customDropDownAdapter =
+            CustomDropDownAdapter("producttype", this, ddlProductTypeList)
+        spinnerProductType.adapter = customDropDownAdapter
+        spinnerProductType.setSelection(ddlPostitionProductType)
+        spinnerProductType.setSelection(0)
 
         vmActivitylViewModel.getDatas("")
         vmActivitylViewModel.activityDatas.observe(this) {
@@ -313,8 +326,6 @@ class ProductEditPage : AppCompatActivity() {
 
         editPublish.setOnClickListener(listener)
 
-
-
         btnAddProduct.setOnClickListener {
             if (btnAddProduct.text == "NEW PRODUCT") {
                 btnAddProduct.text = "INSERT ID"
@@ -346,6 +357,17 @@ class ProductEditPage : AppCompatActivity() {
                     return@setOnClickListener
                 }
 
+
+                var count = 0
+                if (tempSpecificationList.isNotEmpty()) {
+                    tempSpecificationList.forEach {
+                        val uuidTimestamp = TimeFormat().TodayDate().yyyyMMddHHmmssSSS(count)
+                        it.id =
+                            editPublish.text.toString() + "_" + editId.text.toString() + uuidTimestamp
+                        count++
+                    }
+                }
+
                 btnAddProduct.text = "NEW PRODUCT"
                 linearEditID.isVisible = false
                 linearTxtId.isVisible = true
@@ -373,7 +395,7 @@ class ProductEditPage : AppCompatActivity() {
                     member = arrayOf(),
                     order = 1,
                     price = arrPrice,
-                    product = editId.text.toString(),
+                    product = "",
                     specificationType = "",
                     title = "",
                 )
@@ -381,7 +403,6 @@ class ProductEditPage : AppCompatActivity() {
 
             setProductDetailRecyclerView(tempSpecificationList)
         }
-
 
         val vmProductSaveViewModel =
             ViewModelProvider(this)[VmProductSaveViewModel::class.java]
@@ -482,104 +503,73 @@ class ProductEditPage : AppCompatActivity() {
                 setProductDetailRecyclerView(tempSpecificationList)
             }
         }
-//
-//        btnSubmit.setOnClickListener {
-//            try {
-//                btnSubmit.startLoading()
-//                if (editId.text.isEmpty()) {
-//                    Toast.makeText(applicationContext, "暱稱/識別不得為空！！", Toast.LENGTH_SHORT).show()
-//                    btnSubmit.loadingFailed()
-//                    return@setOnClickListener
-//                }
-//                if (ddlChannelDetailList[ddlChannelDetailPosition].id.isEmpty()) {
-//                    Toast.makeText(applicationContext, "通路明細不得為空！！", Toast.LENGTH_SHORT)
-//                        .show()
-//                    btnSubmit.loadingFailed()
-//                    return@setOnClickListener
-//                }
-//                if (editPublish.text.isEmpty()) {
-//                    Toast.makeText(applicationContext, "發行日不得為空！！", Toast.LENGTH_SHORT)
-//                        .show()
-//                    btnSubmit.loadingFailed()
-//                    return@setOnClickListener
-//                }
-//
-//                var formatId = editPublish.text.toString() + "_" + editId.text.toString()
-//
-//                if (txtId.text.isNotEmpty()) {
-//                    formatId = txtId.text.toString()
-//                }
-//
-//                val limit = arrayOfNulls<Int>(size = copyProductDetailList.size)
-//                val member = arrayOfNulls<String>(size = copyProductDetailList.size)
-//                val price = arrayOfNulls<Int>(size = copyProductDetailList.size)
-//
-//                var orderList = mutableListOf<OrderProductDetail>()
-//                dbMemberList.forEach { mem ->
-//                    copyProductDetailList.forEach { pro ->
-//                        if (mem.id == pro.member) {
-//                            orderList.add(
-//                                OrderProductDetail(
-//                                    count = pro.count,
-//                                    limit = pro.limit,
-//                                    member = pro.member,
-//                                    price = pro.price,
-//                                    number = mem.number,
-//                                    group = mem.group,
-//                                )
-//                            )
-//                        } else {
-//                            if (mem.id == pro.member.split(",")[0]) {
-//                                orderList.add(
-//                                    OrderProductDetail(
-//                                        count = pro.count,
-//                                        limit = pro.limit,
-//                                        member = pro.member,
-//                                        price = pro.price,
-//                                        number = mem.number,
-//                                        group = mem.group,
-//                                    )
-//                                )
-//                            }
-//                        }
-//                    }
-//                }
-//
-//                var index = 0
-//                orderList.sortedBy { it.group }.sortedBy { it.number }.forEach {
-//                    limit[index] = it.limit
-//                    member[index] = it.member
-//                    price[index] = it.price
-//                    index++
-//                }
-//
-//                val productData = ProductEn(
-//
-//                    activity = "",
-//                    channelDetail = arrayOf(),
-//                    group = arrayOf(),
-//                    id = formatId,
-//                    imgUrl = formatId.toLowerCase().replace(" ", ""),
-//                    name = editName.text.toString(),
-//                    onSell = switchOnSell.isChecked,
-//                    preOrder = switchPreOrder.isChecked,
-//                    productType = "",
-//                    publish = editPublish.text.toString(),
-//                    specification = arrayOf(),
-//                )
-//                vmProductViewModel.upsertOne(productData)
-//
-//                btnSubmit.loadingSuccessful()
-//
-//                btnSubmit.animationEndAction = {
-//                    btnSubmit.reset()
-//                }
-//
-//            } catch (ex: Exception) {
-//                Toast.makeText(this, ex.message, Toast.LENGTH_LONG).show()
-//                btnSubmit.loadingFailed()
-//            }
-//        }
+
+        btnSubmit.setOnClickListener {
+            try {
+                btnSubmit.startLoading()
+
+                var formatId = editPublish.text.toString() + "_" + editId.text.toString()
+
+                if (txtId.text.isNotEmpty()) {
+                    formatId = txtId.text.toString()
+                }
+                var speList = mutableListOf<String>()
+                tempSpecificationList.forEach {
+                    speList.add(it.id)
+
+                    var specificationType = "Group"
+                    var formatTitle = it.title
+
+                    if (it.member.isNotEmpty()) {
+                        specificationType = "Member"
+                        formatTitle = ""
+                        it.member.forEach { mem -> formatTitle += ",$mem" }
+                        formatTitle.substring(1, formatTitle.length - 1)
+                    }
+
+                    val specificationData = SpecificationEn(
+                        id = it.id,
+                        imgUrl = it.id.toLowerCase().replace(" ", ""),
+                        limit = it.limit.toTypedArray(),
+                        member = it.member,
+                        order = 0,
+                        price = it.price.toTypedArray(),
+                        product = formatId,
+                        specificationType = specificationType,
+                        title = formatTitle,
+                    )
+
+                    vmSpecificationViewModel.upsertOne(specificationData)
+                }
+
+
+                val productData = ProductEn(
+                    activity = ddlActivityList[ddlPositionActivity].id,
+                    channelDetail = productChannelDetailList.toTypedArray(),
+                    group = productGroupList.toTypedArray(),
+                    id = formatId,
+                    imgUrl = formatId.toLowerCase().replace(" ", ""),
+                    name = editName.text.toString(),
+                    onSell = switchOnSell.isChecked,
+                    preOrder = switchPreOrder.isChecked,
+                    productType = ddlProductTypeList[ddlPostitionProductType].id,
+                    publish = editPublish.text.toString(),
+                    specification = speList.toTypedArray(),
+                )
+
+                vmProductViewModel.upsertOne(productData)
+
+                btnSubmit.loadingSuccessful()
+
+                btnSubmit.animationEndAction = {
+                    btnSubmit.reset()
+                }
+
+            } catch (ex: Exception) {
+                Toast.makeText(this, ex.message, Toast.LENGTH_LONG).show()
+                btnSubmit.loadingFailed()
+            }
+        }
     }
 
     private fun setProductDetailRecyclerView(list: MutableList<Specification>) {

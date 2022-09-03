@@ -6,11 +6,10 @@ data class SpecificationEn(
     val id: String,
     val imgUrl: String,
     val limit: Array<Int?>,
-    val member: String,
+    val member: Array<String>,
     val order: Int,
     val price: Array<Int?>,
     val product: String,
-    val specificationId: String,
     val specificationType: String,
     val title: String,
 ) {
@@ -24,7 +23,6 @@ data class SpecificationEn(
         dbData["order"] = data.order
         dbData["price"] = data.price
         dbData["product"] = data.product
-        dbData["specificationId"] = data.specificationId
         dbData["specificationType"] = data.specificationType
         dbData["title"] = data.title
         FirebaseService_Specification.updateData(id, dbData)
@@ -36,11 +34,10 @@ data class SpecificationEn(
             "id" to id,
             "imgUrl" to imgUrl,
             "limit" to limit.toCollection(java.util.ArrayList()),
-            "member" to member,
+            "member" to member.toCollection(java.util.ArrayList()),
             "order" to order,
             "price" to price.toCollection(java.util.ArrayList()),
             "product" to product,
-            "specificationId" to specificationId,
             "specificationType" to specificationType,
             "title" to title,
         )
