@@ -10,7 +10,7 @@ data class Specification(
     val order: Int,
     val price: ArrayList<Int>,
     val product: String,
-    val specificationType: String,
+    var specificationType: String,
     var title: String,
 ) {
     companion object {

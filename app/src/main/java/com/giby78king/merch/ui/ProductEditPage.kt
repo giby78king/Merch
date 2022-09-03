@@ -5,6 +5,7 @@ import android.content.res.Resources
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.Window
@@ -37,6 +38,7 @@ import com.giby78king.merch.Model.EditAmountSetting
 import com.giby78king.merch.Model.Group.Companion.dbGroupList
 import com.giby78king.merch.Model.Group.Companion.ddlGroupList
 import com.giby78king.merch.Model.Group.Companion.productGroupList
+import com.giby78king.merch.Model.Member.Companion.dbMemberList
 import com.giby78king.merch.Model.Product.Companion.dbProductList
 import com.giby78king.merch.Model.ProductType.Companion.ddlProductTypeList
 import com.giby78king.merch.Model.Specification
@@ -75,6 +77,8 @@ class ProductEditPage : AppCompatActivity() {
             ViewModelProvider(this)[VmChannelDetailViewModel::class.java]
         val vmProductViewModel =
             ViewModelProvider(this)[VmProductViewModel::class.java]
+        val vmSpecificationViewModel =
+            ViewModelProvider(this)[VmSpecificationViewModel::class.java]
 
         var ddlPositionActivity = 0
         var ddlPositionGroup = 0
@@ -412,8 +416,7 @@ class ProductEditPage : AppCompatActivity() {
             setProductDetailRecyclerView(tempSpecificationList)
         }
 
-        val vmSpecificationViewModel =
-            ViewModelProvider(this)[VmSpecificationViewModel::class.java]
+
 
         vmSpecificationViewModel.SelectedMemberDatas.observe(page) {
             setProductDetailRecyclerView(tempSpecificationList)
@@ -508,24 +511,72 @@ class ProductEditPage : AppCompatActivity() {
             try {
                 btnSubmit.startLoading()
 
+                if (productChannelDetailList.size == 0) {
+                    Toast.makeText(applicationContext, "發行日不得為空！！", Toast.LENGTH_SHORT)
+                        .show()
+                    return@setOnClickListener
+                }
+
                 var formatId = editPublish.text.toString() + "_" + editId.text.toString()
 
                 if (txtId.text.isNotEmpty()) {
                     formatId = txtId.text.toString()
                 }
                 var speList = mutableListOf<String>()
-                tempSpecificationList.forEach {
-                    speList.add(it.id)
 
+                tempSpecificationList.forEach {
                     var specificationType = "Group"
                     var formatTitle = it.title
-
-                    if (it.member.isNotEmpty()) {
+//todo
+                    if (it.member[0].isNotEmpty()) {
                         specificationType = "Member"
                         formatTitle = ""
                         it.member.forEach { mem -> formatTitle += ",$mem" }
-                        formatTitle.substring(1, formatTitle.length - 1)
+                        formatTitle = formatTitle.substring(1)
                     }
+
+                    it.specificationType = specificationType
+                    it.title = formatTitle
+
+                }
+
+                val groupList =
+                    tempSpecificationList.filter { it.specificationType == "Group" }.toMutableList()
+                val memberList =
+                    tempSpecificationList.filter { it.specificationType == "Member" && it.member.size == 1 }
+                        .toMutableList()
+                val memberMultiList =
+                    tempSpecificationList.filter { it.specificationType == "Member" && it.member.size > 1 }
+                        .toMutableList()
+
+                var sortedMemberList = mutableListOf<Specification>()
+                var sortedMultiMemberList = mutableListOf<Specification>()
+
+                dbMemberList.sortedBy { it.group }.sortedBy { it.number }.forEach { db ->
+                    memberList.forEach {
+                        if (it.member.isNotEmpty()) {
+                            if (it.member[0] == db.id) {
+                                sortedMemberList.add(it)
+                            }
+                        }
+                    }
+
+                    memberMultiList.forEach {
+                        if (it.member.isNotEmpty()) {
+                            if (it.member[0] == db.id) {
+                                sortedMultiMemberList.add(it)
+                            }
+                        }
+                    }
+                }
+
+
+
+                tempSpecificationList =
+                    (groupList + sortedMemberList + sortedMultiMemberList).toMutableList()
+
+                tempSpecificationList.forEach {
+                    speList.add(it.id)
 
                     val specificationData = SpecificationEn(
                         id = it.id,
@@ -535,10 +586,9 @@ class ProductEditPage : AppCompatActivity() {
                         order = 0,
                         price = it.price.toTypedArray(),
                         product = formatId,
-                        specificationType = specificationType,
-                        title = formatTitle,
+                        specificationType = it.specificationType,
+                        title = it.title,
                     )
-
                     vmSpecificationViewModel.upsertOne(specificationData)
                 }
 
@@ -563,11 +613,18 @@ class ProductEditPage : AppCompatActivity() {
 
                 btnSubmit.animationEndAction = {
                     btnSubmit.reset()
+                    vmProductViewModel.getDatas("")
                 }
 
             } catch (ex: Exception) {
                 Toast.makeText(this, ex.message, Toast.LENGTH_LONG).show()
                 btnSubmit.loadingFailed()
+            }
+        }
+        vmProductViewModel.productDatas.observe(this) {
+            vmSpecificationViewModel.getDatas("")
+            vmSpecificationViewModel.specificationDatas.observe(this) {
+                setEditPageData(selectedProduct)
             }
         }
     }
@@ -656,14 +713,15 @@ class ProductEditPage : AppCompatActivity() {
 
         tempSpecificationList.clear()
 
-        dbSpecificationList.forEach { dbsp ->
-            productInfo.specification.forEach { sp ->
+        productInfo.specification.forEach { sp ->
+            dbSpecificationList.forEach { dbsp ->
                 if (sp == dbsp.id) {
                     tempSpecificationList.add(dbsp)
                 }
             }
 
         }
+
         setProductDetailRecyclerView(tempSpecificationList)
 
     }
