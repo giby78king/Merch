@@ -1,6 +1,8 @@
 package com.giby78king.merch.Domain
 
 import com.giby78king.merch.DataSource.FirebaseService_Specification
+import com.giby78king.merch.Model.Specification
+import com.giby78king.merch.TimeFormat
 
 data class SpecificationEn(
     val id: String,
@@ -13,19 +15,22 @@ data class SpecificationEn(
     val specificationType: String,
     val title: String,
 ) {
-    suspend fun <T> updateOne(data: T) {
-        data as SpecificationEn
-        val dbData: HashMap<String, Any> = hashMapOf()
-        dbData["id"] = data.id
-        dbData["imgUrl"] = data.imgUrl
-        dbData["limit"] = data.limit
-        dbData["member"] = data.member
-        dbData["order"] = data.order
-        dbData["price"] = data.price
-        dbData["product"] = data.product
-        dbData["specificationType"] = data.specificationType
-        dbData["title"] = data.title
-        FirebaseService_Specification.updateData(id, dbData)
+    companion object {
+        suspend fun getOne(id: String): SpecificationEn {
+            val data = FirebaseService_Specification.getOne(id)
+            val en = SpecificationEn(
+                id = data.id,
+                imgUrl = data.imgUrl,
+                limit = data.limit.toTypedArray(),
+                member = data.member,
+                order = data.order,
+                price = data.price.toTypedArray(),
+                product = data.product,
+                specificationType = data.specificationType,
+                title = data.title,
+            )
+            return en
+        }
     }
 
     suspend fun save() {

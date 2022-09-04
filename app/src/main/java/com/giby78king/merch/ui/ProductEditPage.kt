@@ -5,7 +5,6 @@ import android.content.res.Resources
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.Window
@@ -43,6 +42,7 @@ import com.giby78king.merch.Model.Product.Companion.dbProductList
 import com.giby78king.merch.Model.ProductType.Companion.ddlProductTypeList
 import com.giby78king.merch.Model.Specification
 import com.giby78king.merch.Model.Specification.Companion.dbSpecificationList
+import com.giby78king.merch.Model.Specification.Companion.tempDeleteSpecificationList
 import com.giby78king.merch.Model.Specification.Companion.tempSpecificationList
 import com.giby78king.merch.R
 import com.giby78king.merch.TimeFormat
@@ -56,7 +56,7 @@ import kotlin.math.abs
 
 class ProductEditPage : AppCompatActivity() {
 
-    private lateinit var nowEdit: EditText
+    private lateinit var nowEditText: EditText
     var ddlPositionChannelDetail = 0
     var init = true
     lateinit var page: ProductEditPage
@@ -66,7 +66,7 @@ class ProductEditPage : AppCompatActivity() {
         setContentView(R.layout.activity_product_edit_page)
 
         val bundle = intent.extras
-        val selectedProduct = bundle?.getString("selectedProduct").toString()
+        var selectedProduct = bundle?.getString("selectedProduct").toString()
         page = this
 
         val vmActivitylViewModel =
@@ -222,30 +222,42 @@ class ProductEditPage : AppCompatActivity() {
                             }
                         productChannelDetailList = sortList
 
-                        val padding =
-                            productChannelDetailList.size - tempSpecificationList[0].limit.size
+                        if(tempSpecificationList.size>0){
+                            val padding =
+                                productChannelDetailList.size - tempSpecificationList[0].limit.size
 
-                        if (padding > 0) {
-                            for (i in 1..padding) {
-                                tempSpecificationList.forEach { sp ->
-                                    sp.price.add(0)
-                                    sp.limit.add(0)
+                            if (padding > 0) {
+                                for (i in 1..padding) {
+                                    tempSpecificationList.forEach { sp ->
+                                        sp.price.add(0)
+                                        sp.limit.add(0)
+                                    }
                                 }
                             }
-                        }
-                        if (padding < 0) {
-                            for (i in 1..abs(padding)) {
-                                tempSpecificationList.forEach { sp ->
-                                    sp.price.removeLast()
-                                    sp.limit.removeLast()
+                            if (padding < 0) {
+                                for (i in 1..abs(padding)) {
+                                    tempSpecificationList.forEach { sp ->
+                                        sp.price.removeLast()
+                                        sp.limit.removeLast()
+                                    }
                                 }
                             }
-                        }
 
-                        if (tempSpecificationList[0].limit.size != 0) {
-                            vmChannelDetailViewModel.setSelectedChannelDetail()
+                            if (tempSpecificationList[0].limit.size != 0) {
+                                vmChannelDetailViewModel.setSelectedChannelDetail()
+                            }
                         }
-
+                        else
+                        {
+                            val layoutManager = LinearLayoutManager(this)
+                            layoutManager.orientation = LinearLayoutManager.HORIZONTAL
+                            val numberOfColumns = 3
+                            rvAddPoolChannelDetail.layoutManager =
+                                GridLayoutManager(this, numberOfColumns)
+                            rvAddPoolChannelDetail.adapter =
+                                PoolProductEditChannelDetailAdapter(productChannelDetailList, page)
+                            setProductDetailRecyclerView(tempSpecificationList)
+                        }
                     }
                 }
 
@@ -372,6 +384,8 @@ class ProductEditPage : AppCompatActivity() {
                     }
                 }
 
+                selectedProduct = editPublish.text.toString() + "_" + editId.text.toString()
+
                 btnAddProduct.text = "NEW PRODUCT"
                 linearEditID.isVisible = false
                 linearTxtId.isVisible = true
@@ -412,6 +426,7 @@ class ProductEditPage : AppCompatActivity() {
             ViewModelProvider(this)[VmProductSaveViewModel::class.java]
 
         vmProductSaveViewModel.specificationSelectInfo.observe(this) {
+            tempDeleteSpecificationList.add(tempSpecificationList[it].id)
             tempSpecificationList.removeAt(it)
             setProductDetailRecyclerView(tempSpecificationList)
         }
@@ -527,8 +542,8 @@ class ProductEditPage : AppCompatActivity() {
                 tempSpecificationList.forEach {
                     var specificationType = "Group"
                     var formatTitle = it.title
-//todo
-                    if (it.member[0].isNotEmpty()) {
+
+                    if (it.member.isNotEmpty() && it.member[0].isNotEmpty()) {
                         specificationType = "Member"
                         formatTitle = ""
                         it.member.forEach { mem -> formatTitle += ",$mem" }
@@ -592,6 +607,11 @@ class ProductEditPage : AppCompatActivity() {
                     vmSpecificationViewModel.upsertOne(specificationData)
                 }
 
+                if (tempDeleteSpecificationList.size > 0) {
+                    tempDeleteSpecificationList.forEach {
+                        vmSpecificationViewModel.deleteOne(it)
+                    }
+                }
 
                 val productData = ProductEn(
                     activity = ddlActivityList[ddlPositionActivity].id,
@@ -641,7 +661,7 @@ class ProductEditPage : AppCompatActivity() {
     private val listener = View.OnClickListener {
         when (it) {
             editPublish -> {
-                nowEdit = editPublish
+                nowEditText = editPublish
                 datePicker()
             }
         }
@@ -662,7 +682,7 @@ class ProductEditPage : AppCompatActivity() {
         calender.set(year, month, day)
         val time = SimpleDateFormat("yyyyMMdd", Locale.TAIWAN)
         selectedDate = time.format(calender.time)
-        nowEdit.setText(selectedDate)
+        nowEditText.setText(selectedDate)
     }
 
     private fun setEditPageData(selectedProduct: String) {

@@ -294,10 +294,10 @@
 
             <LinearLayout
                 android:id="@+id/linearDetail"
-
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -450,14 +450,13 @@
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:minHeight="30dp"
-                                    android:background="@drawable/top_item_border">
+                                    android:background="@drawable/top_item_border"
+                                    android:minHeight="30dp">
 
                                     <androidx.recyclerview.widget.RecyclerView
                                         android:id="@+id/rvAddPoolChannelDetail"
                                         android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        />
+                                        android:layout_height="wrap_content" />
                                 </LinearLayout>
 
                             </LinearLayout>
@@ -554,14 +553,13 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:minHeight="30dp"
-                                android:background="@drawable/top_item_border">
+                                android:background="@drawable/top_item_border"
+                                android:minHeight="30dp">
 
                                 <androidx.recyclerview.widget.RecyclerView
                                     android:id="@+id/rvAddPoolGroup"
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    />
+                                    android:layout_height="wrap_content" />
                             </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>

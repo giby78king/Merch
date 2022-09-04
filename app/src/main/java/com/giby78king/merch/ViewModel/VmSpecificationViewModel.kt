@@ -49,9 +49,10 @@ class VmSpecificationViewModel : ViewModel() {
         }
     }
 
-    fun deleteOne(data: SpecificationEn) {
+    fun deleteOne(id: String) {
         viewModelScope.launch {
-            data.delete()
+            val en = SpecificationEn.getOne(id)
+            en.delete()
         }
     }
 

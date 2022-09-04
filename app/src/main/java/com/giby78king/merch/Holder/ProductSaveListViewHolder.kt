@@ -171,6 +171,63 @@ class ProductSaveListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
                 id: Long
             ) {
                 ddlMemberPosition = position
+
+                if(tempSpecificationList[index].member.isEmpty()){
+                    var selectedMemberList = mutableListOf<Member>()
+
+                    dbMemberList.filter {
+                        tempSpecificationList[index].member.contains(it.id)
+                    }.sortedBy { it.group }.sortedBy { it.number }.toMutableList().forEach { member ->
+                        if (selectedMemberList.none { it.id == member.id }
+                        ) {
+                            selectedMemberList.add(
+                                member
+                            )
+                        }
+                    }
+
+                    if (selectedMemberList.none { it.id == ddlMemberList[ddlMemberPosition].id }) {
+                        dbMemberList.firstOrNull { it.id == ddlMemberList[ddlMemberPosition].id }
+                            ?.let { it1 ->
+                                selectedMemberList.add(
+                                    it1
+                                )
+                            }
+                    }
+                    if (switchGroup.isChecked) {
+                        dbMemberList.filter { it.group.contains(ddlGroupList[ddlGroupPosition].id) }
+                            .forEach { member ->
+                                if (selectedMemberList.none { it.id == member.id }) {
+                                    selectedMemberList.add(
+                                        member
+                                    )
+                                }
+                            }
+                    }
+
+                    selectedMemberList =
+                        selectedMemberList.sortedBy { it.number }.sortedBy { it.group }.toMutableList()
+
+                    if (selectedMemberList.isNotEmpty()) {
+                        var count = 0
+
+                        var list = arrayListOf<String>()
+
+                        selectedMemberList.forEach {
+                            list.add(it.id)
+                            count++
+                        }
+
+                        tempSpecificationList[index].member = list.toTypedArray()
+
+                        setMemberSelectedRecyclerView(selectedMemberList, index, productEditPage)
+
+                        if (productChannelDetailList.size > 0) {
+                            setPriceEditRecyclerView(productChannelDetailList, index, productEditPage)
+                        }
+                    }
+                }
+
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {}

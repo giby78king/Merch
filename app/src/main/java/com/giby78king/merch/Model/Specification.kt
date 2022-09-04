@@ -16,6 +16,7 @@ data class Specification(
     companion object {
         var dbSpecificationList = mutableListOf<Specification>()
         var tempSpecificationList = mutableListOf<Specification>()
+        var tempDeleteSpecificationList = mutableListOf<String>()
 
         fun DocumentSnapshot.toSpecification(): Specification {
 

@@ -41,9 +41,17 @@ class SettingFragment : Fragment() {
 
         val button4 = root.findViewById<Button>(R.id.button4)
         button4.setOnClickListener{
+            val intent = Intent(context, ProductEditPage::class.java)
+            context?.startActivity(intent)
+        }
+
+        val button5 = root.findViewById<Button>(R.id.button5)
+        button5.setOnClickListener{
             val intent = Intent(context, ProductSelectPage::class.java)
             context?.startActivity(intent)
         }
+
+
 
         return root
     }
