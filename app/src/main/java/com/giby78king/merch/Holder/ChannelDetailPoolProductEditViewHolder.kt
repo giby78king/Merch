@@ -65,26 +65,28 @@ class ChannelDetailPoolProductEditViewHolder(v: View) : RecyclerView.ViewHolder(
                 }
             }
 
-            val padding =
-                productChannelDetailList.size - tempSpecificationList[0].limit.size
+            if(tempSpecificationList.size>0) {
 
-            if (padding > 0) {
-                for (i in 1..padding) {
-                    tempSpecificationList.forEach { sp ->
-                        sp.price.add(0)
-                        sp.limit.add(0)
+                val padding =
+                    productChannelDetailList.size - tempSpecificationList[0].limit.size
+
+                if (padding > 0) {
+                    for (i in 1..padding) {
+                        tempSpecificationList.forEach { sp ->
+                            sp.price.add(0)
+                            sp.limit.add(0)
+                        }
+                    }
+                }
+                if (padding < 0) {
+                    for (i in 1..abs(padding)) {
+                        tempSpecificationList.forEach { sp ->
+                            sp.price.removeLast()
+                            sp.limit.removeLast()
+                        }
                     }
                 }
             }
-            if (padding < 0) {
-                for (i in 1..abs(padding)) {
-                    tempSpecificationList.forEach { sp ->
-                        sp.price.removeLast()
-                        sp.limit.removeLast()
-                    }
-                }
-            }
-
             val vmChannelDetailViewModel =
                 ViewModelProvider(page)[VmChannelDetailViewModel::class.java]
 
