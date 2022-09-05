@@ -7,20 +7,26 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.giby78king.merch.Adapter.PoolChannelDetailInfoAdapter
 import com.giby78king.merch.ImgSetting
+import com.giby78king.merch.Model.Activity.Companion.dbActivityList
 import com.giby78king.merch.Model.ChannelDetail.Companion.dbChannelDetailList
 import com.giby78king.merch.Model.Product
 import com.giby78king.merch.R
 import com.giby78king.merch.ui.ProductEditPage
+import kotlinx.android.synthetic.main.activity_product_select_page.*
 
 
 class ProductListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
     private val parentView = v
 
-    private val txtMember: TextView = v.findViewById(R.id.txtMember)
+    private val txtName: TextView = v.findViewById(R.id.txtName)
     private val txtPublish: TextView = v.findViewById(R.id.txtPublish)
-    private val txtChannelDetail: TextView = v.findViewById(R.id.txtChannelDetail)
+    private val txtActivity:TextView = v.findViewById(R.id.txtActivity)
+    private val rvPoolChannelDetail: RecyclerView = v.findViewById(R.id.rvPoolChannelDetail)
     private val imgProduct: ImageView = v.findViewById(R.id.imgProduct)
 
     val res: Resources = v.context.resources
@@ -29,9 +35,8 @@ class ProductListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
     fun bind(data: Product) {
 
         txtPublish.text = data.publish
-        txtChannelDetail.text =
-            dbChannelDetailList.filter { it.id == data.channelDetail[0] }.toMutableList()[0].name
-        txtMember.text = data.name
+        txtActivity.text = dbActivityList.filter { it.id==data.activity }.toMutableList()[0].name
+        txtName.text = data.name
 
         itemView.setOnClickListener {
 
@@ -46,5 +51,18 @@ class ProductListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
         ImgSetting().setImage("product", res, imgProduct, data.id)
 
+        var sortList = mutableListOf<String>()
+        dbChannelDetailList.sortedBy { it.channel }.toMutableList().forEach { chd ->
+            data.channelDetail.forEach { act ->
+                if (act == chd.id) {
+                    sortList.add(act)
+                }
+            }
+        }
+        val layoutManager = LinearLayoutManager(parentView.context)
+        layoutManager.orientation = LinearLayoutManager.VERTICAL
+        val numberOfColumns = 3
+        rvPoolChannelDetail.layoutManager = GridLayoutManager(parentView.context, numberOfColumns)
+        rvPoolChannelDetail.adapter = PoolChannelDetailInfoAdapter(sortList)
     }
 }

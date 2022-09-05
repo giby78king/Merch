@@ -3,12 +3,9 @@ package com.giby78king.merch.Adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.giby78king.merch.Holder.MemberListViewHolder
 import com.giby78king.merch.Holder.MemberSelectedListViewHolder
 import com.giby78king.merch.Model.Member
-import com.giby78king.merch.Model.ProductDetail
 import com.giby78king.merch.R
-import com.giby78king.merch.ViewModel.VmTopProductDepositoryViewModel
 import com.giby78king.merch.ui.ProductEditPage
 
 class MemberSelectedAdapter(private var inputData: MutableList<Member>,private var index:Int,private var productEditPage: ProductEditPage) :
@@ -17,7 +14,7 @@ class MemberSelectedAdapter(private var inputData: MutableList<Member>,private v
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MemberSelectedListViewHolder {
         return MemberSelectedListViewHolder(
             LayoutInflater.from(parent.context).inflate(
-                R.layout.rv_list_item_product_selected_member, parent, false
+                R.layout.rv_list_item_specification_selected_member, parent, false
             )
         )
     }
