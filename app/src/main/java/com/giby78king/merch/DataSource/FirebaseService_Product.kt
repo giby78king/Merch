@@ -4,6 +4,7 @@ import com.giby78king.merch.Model.Product
 import com.giby78king.merch.Model.Product.Companion.dbProductList
 import com.giby78king.merch.Model.Product.Companion.toProduct
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
 
 object FirebaseService_Product {
@@ -33,7 +34,7 @@ object FirebaseService_Product {
 
     suspend fun getDatas(): MutableList<Product> {
         dbProductList = db
-//            .orderBy("number", Query.Direction.DESCENDING)
+            .orderBy("publish", Query.Direction.DESCENDING)
             .get()
             .await()
             .documents.mapNotNull { it.toProduct() }

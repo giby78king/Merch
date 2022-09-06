@@ -7,6 +7,7 @@ import com.giby78king.merch.Model.ChannelDetail
 import com.giby78king.merch.Model.ChannelDetail.Companion.dbChannelDetailList
 import com.giby78king.merch.Model.ChannelDetail.Companion.toChannelDetail
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
 
 object FirebaseService_Activity {
@@ -31,7 +32,7 @@ object FirebaseService_Activity {
 
     suspend fun getDatas(): MutableList<Activity> {
         dbActivityList = db
-//            .orderBy("number", Query.Direction.DESCENDING)
+            .orderBy("endDate", Query.Direction.DESCENDING)
             .get()
             .await()
             .documents.mapNotNull { it.toActivity() }.toMutableList()

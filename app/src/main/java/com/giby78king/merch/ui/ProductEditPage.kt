@@ -555,8 +555,20 @@ class ProductEditPage : AppCompatActivity() {
 
                 }
 
-                val groupList =
+                var groupList =
                     tempSpecificationList.filter { it.specificationType == "Group" }.toMutableList()
+
+                var sortedGroupList = mutableListOf<Specification>()
+                tempSpecificationList.sortedByDescending { it.price[0] }.forEach { temp ->
+                    groupList.forEach {
+                        if (it.price.isNotEmpty()) {
+                            if(it.id == temp.id) {
+                                sortedGroupList.add(it)
+                            }
+                        }
+                    }
+                }
+
                 val memberList =
                     tempSpecificationList.filter { it.specificationType == "Member" && it.member.size == 1 }
                         .toMutableList()
@@ -588,7 +600,7 @@ class ProductEditPage : AppCompatActivity() {
 
 
                 tempSpecificationList =
-                    (groupList + sortedMemberList + sortedMultiMemberList).toMutableList()
+                    (sortedGroupList + sortedMemberList + sortedMultiMemberList).toMutableList()
 
                 tempSpecificationList.forEach {
                     speList.add(it.id)
