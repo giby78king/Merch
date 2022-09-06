@@ -545,9 +545,11 @@ class ProductEditPage : AppCompatActivity() {
 
                     if (it.member.isNotEmpty() && it.member[0].isNotEmpty()) {
                         specificationType = "Member"
-                        formatTitle = ""
-                        it.member.forEach { mem -> formatTitle += ",$mem" }
-                        formatTitle = formatTitle.substring(1)
+                        if(formatTitle.isEmpty()){
+                            formatTitle = ""
+                            it.member.forEach { mem -> formatTitle += ",$mem" }
+                            formatTitle = formatTitle.substring(1)
+                        }
                     }
 
                     it.specificationType = specificationType
