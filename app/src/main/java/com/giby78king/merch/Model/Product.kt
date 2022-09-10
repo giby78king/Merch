@@ -33,7 +33,7 @@ data class Product(
 ) {
     companion object {
         var dbProductList = mutableListOf<Product>()
-
+        var ddlProductList = arrayListOf<DdlNormalModel>()
         fun DocumentSnapshot.toProduct(): Product {
 
             val activity = getString("activity")!!

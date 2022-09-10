@@ -22,4 +22,7 @@
     <color name="top_text_background_color">#2C5C8C</color>
     <color name="top_text_color">#FFFFE6</color>
 
+    <!--fab-->
+    <color name="fab_inner_color">#FFFFFF</color>
+    <color name="fab_background_color">#2C5C8C</color>
 </resources>

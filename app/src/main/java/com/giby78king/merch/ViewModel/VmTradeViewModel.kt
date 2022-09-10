@@ -6,8 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.giby78king.merch.DataSource.FirebaseService_Trade
 import com.giby78king.merch.Domain.MemberEn
+import com.giby78king.merch.Model.Group
 import com.giby78king.merch.Model.Trade
 import com.giby78king.merch.Model.Trade.Companion.dbTradeList
+import com.giby78king.merch.Model.Trade.Companion.tradeModifyList
+import com.giby78king.merch.Model.Trade.Companion.tradeOtherList
 import kotlinx.coroutines.launch
 
 class VmTradeViewModel : ViewModel() {
@@ -57,5 +60,22 @@ class VmTradeViewModel : ViewModel() {
         viewModelScope.launch {
             data.delete()
         }
+    }
+
+
+    private val _selectedModifyDatas = MutableLiveData<MutableList<String>>().apply {
+        value = tradeModifyList
+    }
+    val SelectedModifyDatas: LiveData<MutableList<String>> = _selectedModifyDatas
+    fun setSelectedModify() {
+        _selectedModifyDatas.value = tradeModifyList
+    }
+
+    private val _selectedOtherDatas = MutableLiveData<MutableList<String>>().apply {
+        value = tradeOtherList
+    }
+    val SelectedOtherDatas: LiveData<MutableList<String>> = _selectedOtherDatas
+    fun setSelectedOther() {
+        _selectedOtherDatas.value = tradeOtherList
     }
 }

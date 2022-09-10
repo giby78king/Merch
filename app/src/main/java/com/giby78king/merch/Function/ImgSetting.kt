@@ -16,6 +16,7 @@ class ImgSetting {
             "product" -> img += module
             "member" -> img += module
             "specification" -> img += module
+            "traderule"-> img += module
         }
 
         img = img + "_" + imgUrl.toLowerCase().replace(" ", "")

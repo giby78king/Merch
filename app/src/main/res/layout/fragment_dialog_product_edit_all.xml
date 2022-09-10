@@ -47,7 +47,7 @@
                                 <ImageView
                                     android:layout_width="40dp"
                                     android:layout_height="40dp"
-                                    app:srcCompat="@drawable/ic_productdepository_valuation" />
+                                    app:srcCompat="@drawable/ic_specification_valuation" />
                             </LinearLayout>
                         </RelativeLayout>
                     </LinearLayout>
@@ -116,7 +116,7 @@
                                 <ImageView
                                     android:layout_width="40dp"
                                     android:layout_height="40dp"
-                                    app:srcCompat="@drawable/ic_product_save_limit" />
+                                    app:srcCompat="@drawable/ic_specification_limit" />
                             </LinearLayout>
                         </RelativeLayout>
                     </LinearLayout>

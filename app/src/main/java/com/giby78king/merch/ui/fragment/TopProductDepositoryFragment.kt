@@ -371,9 +371,9 @@ class TopProductDepositoryFragment : Fragment() {
                     ViewModelProvider(requireActivity())[VmTopProductDepositoryViewModel::class.java]
                 vmTopStockDepositoryViewModel.setDepoToDetailDatas("trigger")
 
-                val firstViewPager =
-                    root.rootView.findViewById(R.id.view_pager) as ViewPager
-                firstViewPager.currentItem = 2
+//                val firstViewPager =
+//                    root.rootView.findViewById(R.id.view_pager) as ViewPager
+//                firstViewPager.currentItem = 2
             }
         }
         return root

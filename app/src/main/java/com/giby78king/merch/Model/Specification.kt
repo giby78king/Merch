@@ -15,6 +15,7 @@ data class Specification(
 ) {
     companion object {
         var dbSpecificationList = mutableListOf<Specification>()
+        var ddlSpecificationList = arrayListOf<DdlNormalModel>()
         var tempSpecificationList = mutableListOf<Specification>()
         var tempDeleteSpecificationList = mutableListOf<String>()
 

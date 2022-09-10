@@ -17,17 +17,10 @@ object FirebaseService_Trade {
             return data.toTrade()
         }
         return Trade(
-            amount = arrayOf(),
-            channelDetail = "",
             date = "",
-            group = arrayOf(),
-            holdingAmount = arrayOf(),
-            holdingMember = arrayOf(),
-            id = "",
-            imgUrl = arrayOf(),
-            product = arrayOf(),
-            rules = arrayOf(),
-            status = "",
+            id = "newOne",
+            tradeDetail = arrayOf(),
+            transType = "",
             ym = "",
         )
     }

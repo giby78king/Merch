@@ -22,6 +22,15 @@ class SpinnerSet {
             "activity" -> {
                 "img_activity_"
             }
+            "product" -> {
+                "img_product_"
+            }
+            "specification" -> {
+                "img_specification_"
+            }
+            "traderule"-> {
+                "img_traderule_"
+            }
             else -> {
                 "ic_" + module.toLowerCase() + "_"
             }

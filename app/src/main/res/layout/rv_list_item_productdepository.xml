@@ -269,7 +269,7 @@
                                             <ImageView
                                                 android:layout_width="20dp"
                                                 android:layout_height="20dp"
-                                                app:srcCompat="@drawable/ic_productdepository_valuation" />
+                                                app:srcCompat="@drawable/ic_specification_valuation" />
                                         </LinearLayout>
                                     </RelativeLayout>
                                 </LinearLayout>
@@ -325,7 +325,7 @@
                                             <ImageView
                                                 android:layout_width="20dp"
                                                 android:layout_height="20dp"
-                                                app:srcCompat="@drawable/ic_productdepository_valuation" />
+                                                app:srcCompat="@drawable/ic_specification_valuation" />
                                         </LinearLayout>
                                     </RelativeLayout>
                                 </LinearLayout>

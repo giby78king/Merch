@@ -47,6 +47,11 @@
             android:screenOrientation="portrait"
             android:label="@string/title_activity_activity_edit_page"
             android:parentActivityName=".ui.MainActivity" />
+        <activity
+            android:name=".ui.TradeEditPage"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_trade_edit_page"
+            android:parentActivityName=".ui.MainActivity" />
 
     </application>
 

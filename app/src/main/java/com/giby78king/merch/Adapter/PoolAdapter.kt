@@ -4,10 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.giby78king.merch.Holder.ChannelDetailInfoPoolViewHolder
-import com.giby78king.merch.Holder.ChannelDetailPoolProductEditViewHolder
-import com.giby78king.merch.Holder.ChannelDetailPoolViewHolder
-import com.giby78king.merch.Holder.GroupPoolViewHolder
+import com.giby78king.merch.Holder.*
 import com.giby78king.merch.R
 import com.giby78king.merch.ui.ProductEditPage
 
@@ -134,5 +131,98 @@ class PoolProductEditChannelDetailAdapter(private var inputData: MutableList<Str
 
     override fun onBindViewHolder(holder: ChannelDetailPoolProductEditViewHolder, position: Int) {
         holder.bind(inputData[position],page)
+    }
+}
+
+class PoolTradeEditModifyAdapter(private var inputData: MutableList<String>) :
+    RecyclerView.Adapter<ModifyPoolViewHolder>() {
+
+    private var context: Context? = null
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ModifyPoolViewHolder {
+        this.context = parent.context
+        return ModifyPoolViewHolder(
+            LayoutInflater.from(parent.context).inflate(
+                R.layout.rv_list_item_activity_selected_channeldetail, parent, false
+            )
+        )
+    }
+
+    override fun getItemCount(): Int {
+        return inputData.size
+    }
+
+    override fun onBindViewHolder(holder: ModifyPoolViewHolder, position: Int) {
+        holder.bind(inputData[position])
+    }
+}
+
+class PoolTradeEditOtherAdapter(private var inputData: MutableList<String>) :
+    RecyclerView.Adapter<OtherPoolViewHolder>() {
+
+    private var context: Context? = null
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OtherPoolViewHolder {
+        this.context = parent.context
+        return OtherPoolViewHolder(
+            LayoutInflater.from(parent.context).inflate(
+                R.layout.rv_list_item_activity_selected_channeldetail, parent, false
+            )
+        )
+    }
+
+    override fun getItemCount(): Int {
+        return inputData.size
+    }
+
+    override fun onBindViewHolder(holder: OtherPoolViewHolder, position: Int) {
+        holder.bind(inputData[position])
+    }
+}
+
+
+class PoolTradeEditSpecModifyAdapter(private var inputData: MutableList<String>) :
+    RecyclerView.Adapter<SpecModifyPoolViewHolder>() {
+
+    private var context: Context? = null
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SpecModifyPoolViewHolder {
+        this.context = parent.context
+        return SpecModifyPoolViewHolder(
+            LayoutInflater.from(parent.context).inflate(
+                R.layout.rv_list_item_trade_specification_selected_traderule_price, parent, false
+            )
+        )
+    }
+
+    override fun getItemCount(): Int {
+        return inputData.size
+    }
+
+    override fun onBindViewHolder(holder: SpecModifyPoolViewHolder, position: Int) {
+        holder.bind(inputData[position])
+    }
+}
+
+class PoolTradeEditSpecOtherAdapter(private var inputData: MutableList<String>) :
+    RecyclerView.Adapter<SpecOtherPoolViewHolder>() {
+
+    private var context: Context? = null
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SpecOtherPoolViewHolder {
+        this.context = parent.context
+        return SpecOtherPoolViewHolder(
+            LayoutInflater.from(parent.context).inflate(
+                R.layout.rv_list_item_trade_specification_selected_traderule_price, parent, false
+            )
+        )
+    }
+
+    override fun getItemCount(): Int {
+        return inputData.size
+    }
+
+    override fun onBindViewHolder(holder: SpecOtherPoolViewHolder, position: Int) {
+        holder.bind(inputData[position])
     }
 }

@@ -57,8 +57,9 @@
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/activity_channeldetail_edit_page.xml" value="0.33" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/activity_main.xml" value="0.31302083333333336" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/activity_member_edit_page.xml" value="0.3098958333333333" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/activity_product_edit_page.xml" value="0.23495145631067962" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/activity_product_edit_page.xml" value="0.5" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/activity_product_select_page.xml" value="0.5536458333333333" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/activity_trade_edit_page.xml" value="0.40520833333333334" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/custom_spinner_item.xml" value="0.67" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/fragment_bot_channel.xml" value="0.5536458333333333" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/fragment_bot_member.xml" value="0.5536458333333333" />
@@ -73,7 +74,7 @@
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/fragment_tab_query.xml" value="0.5536458333333333" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/fragment_target.xml" value="0.5536458333333333" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/fragment_top_productdepository.xml" value="0.440536013400335" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/fragment_trade.xml" value="0.5536458333333333" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/fragment_trade.xml" value="0.4368332397529478" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/ic_channelteail_save_channel.xml" value="0.5536458333333333" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/rv_list_item_activity_selected_channeldetail.xml" value="0.5536458333333333" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/rv_list_item_channeldetail.xml" value="0.5536458333333333" />
@@ -88,7 +89,9 @@
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/rv_list_item_specifiation_price_edit.xml" value="0.5536458333333333" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/rv_list_item_specification_edit.xml" value="0.5536458333333333" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/rv_list_item_specification_price_edit.xml" value="0.38858695652173914" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/rv_list_item_specification_selected_member.xml" value="0.40520833333333334" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/rv_list_item_trade.xml" value="0.31614583333333335" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/rv_list_item_trade_specification_selected_traderule_price.xml" value="0.5536458333333333" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/rv_list_item_tradeinner.xml" value="0.31614583333333335" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/rv_member_list_item.xml" value="0.1522289766970618" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/rv_merch_list_item.xml" value="0.5536458333333333" />
