@@ -8,10 +8,17 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.giby78king.merch.Adapter.PoolTradeEditOtherAdapter
+import com.giby78king.merch.Adapter.PoolTradeEditSpecModifyAdapter
+import com.giby78king.merch.Adapter.PoolTradeEditSpecOtherAdapter
 import com.giby78king.merch.ImgSetting
+import com.giby78king.merch.Model.Trade
 import com.giby78king.merch.Model.Trade.Companion.ddlOtherList
 import com.giby78king.merch.Model.Trade.Companion.tradeOtherList
+import com.giby78king.merch.Model.TradeDetail
+import com.giby78king.merch.Model.TradeDetail.Companion.specOtherList
+import com.giby78king.merch.Model.tempPriceDetail
 import com.giby78king.merch.R
+import com.giby78king.merch.ui.TradeEditPage
 
 
 class OtherPoolViewHolder(v: View) : RecyclerView.ViewHolder(v) {
@@ -19,7 +26,7 @@ class OtherPoolViewHolder(v: View) : RecyclerView.ViewHolder(v) {
     val imgChannelDetail: ImageView = v.findViewById(R.id.imgChannelDetail)
     val res: Resources = v.context.resources
 
-    fun bind(item: String) {
+    fun bind(item: String, page: TradeEditPage) {
         if (ddlOtherList.filter { it.id == item }.isNotEmpty()) {
             val data = ddlOtherList.filter { it.id == item }[0]
 
@@ -47,7 +54,7 @@ class OtherPoolViewHolder(v: View) : RecyclerView.ViewHolder(v) {
                     tradeOtherList.remove(data.id)
                 }
                 val rvAddPoolOther =
-                    itemView.rootView.findViewById<RecyclerView>(R.id.rvAddPoolOther)
+                    page.findViewById<RecyclerView>(R.id.rvAddPoolOther)
 
                 var sortList = mutableListOf<String>()
                 ddlOtherList.sortedBy { it.id }.toMutableList().forEach { chd ->
@@ -58,7 +65,23 @@ class OtherPoolViewHolder(v: View) : RecyclerView.ViewHolder(v) {
                     }
                 }
 
-                rvAddPoolOther.adapter = PoolTradeEditOtherAdapter(sortList)
+                rvAddPoolOther.adapter = PoolTradeEditOtherAdapter(sortList, page)
+
+                val rvAddPoolSpecOther =
+                    page.findViewById<RecyclerView>(R.id.rvAddPoolSpecOther)
+
+                if (rvAddPoolSpecOther != null) {
+                    specOtherList.clear()
+                    tradeOtherList.forEach {
+                        specOtherList.add(
+                            tempPriceDetail(
+                                price= 0,
+                                rule = it
+                            )
+                        )
+                    }
+                    rvAddPoolSpecOther.adapter = PoolTradeEditSpecOtherAdapter(specOtherList, page)
+                }
             }
         }
     }

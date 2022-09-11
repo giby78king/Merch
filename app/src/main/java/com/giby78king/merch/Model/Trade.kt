@@ -11,6 +11,7 @@ data class Trade(
 ) {
     companion object {
         var dbTradeList = mutableListOf<Trade>()
+        var ddlTransType = java.util.ArrayList<DdlNormalModel>()
 
         var ddlModifyList = ArrayList<DdlNormalModel>()
         var tradeModifyList = mutableListOf<String>()

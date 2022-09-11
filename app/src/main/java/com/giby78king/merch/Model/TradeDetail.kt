@@ -2,20 +2,9 @@ package com.giby78king.merch.Model
 
 import com.google.firebase.firestore.DocumentSnapshot
 
-class tempTradeDetail(
-    val accountDate: String,
-    val channelDetail: String,
-    val id: String,
-    val modify: ArrayList<Int>,
-    val modifyRule: Array<String>,
-    val other: ArrayList<Int>,
-    val otherRule: Array<String>,
-    val price: Int,
-    val processDate: String,
-    val specification: String,
-    val stockDate: String,
-    val tradeId: String,
-    val transType: String,
+class tempPriceDetail(
+    var price: Int,
+    val rule: String,
 )
 
 data class TradeDetail(
@@ -35,8 +24,11 @@ data class TradeDetail(
 ) {
     companion object {
         var dbTradeDetailList = mutableListOf<TradeDetail>()
-        var specModifyList = mutableListOf<String>()
-        var specOtherList = mutableListOf<String>()
+
+        var tempSpecList = mutableListOf<TradeDetail>()
+        var specModifyList = mutableListOf<tempPriceDetail>()
+        var specOtherList = mutableListOf<tempPriceDetail>()
+        var selectedTradeDetailSpcification = ""
 
         fun DocumentSnapshot.toTradeDetail(): TradeDetail {
 

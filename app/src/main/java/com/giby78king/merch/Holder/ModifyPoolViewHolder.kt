@@ -3,16 +3,22 @@ package com.giby78king.merch.Holder
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.res.Resources
+import android.util.Log
 import android.view.View
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.giby78king.merch.Adapter.PoolTradeEditModifyAdapter
+import com.giby78king.merch.Adapter.PoolTradeEditSpecModifyAdapter
 import com.giby78king.merch.ImgSetting
-import com.giby78king.merch.Model.DdlNormalModel
 import com.giby78king.merch.Model.Trade.Companion.ddlModifyList
 import com.giby78king.merch.Model.Trade.Companion.tradeModifyList
+import com.giby78king.merch.Model.TradeDetail.Companion.specModifyList
+import com.giby78king.merch.Model.tempPriceDetail
 import com.giby78king.merch.R
+import com.giby78king.merch.ui.ProductEditPage
+import com.giby78king.merch.ui.TradeEditPage
 
 
 class ModifyPoolViewHolder(v: View) : RecyclerView.ViewHolder(v) {
@@ -20,7 +26,7 @@ class ModifyPoolViewHolder(v: View) : RecyclerView.ViewHolder(v) {
     val imgChannelDetail: ImageView = v.findViewById(R.id.imgChannelDetail)
     val res: Resources = v.context.resources
 
-    fun bind(item: String) {
+    fun bind(item: String, page: TradeEditPage) {
 
         if (ddlModifyList.filter { it.id == item }.isNotEmpty()) {
             val data = ddlModifyList.filter { it.id == item }[0]
@@ -42,6 +48,7 @@ class ModifyPoolViewHolder(v: View) : RecyclerView.ViewHolder(v) {
                 true
             }
 
+
             itemView.setOnClickListener {
 
                 if (tradeModifyList.contains(data.id))            //排除重複點選
@@ -59,8 +66,24 @@ class ModifyPoolViewHolder(v: View) : RecyclerView.ViewHolder(v) {
                         }
                     }
                 }
+                rvAddPoolModify.adapter = PoolTradeEditModifyAdapter(sortList, page)
 
-                rvAddPoolModify.adapter = PoolTradeEditModifyAdapter(sortList)
+                val rvAddPoolSpecModify =
+                    page.findViewById<RecyclerView>(R.id.rvAddPoolSpecModify)
+
+                if (rvAddPoolSpecModify != null) {
+                    specModifyList.clear()
+                    tradeModifyList.forEach {
+                        specModifyList.add(
+                            tempPriceDetail(
+                                price= 0,
+                                rule = it
+                            )
+                        )
+                    }
+                    rvAddPoolSpecModify.adapter =
+                        PoolTradeEditSpecModifyAdapter(specModifyList, page)
+                }
             }
         }
     }

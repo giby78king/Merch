@@ -5,8 +5,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.giby78king.merch.Holder.*
+import com.giby78king.merch.Model.tempPriceDetail
 import com.giby78king.merch.R
 import com.giby78king.merch.ui.ProductEditPage
+import com.giby78king.merch.ui.TradeEditPage
 
 
 //class PoolGroupAdapter(private var inputData: MutableList<String>) :
@@ -134,7 +136,7 @@ class PoolProductEditChannelDetailAdapter(private var inputData: MutableList<Str
     }
 }
 
-class PoolTradeEditModifyAdapter(private var inputData: MutableList<String>) :
+class PoolTradeEditModifyAdapter(private var inputData: MutableList<String>,private var page: TradeEditPage) :
     RecyclerView.Adapter<ModifyPoolViewHolder>() {
 
     private var context: Context? = null
@@ -153,11 +155,11 @@ class PoolTradeEditModifyAdapter(private var inputData: MutableList<String>) :
     }
 
     override fun onBindViewHolder(holder: ModifyPoolViewHolder, position: Int) {
-        holder.bind(inputData[position])
+        holder.bind(inputData[position],page)
     }
 }
 
-class PoolTradeEditOtherAdapter(private var inputData: MutableList<String>) :
+class PoolTradeEditOtherAdapter(private var inputData: MutableList<String>,private var page: TradeEditPage) :
     RecyclerView.Adapter<OtherPoolViewHolder>() {
 
     private var context: Context? = null
@@ -176,12 +178,11 @@ class PoolTradeEditOtherAdapter(private var inputData: MutableList<String>) :
     }
 
     override fun onBindViewHolder(holder: OtherPoolViewHolder, position: Int) {
-        holder.bind(inputData[position])
+        holder.bind(inputData[position],page)
     }
 }
 
-
-class PoolTradeEditSpecModifyAdapter(private var inputData: MutableList<String>) :
+class PoolTradeEditSpecModifyAdapter(private var inputData: MutableList<tempPriceDetail>, private var page: TradeEditPage) :
     RecyclerView.Adapter<SpecModifyPoolViewHolder>() {
 
     private var context: Context? = null
@@ -200,11 +201,11 @@ class PoolTradeEditSpecModifyAdapter(private var inputData: MutableList<String>)
     }
 
     override fun onBindViewHolder(holder: SpecModifyPoolViewHolder, position: Int) {
-        holder.bind(inputData[position])
+        holder.bind(inputData[position],page)
     }
 }
 
-class PoolTradeEditSpecOtherAdapter(private var inputData: MutableList<String>) :
+class PoolTradeEditSpecOtherAdapter(private var inputData: MutableList<tempPriceDetail>,private var page:TradeEditPage) :
     RecyclerView.Adapter<SpecOtherPoolViewHolder>() {
 
     private var context: Context? = null
@@ -223,6 +224,6 @@ class PoolTradeEditSpecOtherAdapter(private var inputData: MutableList<String>) 
     }
 
     override fun onBindViewHolder(holder: SpecOtherPoolViewHolder, position: Int) {
-        holder.bind(inputData[position])
+        holder.bind(inputData[position],page)
     }
 }
