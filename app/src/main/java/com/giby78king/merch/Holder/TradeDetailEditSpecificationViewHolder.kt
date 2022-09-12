@@ -5,6 +5,7 @@ import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.PorterDuff
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.core.widget.ImageViewCompat
@@ -95,7 +96,6 @@ class TradeDetailEditSpecificationViewHolder(v: View) : RecyclerView.ViewHolder(
                         other.add(it.price)
                         otherRule.add(it.rule)
                     }
-
                     tempSpecList.add(
                         0, TradeDetail(
                             accountDate = editAccountDate.text.toString(),

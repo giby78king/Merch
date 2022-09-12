@@ -37,7 +37,6 @@ class SpecModifyPoolViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
     fun bind(item: tempPriceDetail, page: TradeEditPage) {
 
-        Log.d("SpecModifyPoolViewHolder","::"+ item.price+ item.rule)
 
         val rvAddPoolModify =
             itemView.rootView.findViewById<RecyclerView>(R.id.rvAddPoolModify)
@@ -54,40 +53,40 @@ class SpecModifyPoolViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
             ImgSetting().setImage("traderule", res, imgChannelDetail, data.id)
 
-            itemView.setOnLongClickListener {
-
-                //todo ask to delete
-                if (tradeModifyList.contains(data.id))            //排除重複點選
-                {
-                    tradeModifyList.remove(data.id)
-                }
-
-                var sortList = mutableListOf<String>()
-                ddlModifyList.sortedBy { it.id }.toMutableList().forEach { chd ->
-                    tradeModifyList.forEach { act ->
-                        if (act == chd.id) {
-                            sortList.add(act)
-                        }
-                    }
-                }
-
-                rvAddPoolModify.adapter = PoolTradeEditModifyAdapter(sortList, page)
-
-                specModifyList.clear()
-
-                tradeModifyList.forEach {
-                    specModifyList.add(
-                        tempPriceDetail(
-                            price = 0,
-                            rule = it
-                        )
-                    )
-                }
-                rvAddPoolSpecModify.adapter =
-                    PoolTradeEditSpecModifyAdapter(specModifyList, page)
-
-                true
-            }
+//            itemView.setOnLongClickListener {
+//
+//                //todo ask to delete
+//                if (tradeModifyList.contains(data.id))            //排除重複點選
+//                {
+//                    tradeModifyList.remove(data.id)
+//                }
+//
+//                var sortList = mutableListOf<String>()
+//                ddlModifyList.sortedBy { it.id }.toMutableList().forEach { chd ->
+//                    tradeModifyList.forEach { act ->
+//                        if (act == chd.id) {
+//                            sortList.add(act)
+//                        }
+//                    }
+//                }
+//
+//                rvAddPoolModify.adapter = PoolTradeEditModifyAdapter(sortList, page)
+//
+//                specModifyList.clear()
+//
+//                tradeModifyList.forEach {
+//                    specModifyList.add(
+//                        tempPriceDetail(
+//                            price = 0,
+//                            rule = it
+//                        )
+//                    )
+//                }
+//                rvAddPoolSpecModify.adapter =
+//                    PoolTradeEditSpecModifyAdapter(specModifyList, page)
+//
+//                true
+//            }
         }
 
         editPrice.setText(item.price.toString())

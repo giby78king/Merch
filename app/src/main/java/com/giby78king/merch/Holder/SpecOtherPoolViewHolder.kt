@@ -49,39 +49,39 @@ class SpecOtherPoolViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
             ImgSetting().setImage("traderule", res, imgChannelDetail, data.id)
 
-            itemView.setOnLongClickListener {
-
-                //todo ask to delete
-                if (tradeOtherList.contains(data.id))            //排除重複點選
-                {
-                    tradeOtherList.remove(data.id)
-                }
-
-                var sortList = mutableListOf<String>()
-                ddlOtherList.sortedBy { it.id }.toMutableList().forEach { chd ->
-                    tradeOtherList.forEach { act ->
-                        if (act == chd.id) {
-                            sortList.add(act)
-                        }
-                    }
-                }
-
-                rvAddPoolOther.adapter = PoolTradeEditOtherAdapter(sortList,page)
-                
-                specOtherList.clear()
-
-                tradeOtherList.forEach {
-                    specOtherList.add(
-                        tempPriceDetail(
-                            price = 0,
-                            rule = it
-                        )
-                    )
-                }
-                rvAddPoolSpecOther.adapter =
-                    PoolTradeEditSpecOtherAdapter(specOtherList, page)
-                true
-            }
+//            itemView.setOnLongClickListener {
+//
+//                //todo ask to delete
+//                if (tradeOtherList.contains(data.id))            //排除重複點選
+//                {
+//                    tradeOtherList.remove(data.id)
+//                }
+//
+//                var sortList = mutableListOf<String>()
+//                ddlOtherList.sortedBy { it.id }.toMutableList().forEach { chd ->
+//                    tradeOtherList.forEach { act ->
+//                        if (act == chd.id) {
+//                            sortList.add(act)
+//                        }
+//                    }
+//                }
+//
+//                rvAddPoolOther.adapter = PoolTradeEditOtherAdapter(sortList,page)
+//
+//                specOtherList.clear()
+//
+//                tradeOtherList.forEach {
+//                    specOtherList.add(
+//                        tempPriceDetail(
+//                            price = 0,
+//                            rule = it
+//                        )
+//                    )
+//                }
+//                rvAddPoolSpecOther.adapter =
+//                    PoolTradeEditSpecOtherAdapter(specOtherList, page)
+//                true
+//            }
         }
         
         editPrice.setText(item.price.toString())
