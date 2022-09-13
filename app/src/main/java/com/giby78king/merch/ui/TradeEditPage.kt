@@ -767,6 +767,7 @@ class TradeEditPage : AppCompatActivity() {
                                                                 txtSpecPrice.text =
                                                                     dbSpecificationList.filter { it.id == ddlSpecificationList[ddlPositionSpecification].id }[0].price[priceIndex].toString()
                                                             }
+
                                                         }
 
                                                         override fun onNothingSelected(
@@ -1162,6 +1163,26 @@ class TradeEditPage : AppCompatActivity() {
                 )
             )
         }
+
+        var sumPrice = 0
+        var sumModify = 0
+        var sumOther = 0
+
+        tempSpecList.forEach {
+            sumPrice += it.price
+            it.modify.forEach {
+                sumModify += it
+            }
+            it.other.forEach {
+                sumOther += it
+            }
+        }
+        sumModify /= 2
+        sumOther /= 2
+        txtTotalSpecPrice.text = sumPrice.toString()
+        txtTotalSpecModify.text = sumModify.toString()
+        txtTotalSpecOther.text = sumOther.toString()
+
         val layoutManager = LinearLayoutManager(this)
         layoutManager.orientation = LinearLayoutManager.HORIZONTAL
         rvSpecification.layoutManager = layoutManager

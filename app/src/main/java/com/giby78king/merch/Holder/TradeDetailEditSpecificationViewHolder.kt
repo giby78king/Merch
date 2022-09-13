@@ -28,9 +28,11 @@ import com.giby78king.merch.Model.TextAmountSetting
 import com.giby78king.merch.Model.Trade
 import com.giby78king.merch.Model.Trade.Companion.ddlTransType
 import com.giby78king.merch.Model.TradeDetail
+import com.giby78king.merch.Model.TradeDetail.Companion.nowEditId
 import com.giby78king.merch.Model.TradeDetail.Companion.specModifyList
 import com.giby78king.merch.Model.TradeDetail.Companion.specOtherList
 import com.giby78king.merch.Model.TradeDetail.Companion.tempSpecList
+import com.giby78king.merch.Model.tempPriceDetail
 
 import com.giby78king.merch.R
 import com.giby78king.merch.TimeFormat
@@ -59,6 +61,7 @@ class TradeDetailEditSpecificationViewHolder(v: View) : RecyclerView.ViewHolder(
         val txtTotalSpecModify: TextView = page.findViewById(R.id.txtTotalSpecModify)
         val txtTotalSpecOther: TextView = page.findViewById(R.id.txtTotalSpecOther)
 
+        val txtSpecPrice: TextView = page.findViewById(R.id.txtSpecPrice)
         val editProcessDate: EditText = page.findViewById(R.id.editProcessDate)
         val editStockDate: EditText = page.findViewById(R.id.editStockDate)
         val editAccountDate: EditText = page.findViewById(R.id.editAccountDate)
@@ -80,7 +83,7 @@ class TradeDetailEditSpecificationViewHolder(v: View) : RecyclerView.ViewHolder(
 
         itemView.setOnClickListener {
             if (data.id == "addOne") {
-                if (ddlSpecificationList.size > 0 ) {
+                if (ddlSpecificationList.size > 0) {
                     val specId = TimeFormat().TodayDate().yyyyMMddHHmmssSSS()
 
                     val modify = arrayListOf<Int>()
@@ -105,7 +108,7 @@ class TradeDetailEditSpecificationViewHolder(v: View) : RecyclerView.ViewHolder(
                             modifyRule = modifyRule.toTypedArray(),
                             other = other,
                             otherRule = otherRule.toTypedArray(),
-                            price = 0,
+                            price = txtSpecPrice.text.toString().toInt(),
                             processDate = editProcessDate.text.toString(),
                             specification = ddlSpecificationList[ddlPositionSpecification].id,
                             stockDate = editStockDate.text.toString(),
@@ -114,15 +117,62 @@ class TradeDetailEditSpecificationViewHolder(v: View) : RecyclerView.ViewHolder(
                         )
                     )
 
+                    nowEditId = specId
+
                     val vmTradeViewModel =
                         ViewModelProvider(page)[VmTradeViewModel::class.java]
                     vmTradeViewModel.setProcessTradeDetail()
+
+
                 }
             } else {
+
+                val lastId = tempSpecList.indexOfFirst { it.id == nowEditId }
+
+                val modify = arrayListOf<Int>()
+                val modifyRule = arrayListOf<String>()
+                val other = arrayListOf<Int>()
+                val otherRule = arrayListOf<String>()
+                specModifyList.forEach {
+                    modify.add(it.price)
+                    modifyRule.add(it.rule)
+                }
+
+                specOtherList.forEach {
+                    other.add(it.price)
+                    otherRule.add(it.rule)
+                }
+
+                tempSpecList[lastId].accountDate = editAccountDate.text.toString()
+                tempSpecList[lastId].modify = modify
+                tempSpecList[lastId].modifyRule = modifyRule.toTypedArray()
+                tempSpecList[lastId].other = other
+                tempSpecList[lastId].otherRule = otherRule.toTypedArray()
+                tempSpecList[lastId].price = txtSpecPrice.text.toString().toInt()
+                tempSpecList[lastId].processDate = editProcessDate.text.toString()
+                tempSpecList[lastId].specification =
+                    ddlSpecificationList[ddlPositionSpecification].id
+                tempSpecList[lastId].stockDate = editStockDate.text.toString()
+
 //todo 點選rv顯示正常
                 editProcessDate.setText(data.processDate)
                 editStockDate.setText(data.stockDate)
                 editAccountDate.setText(data.accountDate)
+
+                for (i in data.modify.indices){
+                    specModifyList[i] = tempPriceDetail(
+                        modify[i],
+                        modifyRule[i]
+                    )
+                }
+                for (i in data.other.indices){
+                    specOtherList[i] = tempPriceDetail(
+                        other[i],
+                        otherRule[i]
+                    )
+                }
+
+                nowEditId = data.id
 
                 if (data.specification.isNotEmpty()) {
                     val vmTradeViewModel =
