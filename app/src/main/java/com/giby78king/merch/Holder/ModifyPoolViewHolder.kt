@@ -81,6 +81,14 @@ class ModifyPoolViewHolder(v: View) : RecyclerView.ViewHolder(v) {
                             )
                         )
                     }
+                    if (specModifyList.none { it.rule == "sum" }) {
+                        specModifyList.add(
+                            tempPriceDetail(
+                                price = 0,
+                                rule = "sum"
+                            )
+                        )
+                    }
                     rvAddPoolSpecModify.adapter =
                         PoolTradeEditSpecModifyAdapter(specModifyList, page)
                 }

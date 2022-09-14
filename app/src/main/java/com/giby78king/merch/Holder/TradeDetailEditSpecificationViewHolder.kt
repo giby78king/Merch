@@ -66,6 +66,7 @@ class TradeDetailEditSpecificationViewHolder(v: View) : RecyclerView.ViewHolder(
         val editStockDate: EditText = page.findViewById(R.id.editStockDate)
         val editAccountDate: EditText = page.findViewById(R.id.editAccountDate)
 
+
         if (data.id == "addOne") {
             val resources: Resources = itemView.context!!.resources
             val resourceId: Int = resources.getIdentifier(
@@ -128,48 +129,61 @@ class TradeDetailEditSpecificationViewHolder(v: View) : RecyclerView.ViewHolder(
             } else {
 
                 val lastId = tempSpecList.indexOfFirst { it.id == nowEditId }
+                if (lastId != -1) {
 
-                val modify = arrayListOf<Int>()
-                val modifyRule = arrayListOf<String>()
-                val other = arrayListOf<Int>()
-                val otherRule = arrayListOf<String>()
-                specModifyList.forEach {
-                    modify.add(it.price)
-                    modifyRule.add(it.rule)
-                }
 
-                specOtherList.forEach {
-                    other.add(it.price)
-                    otherRule.add(it.rule)
-                }
+                    val modify = arrayListOf<Int>()
+                    val modifyRule = arrayListOf<String>()
+                    val other = arrayListOf<Int>()
+                    val otherRule = arrayListOf<String>()
+                    specModifyList.forEach {
+                        modify.add(it.price)
+                        modifyRule.add(it.rule)
+                    }
 
-                tempSpecList[lastId].accountDate = editAccountDate.text.toString()
-                tempSpecList[lastId].modify = modify
-                tempSpecList[lastId].modifyRule = modifyRule.toTypedArray()
-                tempSpecList[lastId].other = other
-                tempSpecList[lastId].otherRule = otherRule.toTypedArray()
-                tempSpecList[lastId].price = txtSpecPrice.text.toString().toInt()
-                tempSpecList[lastId].processDate = editProcessDate.text.toString()
-                tempSpecList[lastId].specification =
-                    ddlSpecificationList[ddlPositionSpecification].id
-                tempSpecList[lastId].stockDate = editStockDate.text.toString()
+                    specOtherList.forEach {
+                        other.add(it.price)
+                        otherRule.add(it.rule)
+                    }
+
+                    tempSpecList[lastId].accountDate = editAccountDate.text.toString()
+                    tempSpecList[lastId].modify = modify
+                    tempSpecList[lastId].modifyRule = modifyRule.toTypedArray()
+                    tempSpecList[lastId].other = other
+                    tempSpecList[lastId].otherRule = otherRule.toTypedArray()
+                    tempSpecList[lastId].price = txtSpecPrice.text.toString().toInt()
+                    tempSpecList[lastId].processDate = editProcessDate.text.toString()
+                    tempSpecList[lastId].specification =
+                        ddlSpecificationList[ddlPositionSpecification].id
+                    tempSpecList[lastId].stockDate = editStockDate.text.toString()
 
 //todo 點選rv顯示正常
-                editProcessDate.setText(data.processDate)
-                editStockDate.setText(data.stockDate)
-                editAccountDate.setText(data.accountDate)
+                    editProcessDate.setText(data.processDate)
+                    editStockDate.setText(data.stockDate)
+                    editAccountDate.setText(data.accountDate)
 
-                for (i in data.modify.indices){
-                    specModifyList[i] = tempPriceDetail(
-                        modify[i],
-                        modifyRule[i]
-                    )
-                }
-                for (i in data.other.indices){
-                    specOtherList[i] = tempPriceDetail(
-                        other[i],
-                        otherRule[i]
-                    )
+                    if (data.modify.size > 0) {
+                        specModifyList.clear()
+                        for (i in 0 until data.modify.size) {
+                            specModifyList.add(
+                                tempPriceDetail(
+                                    data.modify[i],
+                                    data.modifyRule[i]
+                                )
+                            )
+                        }
+                    }
+                    if (data.other.size > 0) {
+                        specOtherList.clear()
+                        for (i in 0 until data.other.size) {
+                            specOtherList.add(
+                                tempPriceDetail(
+                                    data.other[i],
+                                    data.otherRule[i]
+                                )
+                            )
+                        }
+                    }
                 }
 
                 nowEditId = data.id

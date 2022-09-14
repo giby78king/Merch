@@ -81,6 +81,14 @@ class OtherPoolViewHolder(v: View) : RecyclerView.ViewHolder(v) {
                             )
                         )
                     }
+                    if (specOtherList.none { it.rule == "sum" }) {
+                        specOtherList.add(
+                            tempPriceDetail(
+                                price = 0,
+                                rule = "sum"
+                            )
+                        )
+                    }
                     rvAddPoolSpecOther.adapter = PoolTradeEditSpecOtherAdapter(specOtherList, page)
                 }
             }
