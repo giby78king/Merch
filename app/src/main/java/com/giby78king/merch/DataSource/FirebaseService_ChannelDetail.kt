@@ -4,6 +4,7 @@ import com.giby78king.merch.Model.ChannelDetail
 import com.giby78king.merch.Model.ChannelDetail.Companion.dbChannelDetailList
 import com.giby78king.merch.Model.ChannelDetail.Companion.toChannelDetail
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
 
 object FirebaseService_ChannelDetail {
@@ -26,7 +27,7 @@ object FirebaseService_ChannelDetail {
 
     suspend fun getDatas(): MutableList<ChannelDetail> {
         dbChannelDetailList = db
-//            .orderBy("number", Query.Direction.DESCENDING)
+            .orderBy("order")
             .get()
             .await()
             .documents.mapNotNull { it.toChannelDetail() }.toMutableList()

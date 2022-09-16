@@ -63,6 +63,8 @@ class TradeEditPage : AppCompatActivity() {
         var selectedProduct = bundle?.getString("selectedProduct").toString()
         page = this
 
+
+        tempSpecList.clear()
         ddlTransType.clear()
         ddlTransType.add(DdlNormalModel("購買", "", "Purchase"))
         ddlTransType.add(DdlNormalModel("銷售", "", "Sell"))
@@ -248,6 +250,8 @@ class TradeEditPage : AppCompatActivity() {
                                                                         txtSpecTagPrice.text =
                                                                             dbSpecificationList.filter { it.id == ddlSpecificationList[ddlPositionSpecification].id }[0].price[priceIndex].toString()
 
+                                                                        txtSpecPrice.text =
+                                                                            dbSpecificationList.filter { it.id == ddlSpecificationList[ddlPositionSpecification].id }[0].price[priceIndex].toString()
 
                                                                         if (nowEditId.isNotEmpty()) {
                                                                             val lastId =
@@ -255,6 +259,9 @@ class TradeEditPage : AppCompatActivity() {
                                                                             if (lastId != -1) {
                                                                                 tempSpecList[lastId].specification =
                                                                                     ddlSpecificationList[ddlPositionSpecification].id
+
+                                                                                tempSpecList[lastId].price =
+                                                                                    dbSpecificationList.filter { it.id == ddlSpecificationList[ddlPositionSpecification].id }[0].price[priceIndex].toString().toInt()
 
                                                                                 val layoutManager =
                                                                                     LinearLayoutManager(
@@ -271,7 +278,7 @@ class TradeEditPage : AppCompatActivity() {
                                                                                     )
                                                                             }
                                                                         }
-
+//                                                                        setSpec()
                                                                     }
 
                                                                     override fun onNothingSelected(
@@ -575,7 +582,7 @@ class TradeEditPage : AppCompatActivity() {
                     )
                 )
             }
-            if (specOtherList.none { it.rule == "sum" }){
+            if (specOtherList.none { it.rule == "sum" }) {
                 specOtherList.add(
                     tempPriceDetail(
                         price = 0,
@@ -595,6 +602,53 @@ class TradeEditPage : AppCompatActivity() {
 
 
         vmTradeViewModel.ProcessTradeDetailDatas.observe(this) {
+
+            if (nowEditId.isNotEmpty()) {
+                val lastId =
+                    tempSpecList.indexOfFirst { it.id == nowEditId }
+                if (lastId != -1) {
+                    tempSpecList[lastId].specification =
+                        ddlSpecificationList[ddlPositionSpecification].id
+                    val layoutManager =
+                        LinearLayoutManager(page)
+                    layoutManager.orientation =
+                        LinearLayoutManager.HORIZONTAL
+                    rvSpecification.layoutManager =
+                        layoutManager
+                    rvSpecification.adapter =
+                        TradeDetailEditSpecificationAdapter(
+                            tempSpecList,
+                            page
+                        )
+
+                    val modify = arrayListOf<Int>()
+                    val modifyRule =
+                        arrayListOf<String>()
+                    val other = arrayListOf<Int>()
+                    val otherRule =
+                        arrayListOf<String>()
+                    specModifyList.forEach {
+                        modify.add(it.price)
+                        modifyRule.add(it.rule)
+                    }
+
+                    specOtherList.forEach {
+                        other.add(it.price)
+                        otherRule.add(it.rule)
+                    }
+
+                    tempSpecList[lastId].price = txtSpecPrice.text.toString().toInt()
+                    tempSpecList[lastId].modify =
+                        modify
+                    tempSpecList[lastId].modifyRule =
+                        modifyRule.toTypedArray()
+                    tempSpecList[lastId].other =
+                        other
+                    tempSpecList[lastId].otherRule =
+                        otherRule.toTypedArray()
+
+                }
+            }
             setSpec()
         }
 
@@ -748,8 +802,10 @@ class TradeEditPage : AppCompatActivity() {
                                                             txtSpecTagPrice.text =
                                                                 dbSpecificationList.filter { it.id == ddlSpecificationList[ddlPositionSpecification].id }[0].price[priceIndex].toString()
 
+                                                            var sum = 0
+
                                                             if (data.other.size > 0 || data.modify.size > 0) {
-                                                                var sum =
+                                                                sum =
                                                                     dbSpecificationList.filter { it.id == ddlSpecificationList[ddlPositionSpecification].id }[0].price[priceIndex].toString()
                                                                         .toInt()
 
@@ -787,7 +843,7 @@ class TradeEditPage : AppCompatActivity() {
                                                                     dbSpecificationList.filter { it.id == ddlSpecificationList[ddlPositionSpecification].id }[0].price[priceIndex].toString()
                                                             }
 
-                                                            setSpec()
+
 
                                                             if (nowEditId.isNotEmpty()) {
                                                                 val lastId =
@@ -806,8 +862,37 @@ class TradeEditPage : AppCompatActivity() {
                                                                             tempSpecList,
                                                                             page
                                                                         )
+
+                                                                    val modify = arrayListOf<Int>()
+                                                                    val modifyRule =
+                                                                        arrayListOf<String>()
+                                                                    val other = arrayListOf<Int>()
+                                                                    val otherRule =
+                                                                        arrayListOf<String>()
+                                                                    specModifyList.forEach {
+                                                                        modify.add(it.price)
+                                                                        modifyRule.add(it.rule)
+                                                                    }
+
+                                                                    specOtherList.forEach {
+                                                                        other.add(it.price)
+                                                                        otherRule.add(it.rule)
+                                                                    }
+
+                                                                    tempSpecList[lastId].price = sum
+                                                                    tempSpecList[lastId].modify =
+                                                                        modify
+                                                                    tempSpecList[lastId].modifyRule =
+                                                                        modifyRule.toTypedArray()
+                                                                    tempSpecList[lastId].other =
+                                                                        other
+                                                                    tempSpecList[lastId].otherRule =
+                                                                        otherRule.toTypedArray()
+
                                                                 }
                                                             }
+
+//                                                            setSpec()
                                                         }
 
                                                         override fun onNothingSelected(
@@ -967,6 +1052,32 @@ class TradeEditPage : AppCompatActivity() {
                 sum += specOtherList[specOtherList.size - 1].price
             }
             txtSpecPrice.text = sum.toString()
+
+            val lastId = tempSpecList.indexOfFirst { it.id == nowEditId }
+            if (lastId != -1) {
+
+                val modify = arrayListOf<Int>()
+                val modifyRule = arrayListOf<String>()
+                val other = arrayListOf<Int>()
+                val otherRule = arrayListOf<String>()
+                specModifyList.forEach {
+                    modify.add(it.price)
+                    modifyRule.add(it.rule)
+                }
+
+                specOtherList.forEach {
+                    other.add(it.price)
+                    otherRule.add(it.rule)
+                }
+
+                tempSpecList[lastId].price = sum
+                tempSpecList[lastId].modify = modify
+                tempSpecList[lastId].modifyRule = modifyRule.toTypedArray()
+                tempSpecList[lastId].other = other
+                tempSpecList[lastId].otherRule = otherRule.toTypedArray()
+            }
+
+
             setSpec()
         }
 
@@ -1222,6 +1333,7 @@ class TradeEditPage : AppCompatActivity() {
         }
         sumModify /= 2
         sumOther /= 2
+
         txtTotalSpecPrice.text = sumPrice.toString()
         txtTotalSpecModify.text = sumModify.toString()
         txtTotalSpecOther.text = sumOther.toString()
