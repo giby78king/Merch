@@ -7,11 +7,14 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.giby78king.merch.Adapter.*
+import com.giby78king.merch.Domain.TradeDetailEn
+import com.giby78king.merch.Domain.TradeEn
 import com.giby78king.merch.Model.Activity.Companion.dbActivityList
 import com.giby78king.merch.Model.Activity.Companion.ddlActivityList
 import com.giby78king.merch.Model.ChannelDetail.Companion.dbChannelDetailList
@@ -41,9 +44,13 @@ import com.giby78king.merch.Model.TradeDetail.Companion.tempSpecList
 import com.giby78king.merch.Model.TradeRule.Companion.dbTradeRuleList
 import com.giby78king.merch.Model.tempPriceDetail
 import com.giby78king.merch.R
+import com.giby78king.merch.TimeFormat
 import com.giby78king.merch.ViewModel.*
-import kotlinx.android.synthetic.main.activity_channeldetail_edit_page.*
+import kotlinx.android.synthetic.main.activity_product_edit_page.*
 import kotlinx.android.synthetic.main.activity_trade_edit_page.*
+import kotlinx.android.synthetic.main.activity_trade_edit_page.btnSubmit
+import kotlinx.android.synthetic.main.activity_trade_edit_page.spinnerActivity
+import kotlinx.android.synthetic.main.activity_trade_edit_page.spinnerChannelDetail
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.Calendar.getInstance
@@ -63,6 +70,7 @@ class TradeEditPage : AppCompatActivity() {
         var selectedProduct = bundle?.getString("selectedProduct").toString()
         page = this
 
+        editProcessDate.setText(TimeFormat().TodayDate().yyyyMMdd())
 
         tempSpecList.clear()
         ddlTransType.clear()
@@ -125,6 +133,8 @@ class TradeEditPage : AppCompatActivity() {
             ViewModelProvider(this)[VmChannelDetailViewModel::class.java]
         val vmTradeViewModel =
             ViewModelProvider(this)[VmTradeViewModel::class.java]
+        val vmTradeDetailViewModel=
+            ViewModelProvider(this)[VmTradeDetailViewModel::class.java]
         val vmTradeRuleViewModel =
             ViewModelProvider(this)[VmTradeRuleViewModel::class.java]
         val vmProductViewModel =
@@ -261,7 +271,8 @@ class TradeEditPage : AppCompatActivity() {
                                                                                     ddlSpecificationList[ddlPositionSpecification].id
 
                                                                                 tempSpecList[lastId].price =
-                                                                                    dbSpecificationList.filter { it.id == ddlSpecificationList[ddlPositionSpecification].id }[0].price[priceIndex].toString().toInt()
+                                                                                    dbSpecificationList.filter { it.id == ddlSpecificationList[ddlPositionSpecification].id }[0].price[priceIndex].toString()
+                                                                                        .toInt()
 
                                                                                 val layoutManager =
                                                                                     LinearLayoutManager(
@@ -490,6 +501,9 @@ class TradeEditPage : AppCompatActivity() {
         }
 
         btnAddModify.setOnClickListener {
+            tradeModifyList.forEach {
+                Log.d("tradeModifyList11111", ":::" + it)
+            }
             if (ddlModifyList.size > 0) {
                 if (!tradeModifyList.contains(ddlModifyList[ddlPositionModify].id))            //排除重複點選
                 {
@@ -506,6 +520,10 @@ class TradeEditPage : AppCompatActivity() {
                         }
                     }
                 tradeModifyList = sortList
+
+                tradeModifyList.forEach {
+                    Log.d("tradeModifyList", ":::" + it)
+                }
 
                 vmTradeViewModel.setSelectedModify()
             }
@@ -600,14 +618,13 @@ class TradeEditPage : AppCompatActivity() {
         editAccountDate.setOnClickListener(listener)
         editStockDate.setOnClickListener(listener)
 
-
-        vmTradeViewModel.ProcessTradeDetailDatas.observe(this) {
+        vmTradeViewModel.ProcessTradeDetailDatas.observe(this) { data ->
 
             if (nowEditId.isNotEmpty()) {
                 val lastId =
-                    tempSpecList.indexOfFirst { it.id == nowEditId }
+                    data.indexOfFirst { it.id == nowEditId }
                 if (lastId != -1) {
-                    tempSpecList[lastId].specification =
+                    data[lastId].specification =
                         ddlSpecificationList[ddlPositionSpecification].id
                     val layoutManager =
                         LinearLayoutManager(page)
@@ -617,35 +634,48 @@ class TradeEditPage : AppCompatActivity() {
                         layoutManager
                     rvSpecification.adapter =
                         TradeDetailEditSpecificationAdapter(
-                            tempSpecList,
+                            data,
                             page
                         )
 
                     val modify = arrayListOf<Int>()
-                    val modifyRule =
-                        arrayListOf<String>()
                     val other = arrayListOf<Int>()
-                    val otherRule =
-                        arrayListOf<String>()
+                    tradeModifyList.clear()
                     specModifyList.forEach {
-                        modify.add(it.price)
-                        modifyRule.add(it.rule)
+                        if (it.rule != "sum") {
+                            Log.d("tradeModifyList.add(it.rule)", "::" + it.rule)
+                            modify.add(it.price)
+                            tradeModifyList.add(it.rule)
+                        }
                     }
-
+                    if (specModifyList.none { it.rule == "sum" }) {
+                        specModifyList.add(
+                            tempPriceDetail(
+                                price = 0,
+                                rule = "sum"
+                            )
+                        )
+                    }
+                    tradeOtherList.clear()
                     specOtherList.forEach {
-                        other.add(it.price)
-                        otherRule.add(it.rule)
+                        if (it.rule != "sum") {
+                            other.add(it.price)
+                            tradeOtherList.add(it.rule)
+                        }
                     }
-
+                    if (specOtherList.none { it.rule == "sum" }) {
+                        specOtherList.add(
+                            tempPriceDetail(
+                                price = 0,
+                                rule = "sum"
+                            )
+                        )
+                    }
                     tempSpecList[lastId].price = txtSpecPrice.text.toString().toInt()
                     tempSpecList[lastId].modify =
                         modify
-                    tempSpecList[lastId].modifyRule =
-                        modifyRule.toTypedArray()
                     tempSpecList[lastId].other =
                         other
-                    tempSpecList[lastId].otherRule =
-                        otherRule.toTypedArray()
 
                 }
             }
@@ -673,7 +703,7 @@ class TradeEditPage : AppCompatActivity() {
                 )
             }
             setSpinner(spinnerChannelDetail, ddlChannelDetailList, "channeldetail", 0)
-            spinnerChannelDetail.setSelection(ddlChannelDetailList.indexOfFirst { it.id == data.channelDetail })
+            spinnerChannelDetail.setSelection(ddlPositionChannelDetail)
 
             spinnerChannelDetail.onItemSelectedListener =
                 object : AdapterView.OnItemSelectedListener {
@@ -803,40 +833,47 @@ class TradeEditPage : AppCompatActivity() {
                                                                 dbSpecificationList.filter { it.id == ddlSpecificationList[ddlPositionSpecification].id }[0].price[priceIndex].toString()
 
                                                             var sum = 0
+                                                            var sumModify = 0
+                                                            var sumOther = 0
 
                                                             if (data.other.size > 0 || data.modify.size > 0) {
                                                                 sum =
                                                                     dbSpecificationList.filter { it.id == ddlSpecificationList[ddlPositionSpecification].id }[0].price[priceIndex].toString()
                                                                         .toInt()
 
-                                                                specModifyList =
-                                                                    mutableListOf<tempPriceDetail>()
-                                                                for (i in data.modify.indices) {
-                                                                    specModifyList.add(
-                                                                        tempPriceDetail(
-                                                                            price = data.modify[i],
-                                                                            rule = data.modifyRule[i],
-                                                                        )
-                                                                    )
+                                                                for (i in 0 until data.modify.size) {
+                                                                    specModifyList[i].price =
+                                                                        data.modify[i]
+                                                                    sum -= data.modify[i]
+                                                                    sumModify += data.modify[i]
                                                                 }
 
-                                                                specOtherList =
-                                                                    mutableListOf<tempPriceDetail>()
-                                                                for (i in data.other.indices) {
-                                                                    specOtherList.add(
-                                                                        tempPriceDetail(
-                                                                            price = data.other[i],
-                                                                            rule = data.otherRule[i],
-                                                                        )
-                                                                    )
+                                                                specModifyList[specModifyList.size - 1].price =
+                                                                    sumModify
+
+                                                                for (i in 0 until data.other.size) {
+                                                                    specOtherList[i].price =
+                                                                        data.other[i]
+                                                                    sum += data.other[i]
+                                                                    sumOther += data.modify[i]
+                                                                }
+                                                                specOtherList[specOtherList.size - 1].price =
+                                                                    sumOther
+
+
+                                                                tradeModifyList.clear()
+                                                                specModifyList.forEach {
+                                                                    if (it.rule != "sum") {
+                                                                        tradeModifyList.add(it.rule)
+                                                                    }
+                                                                }
+                                                                tradeOtherList.clear()
+                                                                specOtherList.forEach {
+                                                                    if (it.rule != "sum") {
+                                                                        tradeOtherList.add(it.rule)
+                                                                    }
                                                                 }
 
-                                                                if (specModifyList.size > 0) {
-                                                                    sum -= specModifyList[specModifyList.size - 1].price
-                                                                }
-                                                                if (specOtherList.size > 0) {
-                                                                    sum += specOtherList[specOtherList.size - 1].price
-                                                                }
                                                                 txtSpecPrice.text = sum.toString()
                                                             } else {
                                                                 txtSpecPrice.text =
@@ -851,6 +888,8 @@ class TradeEditPage : AppCompatActivity() {
                                                                 if (lastId != -1) {
                                                                     tempSpecList[lastId].specification =
                                                                         ddlSpecificationList[ddlPositionSpecification].id
+                                                                    tempSpecList[lastId].price = txtSpecPrice.text.toString().toInt()
+
                                                                     val layoutManager =
                                                                         LinearLayoutManager(page)
                                                                     layoutManager.orientation =
@@ -862,37 +901,10 @@ class TradeEditPage : AppCompatActivity() {
                                                                             tempSpecList,
                                                                             page
                                                                         )
-
-                                                                    val modify = arrayListOf<Int>()
-                                                                    val modifyRule =
-                                                                        arrayListOf<String>()
-                                                                    val other = arrayListOf<Int>()
-                                                                    val otherRule =
-                                                                        arrayListOf<String>()
-                                                                    specModifyList.forEach {
-                                                                        modify.add(it.price)
-                                                                        modifyRule.add(it.rule)
-                                                                    }
-
-                                                                    specOtherList.forEach {
-                                                                        other.add(it.price)
-                                                                        otherRule.add(it.rule)
-                                                                    }
-
-                                                                    tempSpecList[lastId].price = sum
-                                                                    tempSpecList[lastId].modify =
-                                                                        modify
-                                                                    tempSpecList[lastId].modifyRule =
-                                                                        modifyRule.toTypedArray()
-                                                                    tempSpecList[lastId].other =
-                                                                        other
-                                                                    tempSpecList[lastId].otherRule =
-                                                                        otherRule.toTypedArray()
-
                                                                 }
+                                                                setSpec()
                                                             }
 
-//                                                            setSpec()
                                                         }
 
                                                         override fun onNothingSelected(
@@ -910,39 +922,33 @@ class TradeEditPage : AppCompatActivity() {
                                 override fun onNothingSelected(parent: AdapterView<*>) {}
                             }
 
-                        ddlModifyList.clear()
-                        var sortModifyList = mutableListOf<String>()
 
-                        dbTradeRuleList.sortedBy { it.id }.filter {
-                            (it.type == "Modify" || it.type == "Fluctuate") && it.channelDetail.contains(
-                                ddlChannelDetailList[ddlPositionChannelDetail].id
-                            ) && (it.transType == ddlTransType[ddlPositionTransType].id || it.transType == "Fluctuate")
-                        }.forEach {
-                            ddlModifyList.add(
-                                DdlNormalModel(
-                                    it.name,
-                                    it.imgUrl,
-                                    it.id
-                                )
-                            )
-                            if (it.default) {
-                                if (!sortModifyList.contains(it.id))            //排除重複點選
-                                {
-                                    sortModifyList.add(it.id)
-                                }
-                            }
-                        }
-
-                        tradeModifyList = sortModifyList
 
                         var sum = txtSpecTagPrice.text.toString().toInt()
 
                         val specModifyList = mutableListOf<tempPriceDetail>()
-                        for (i in data.modify.indices) {
+
+                        if (tradeModifyList.size == data.modify.size) {
+                            for (i in 0 until tradeModifyList.size) {
+                                specModifyList.add(
+                                    tempPriceDetail(
+                                        price = data.modify[i],
+                                        rule = tradeModifyList[i],
+                                    )
+                                )
+                            }
+                        }
+                        var sumModify = 0
+
+                        data.modify.forEach {
+                            sumModify += it
+                        }
+
+                        if (specModifyList.none { it.rule == "sum" }) {
                             specModifyList.add(
                                 tempPriceDetail(
-                                    price = data.modify[i],
-                                    rule = data.modifyRule[i],
+                                    price = sumModify,
+                                    rule = "sum"
                                 )
                             )
                         }
@@ -954,12 +960,29 @@ class TradeEditPage : AppCompatActivity() {
                         rvAddPoolSpecModify.adapter =
                             PoolTradeEditSpecModifyAdapter(specModifyList, page)
 
+
+
                         val specOtherList = mutableListOf<tempPriceDetail>()
-                        for (i in data.other.indices) {
+                        if (tradeOtherList.size == data.other.size) {
+                        for (i in 0 until tradeOtherList.size) {
                             specOtherList.add(
                                 tempPriceDetail(
                                     price = data.other[i],
-                                    rule = data.otherRule[i],
+                                    rule = tradeOtherList[i],
+                                )
+                            )
+                        }
+                        }
+                        var sumOther = 0
+
+                        data.other.forEach {
+                            sumOther += it
+                        }
+                        if (specOtherList.none { it.rule == "sum" }) {
+                            specOtherList.add(
+                                tempPriceDetail(
+                                    price = sumOther,
+                                    rule = "sum"
                                 )
                             )
                         }
@@ -967,6 +990,7 @@ class TradeEditPage : AppCompatActivity() {
                         if (specModifyList.size > 0) {
                             sum -= specModifyList[specModifyList.size - 1].price
                         }
+
                         if (specOtherList.size > 0) {
                             sum += specOtherList[specOtherList.size - 1].price
                         }
@@ -1057,24 +1081,19 @@ class TradeEditPage : AppCompatActivity() {
             if (lastId != -1) {
 
                 val modify = arrayListOf<Int>()
-                val modifyRule = arrayListOf<String>()
                 val other = arrayListOf<Int>()
-                val otherRule = arrayListOf<String>()
-                specModifyList.forEach {
+
+                specModifyList.filter { it.rule != "sum" }.forEach {
                     modify.add(it.price)
-                    modifyRule.add(it.rule)
                 }
 
-                specOtherList.forEach {
+                specOtherList.filter { it.rule != "sum" }.forEach {
                     other.add(it.price)
-                    otherRule.add(it.rule)
                 }
 
                 tempSpecList[lastId].price = sum
                 tempSpecList[lastId].modify = modify
-                tempSpecList[lastId].modifyRule = modifyRule.toTypedArray()
                 tempSpecList[lastId].other = other
-                tempSpecList[lastId].otherRule = otherRule.toTypedArray()
             }
 
 
@@ -1095,149 +1114,85 @@ class TradeEditPage : AppCompatActivity() {
                 sum += specOtherList[specOtherList.size - 1].price
             }
             txtSpecPrice.text = sum.toString()
+
+
+            val lastId = tempSpecList.indexOfFirst { it.id == nowEditId }
+            if (lastId != -1) {
+
+                val modify = arrayListOf<Int>()
+                val other = arrayListOf<Int>()
+
+                specModifyList.filter { it.rule != "sum" }.forEach {
+                    modify.add(it.price)
+                }
+
+                specOtherList.filter { it.rule != "sum" }.forEach {
+                    other.add(it.price)
+                }
+
+                tempSpecList[lastId].price = sum
+                tempSpecList[lastId].modify = modify
+                tempSpecList[lastId].other = other
+            }
+
             setSpec()
         }
 
-//
-//        btnSubmit.setOnClickListener {
-//            try {
-//                btnSubmit.startLoading()
-//
-//                if (productChannelDetailList.size == 0) {
-//                    Toast.makeText(applicationContext, "發行日不得為空！！", Toast.LENGTH_SHORT)
-//                        .show()
-//                    return@setOnClickListener
-//                }
-//
-//                var formatId = editPublish.text.toString() + "_" + editId.text.toString()
-//
-//                if (txtId.text.isNotEmpty()) {
-//                    formatId = txtId.text.toString()
-//                }
-//                var speList = mutableListOf<String>()
-//
-//                tempSpecificationList.forEach {
-//                    var specificationType = "Group"
-//                    var formatTitle = it.title
-//
-//                    if (it.member.isNotEmpty() && it.member[0].isNotEmpty()) {
-//                        specificationType = "Member"
-//                        if(formatTitle.isEmpty()){
-//                            formatTitle = ""
-//                            it.member.forEach { mem -> formatTitle += ",$mem" }
-//                            formatTitle = formatTitle.substring(1)
-//                        }
-//                    }
-//
-//                    it.specificationType = specificationType
-//                    it.title = formatTitle
-//
-//                }
-//
-//                var groupList =
-//                    tempSpecificationList.filter { it.specificationType == "Group" }.toMutableList()
-//
-//                var sortedGroupList = mutableListOf<Specification>()
-//                tempSpecificationList.sortedByDescending { it.price[0] }.forEach { temp ->
-//                    groupList.forEach {
-//                        if (it.price.isNotEmpty()) {
-//                            if(it.id == temp.id) {
-//                                sortedGroupList.add(it)
-//                            }
-//                        }
-//                    }
-//                }
-//
-//                val memberList =
-//                    tempSpecificationList.filter { it.specificationType == "Member" && it.member.size == 1 }
-//                        .toMutableList()
-//                val memberMultiList =
-//                    tempSpecificationList.filter { it.specificationType == "Member" && it.member.size > 1 }
-//                        .toMutableList()
-//
-//                var sortedMemberList = mutableListOf<Specification>()
-//                var sortedMultiMemberList = mutableListOf<Specification>()
-//
-//                dbMemberList.sortedBy { it.group }.sortedBy { it.number }.forEach { db ->
-//                    memberList.forEach {
-//                        if (it.member.isNotEmpty()) {
-//                            if (it.member[0] == db.id) {
-//                                sortedMemberList.add(it)
-//                            }
-//                        }
-//                    }
-//
-//                    memberMultiList.forEach {
-//                        if (it.member.isNotEmpty()) {
-//                            if (it.member[0] == db.id) {
-//                                sortedMultiMemberList.add(it)
-//                            }
-//                        }
-//                    }
-//                }
-//
-//
-//
-//                tempSpecificationList =
-//                    (sortedGroupList + sortedMemberList + sortedMultiMemberList).toMutableList()
-//
-//                tempSpecificationList.forEach {
-//                    speList.add(it.id)
-//
-//                    val specificationData = SpecificationEn(
-//                        id = it.id,
-//                        imgUrl = it.id.toLowerCase().replace(" ", ""),
-//                        limit = it.limit.toTypedArray(),
-//                        member = it.member,
-//                        order = 0,
-//                        price = it.price.toTypedArray(),
-//                        product = formatId,
-//                        specificationType = it.specificationType,
-//                        title = it.title,
-//                    )
-//                    vmSpecificationViewModel.upsertOne(specificationData)
-//                }
-//
-//                if (tempDeleteSpecificationList.size > 0) {
-//                    tempDeleteSpecificationList.forEach {
-//                        vmSpecificationViewModel.deleteOne(it)
-//                    }
-//                }
-//
-//                val productData = ProductEn(
-//                    activity = ddlActivityList[ddlPositionActivity].id,
-//                    channelDetail = productChannelDetailList.toTypedArray(),
-//                    group = productGroupList.toTypedArray(),
-//                    id = formatId,
-//                    imgUrl = formatId.toLowerCase().replace(" ", ""),
-//                    name = editName.text.toString(),
-//                    onSell = switchOnSell.isChecked,
-//                    preOrder = switchPreOrder.isChecked,
-//                    productType = ddlProductTypeList[ddlPostitionProductType].id,
-//                    publish = editPublish.text.toString(),
-//                    specification = speList.toTypedArray(),
-//                )
-//
-//                vmProductViewModel.upsertOne(productData)
-//
-//                btnSubmit.loadingSuccessful()
-//
-//                btnSubmit.animationEndAction = {
-//                    btnSubmit.reset()
-//                    vmProductViewModel.getDatas("")
-//                }
-//
-//            } catch (ex: Exception) {
-//                Toast.makeText(this, ex.message, Toast.LENGTH_LONG).show()
-//                btnSubmit.loadingFailed()
-//            }
-//        }
-//        vmProductViewModel.productDatas.observe(this) {
-//            vmSpecificationViewModel.getDatas("")
-//            vmSpecificationViewModel.specificationDatas.observe(this) {
-//                setEditPageData(selectedProduct)
-//            }
-//        }
+        btnSubmit.setOnClickListener {
+            try {
+                btnSubmit.startLoading()
+
+                if (editProcessDate.text.toString() == "") {
+                    Toast.makeText(applicationContext, "交易日不得為空！！", Toast.LENGTH_SHORT)
+                        .show()
+                    btnSubmit.loadingFailed()
+                    return@setOnClickListener
+                }
+
+                val tradeId = TimeFormat().TodayDate().yyyyMMddHHmmss()
+
+                var speList = mutableListOf<String>()
+
+                tempSpecList.filter{it.id!="addOne"}.forEach {
+                    speList.add(it.id)
+
+                    val tradeDetailData = TradeDetailEn(
+                        accountDate = editAccountDate.text.toString(),
+                        id = it.id,
+                        modify = it.modify,
+                        other = it.other,
+                        price = it.price,
+                        processDate = editProcessDate.text.toString(),
+                        specification = it.specification,
+                        stockDate = editStockDate.text.toString(),
+                        tradeId = tradeId,
+                    )
+                    vmTradeDetailViewModel.upsertOne(tradeDetailData)
+                }
+
+                val tradeData = TradeEn(
+                    channelDetail = ddlChannelDetailList[ddlPositionChannelDetail].id,
+                    date = editProcessDate.text.toString(),
+                    id = tradeId,
+                    modifyRule = tradeModifyList.toTypedArray(),
+                    otherRule = tradeOtherList.toTypedArray(),
+                    tradeDetail = speList.toTypedArray(),
+                    transType = ddlTransType[ddlPositionTransType].id,
+                    ym = editProcessDate.text.toString().substring(0, 6),
+                )
+                vmTradeViewModel.upsertOne(tradeData)
+
+                btnSubmit.loadingSuccessful()
+
+                btnSubmit.animationEndAction = {
+                    btnSubmit.reset()
+                }
+
+            } catch (ex: Exception) {
+                Toast.makeText(this, ex.message, Toast.LENGTH_LONG).show()
+                btnSubmit.loadingFailed()
+            }
+        }
     }
 
 
@@ -1296,24 +1251,20 @@ class TradeEditPage : AppCompatActivity() {
     }
 
     private fun setSpec() {
-//        tempSpecList.clear()
 
         if (tempSpecList.findLast { it.id == "addOne" } == null) {
             tempSpecList.add(
                 TradeDetail(
                     accountDate = "",
-                    channelDetail = "",
                     id = "addOne",
                     modify = arrayListOf(),
-                    modifyRule = arrayOf(),
                     other = arrayListOf(),
-                    otherRule = arrayOf(),
                     price = 0,
                     processDate = "",
                     specification = "",
                     stockDate = "",
                     tradeId = "",
-                    transType = "",
+
                 )
             )
         }
@@ -1322,7 +1273,7 @@ class TradeEditPage : AppCompatActivity() {
         var sumModify = 0
         var sumOther = 0
 
-        tempSpecList.forEach {
+        tempSpecList.filter { it.id != "addOne" }.forEach {
             sumPrice += it.price
             it.modify.forEach {
                 sumModify += it
@@ -1331,8 +1282,6 @@ class TradeEditPage : AppCompatActivity() {
                 sumOther += it
             }
         }
-        sumModify /= 2
-        sumOther /= 2
 
         txtTotalSpecPrice.text = sumPrice.toString()
         txtTotalSpecModify.text = sumModify.toString()

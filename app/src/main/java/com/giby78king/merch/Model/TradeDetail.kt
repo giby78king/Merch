@@ -9,18 +9,15 @@ class tempPriceDetail(
 
 data class TradeDetail(
     var accountDate: String,
-    val channelDetail: String,
     val id: String,
     var modify: ArrayList<Int>,
-    var modifyRule: Array<String>,
     var other: ArrayList<Int>,
-    var otherRule: Array<String>,
     var price: Int,
     var processDate: String,
     var specification: String,
     var stockDate: String,
     val tradeId: String,
-    val transType: String,
+
 ) {
     companion object {
         var dbTradeDetailList = mutableListOf<TradeDetail>()
@@ -28,13 +25,11 @@ data class TradeDetail(
         var tempSpecList = mutableListOf<TradeDetail>()
         var specModifyList = mutableListOf<tempPriceDetail>()
         var specOtherList = mutableListOf<tempPriceDetail>()
-        var selectedTradeDetailSpcification = ""
         var nowEditId = ""
 
         fun DocumentSnapshot.toTradeDetail(): TradeDetail {
 
             val accountDate = getString("accountDate")!!
-            val channelDetail = getString("channelDetail")!!
             val id = getString("id")!!
 
             val modifyA =
@@ -44,11 +39,6 @@ data class TradeDetail(
             for (i in modifyA.indices) {
                 modify.add(modifyA[i].toInt())
             }
-
-            val modifyRule =
-                get("modifyRule").toString().replace("[", "").replace("]", "").split(", ")
-                    .toTypedArray()
-
             val otherA =
                 get("other").toString().replace("[", "").replace("]", "").split(", ")
                     .toTypedArray()
@@ -56,31 +46,24 @@ data class TradeDetail(
             for (i in otherA.indices) {
                 other.add(otherA[i].toInt())
             }
-
-            val otherRule =
-                get("otherRule").toString().replace("[", "").replace("]", "").split(", ")
-                    .toTypedArray()
             val price = getLong("price")?.toInt()!!
             val processDate = getString("processDate")!!
             val specification = getString("specification")!!
             val stockDate = getString("stockDate")!!
             val tradeId = getString("tradeId")!!
-            val transType = getString("transType")!!
+
 
             return TradeDetail(
                 accountDate,
-                channelDetail,
                 id,
                 modify,
-                modifyRule,
                 other,
-                otherRule,
                 price,
                 processDate,
                 specification,
                 stockDate,
                 tradeId,
-                transType,
+
             )
         }
     }

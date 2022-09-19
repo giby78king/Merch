@@ -51,10 +51,11 @@
                 android:id="@+id/txtName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxHeight="60dp"
+                android:maxHeight="65dp"
                 android:gravity="center_horizontal|center_vertical|center|top"
                 android:text="新增"
                 android:textSize="10sp"
+                android:lineHeight="9sp"
                 android:textColor="#ffffff"
                 android:textStyle="bold" />
 

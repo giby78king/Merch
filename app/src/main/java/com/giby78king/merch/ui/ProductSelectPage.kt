@@ -292,7 +292,9 @@ class ProductSelectPage : AppCompatActivity() {
                 list.forEach {
                     if(it.specification.contains(sp.id))
                     {
-                        memberProductList.add(it)
+                        if(!memberProductList.contains(it)){
+                            memberProductList.add(it)
+                        }
                     }
                 }
             }

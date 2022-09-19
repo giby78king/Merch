@@ -529,6 +529,7 @@ class ProductEditPage : AppCompatActivity() {
                 if (productChannelDetailList.size == 0) {
                     Toast.makeText(applicationContext, "發行日不得為空！！", Toast.LENGTH_SHORT)
                         .show()
+                    btnSubmit.loadingFailed()
                     return@setOnClickListener
                 }
 

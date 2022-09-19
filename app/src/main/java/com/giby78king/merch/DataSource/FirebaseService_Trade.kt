@@ -17,8 +17,11 @@ object FirebaseService_Trade {
             return data.toTrade()
         }
         return Trade(
+            channelDetail = "",
             date = "",
             id = "newOne",
+            modifyRule = arrayOf(),
+            otherRule = arrayOf(),
             tradeDetail = arrayOf(),
             transType = "",
             ym = "",

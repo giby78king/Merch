@@ -29,7 +29,7 @@ class SpecOtherPoolViewHolder(v: View) : RecyclerView.ViewHolder(v) {
     val imgChannelDetail: ImageView = v.findViewById(R.id.imgChannelDetail)
     val txtName: TextView = v.findViewById(R.id.txtName)
     val editPrice: EditText = v.findViewById(R.id.editPrice)
-    
+
     val res: Resources = v.context.resources
 
     fun bind(item: tempPriceDetail, page: TradeEditPage) {
@@ -38,9 +38,9 @@ class SpecOtherPoolViewHolder(v: View) : RecyclerView.ViewHolder(v) {
             itemView.rootView.findViewById<RecyclerView>(R.id.rvAddPoolOther)
         val rvAddPoolSpecOther =
             page.findViewById<RecyclerView>(R.id.rvAddPoolSpecOther)
-        
+
         val vmTradeViewModel = ViewModelProvider(page)[VmTradeViewModel::class.java]
-        
+
         if (ddlOtherList.filter { it.id == item.rule }.isNotEmpty()) {
 
             val data = ddlOtherList.filter { it.id == item.rule }[0]
@@ -83,7 +83,7 @@ class SpecOtherPoolViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 //                true
 //            }
         }
-        
+
         editPrice.setText(item.price.toString())
 
         if (item.rule == "sum") {

@@ -5,14 +5,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.giby78king.merch.DataSource.FirebaseService_Trade
-import com.giby78king.merch.Domain.MemberEn
-import com.giby78king.merch.Model.*
+import com.giby78king.merch.Domain.TradeEn
+import com.giby78king.merch.Model.Trade
 import com.giby78king.merch.Model.Trade.Companion.dbTradeList
 import com.giby78king.merch.Model.Trade.Companion.tradeModifyList
 import com.giby78king.merch.Model.Trade.Companion.tradeOtherList
+import com.giby78king.merch.Model.TradeDetail
 import com.giby78king.merch.Model.TradeDetail.Companion.specModifyList
 import com.giby78king.merch.Model.TradeDetail.Companion.specOtherList
-import com.giby78king.merch.Model.TradeDetail.Companion.tempSpecList
+import com.giby78king.merch.Model.tempPriceDetail
 import kotlinx.coroutines.launch
 
 class VmTradeViewModel : ViewModel() {
@@ -52,13 +53,13 @@ class VmTradeViewModel : ViewModel() {
         }
     }
 
-    fun upsertOne(data: MemberEn) {
+    fun upsertOne(data: TradeEn) {
         viewModelScope.launch {
             data.save()
         }
     }
 
-    fun deleteOne(data: MemberEn) {
+    fun deleteOne(data: TradeEn) {
         viewModelScope.launch {
             data.delete()
         }
@@ -83,8 +84,8 @@ class VmTradeViewModel : ViewModel() {
 
     private val _processTradeDetailDatas = MutableLiveData<MutableList<TradeDetail>>()
     val ProcessTradeDetailDatas: LiveData<MutableList<TradeDetail>> = _processTradeDetailDatas
-    fun setProcessTradeDetail() {
-        _processTradeDetailDatas.value = tempSpecList
+    fun setProcessTradeDetail(data:MutableList<TradeDetail>) {
+        _processTradeDetailDatas.value = data
     }
 
     private val _selectedSpecDatas = MutableLiveData<TradeDetail>()
