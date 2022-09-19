@@ -23,7 +23,7 @@ class VmTradeDetailViewModel : ViewModel() {
 
     private val _tradeDetailDatas = MutableLiveData<MutableList<TradeDetail>>()
     private val _upsertTradeDatas = MutableLiveData<MutableList<TradeDetail>>()
-    val tradeDatas: LiveData<MutableList<TradeDetail>> = _tradeDetailDatas
+    val tradeDetailDatas: LiveData<MutableList<TradeDetail>> = _tradeDetailDatas
     val upsertTradeDatas: LiveData<MutableList<TradeDetail>> = _upsertTradeDatas
 
 //    init {
@@ -35,7 +35,7 @@ class VmTradeDetailViewModel : ViewModel() {
 
     fun getDatas(selection: String) {
         viewModelScope.launch {
-            FirebaseService_Trade.getDatas()
+            FirebaseService_TradeDetail.getDatas()
             when (selection) {
                 "editTradeDetailId" -> {
                     _tradeDetailDatas.value = dbTradeDetailList

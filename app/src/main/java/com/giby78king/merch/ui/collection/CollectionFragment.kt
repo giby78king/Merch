@@ -1,23 +1,16 @@
 package com.giby78king.merch.ui.collection
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.giby78king.merch.Adapter.ProductDepositoryAdapter
-import com.giby78king.merch.Model.Member
-import com.giby78king.merch.Model.ProductDepository
+import com.giby78king.merch.Model.TradeDetail
+import com.giby78king.merch.Model.TradeDetail.Companion.dbTradeDetailList
 import com.giby78king.merch.R
-import com.giby78king.merch.ViewModel.VmMemberViewModel
-import com.giby78king.merch.ViewModel.VmProductDepositoryViewModel
-import com.giby78king.merch.ViewModel.VmProductViewModel
-import com.giby78king.merch.ViewModel.VmTopProductDepositoryViewModel
+import com.giby78king.merch.ViewModel.*
 
 class CollectionFragment : Fragment() {
 
@@ -29,6 +22,12 @@ class CollectionFragment : Fragment() {
     ): View {
 
         root = inflater.inflate(R.layout.fragment_collection, container, false)
+
+
+
+
+
+
 //        val vmProductDepositoryViewModel =
 //            ViewModelProvider(this)[VmProductDepositoryViewModel::class.java]
 //
@@ -51,15 +50,15 @@ class CollectionFragment : Fragment() {
         return root
     }
 
-    private fun setProductDepositoryRecyclerView(list: MutableList<ProductDepository>) {
-        val rvSetting =
-            root.findViewById<RecyclerView>(R.id.rv_list_item_member)
-
-        val layoutManager = LinearLayoutManager(context)
-        layoutManager.orientation = LinearLayoutManager.VERTICAL
-        val numberOfColumns = 1
-        rvSetting.layoutManager = GridLayoutManager(context, numberOfColumns)
-        rvSetting.adapter = ProductDepositoryAdapter(list)
-    }
+//    private fun setProductDepositoryRecyclerView(list: MutableList<StockDepository>) {
+//        val rvSetting =
+//            root.findViewById<RecyclerView>(R.id.rv_list_item_member)
+//
+//        val layoutManager = LinearLayoutManager(context)
+//        layoutManager.orientation = LinearLayoutManager.VERTICAL
+//        val numberOfColumns = 1
+//        rvSetting.layoutManager = GridLayoutManager(context, numberOfColumns)
+//        rvSetting.adapter = ProductDepositoryAdapter(list)
+//    }
 
 }

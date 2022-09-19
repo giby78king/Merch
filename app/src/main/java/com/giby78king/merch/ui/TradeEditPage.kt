@@ -1,6 +1,7 @@
 package com.giby78king.merch.ui
 
 import android.app.DatePickerDialog
+import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -9,17 +10,20 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.giby78king.merch.Adapter.*
+import com.giby78king.merch.Domain.StockDepositoryEn
 import com.giby78king.merch.Domain.TradeDetailEn
 import com.giby78king.merch.Domain.TradeEn
+import com.giby78king.merch.ImgSetting
+import com.giby78king.merch.Model.*
 import com.giby78king.merch.Model.Activity.Companion.dbActivityList
 import com.giby78king.merch.Model.Activity.Companion.ddlActivityList
 import com.giby78king.merch.Model.ChannelDetail.Companion.dbChannelDetailList
 import com.giby78king.merch.Model.ChannelDetail.Companion.ddlChannelDetailList
-import com.giby78king.merch.Model.DdlNormalModel
 import com.giby78king.merch.Model.DdlPositionCollection.Companion.ddlPositionActivity
 import com.giby78king.merch.Model.DdlPositionCollection.Companion.ddlPositionChannelDetail
 import com.giby78king.merch.Model.DdlPositionCollection.Companion.ddlPositionModify
@@ -31,18 +35,19 @@ import com.giby78king.merch.Model.Product.Companion.dbProductList
 import com.giby78king.merch.Model.Product.Companion.ddlProductList
 import com.giby78king.merch.Model.Specification.Companion.dbSpecificationList
 import com.giby78king.merch.Model.Specification.Companion.ddlSpecificationList
+import com.giby78king.merch.Model.StockDepository.Companion.dbStockDepositoryList
+import com.giby78king.merch.Model.Trade.Companion.dbTradeList
 import com.giby78king.merch.Model.Trade.Companion.ddlModifyList
 import com.giby78king.merch.Model.Trade.Companion.ddlOtherList
 import com.giby78king.merch.Model.Trade.Companion.ddlTransType
 import com.giby78king.merch.Model.Trade.Companion.tradeModifyList
 import com.giby78king.merch.Model.Trade.Companion.tradeOtherList
-import com.giby78king.merch.Model.TradeDetail
+import com.giby78king.merch.Model.TradeDetail.Companion.dbTradeDetailList
 import com.giby78king.merch.Model.TradeDetail.Companion.nowEditId
 import com.giby78king.merch.Model.TradeDetail.Companion.specModifyList
 import com.giby78king.merch.Model.TradeDetail.Companion.specOtherList
 import com.giby78king.merch.Model.TradeDetail.Companion.tempSpecList
 import com.giby78king.merch.Model.TradeRule.Companion.dbTradeRuleList
-import com.giby78king.merch.Model.tempPriceDetail
 import com.giby78king.merch.R
 import com.giby78king.merch.TimeFormat
 import com.giby78king.merch.ViewModel.*
@@ -67,7 +72,7 @@ class TradeEditPage : AppCompatActivity() {
         setContentView(R.layout.activity_trade_edit_page)
 
         val bundle = intent.extras
-        var selectedProduct = bundle?.getString("selectedProduct").toString()
+        var selectedTrade = bundle?.getString("selectedTrade").toString()
         page = this
 
         editProcessDate.setText(TimeFormat().TodayDate().yyyyMMdd())
@@ -117,7 +122,7 @@ class TradeEditPage : AppCompatActivity() {
                 override fun onNothingSelected(parent: AdapterView<*>) {}
             }
 
-        val customDropDownAdapter =
+        var customDropDownAdapter =
             CustomDropDownAdapter(
                 "channeldetail",
                 this,
@@ -133,7 +138,7 @@ class TradeEditPage : AppCompatActivity() {
             ViewModelProvider(this)[VmChannelDetailViewModel::class.java]
         val vmTradeViewModel =
             ViewModelProvider(this)[VmTradeViewModel::class.java]
-        val vmTradeDetailViewModel=
+        val vmTradeDetailViewModel =
             ViewModelProvider(this)[VmTradeDetailViewModel::class.java]
         val vmTradeRuleViewModel =
             ViewModelProvider(this)[VmTradeRuleViewModel::class.java]
@@ -141,369 +146,356 @@ class TradeEditPage : AppCompatActivity() {
             ViewModelProvider(this)[VmProductViewModel::class.java]
         val vmSpecificationViewModel =
             ViewModelProvider(this)[VmSpecificationViewModel::class.java]
+        val vmStockDepositoryViewModel =
+            ViewModelProvider(this)[VmStockDepositoryViewModel::class.java]
 
-        vmActivitylViewModel.getDatas("")
-        vmActivitylViewModel.activityDatas.observe(this) {
-            vmChannelDetailViewModel.getDatas("")
-            vmChannelDetailViewModel.channelDetailDatas.observe(this) {
-                vmProductViewModel.getDatas("")
-                vmProductViewModel.productDatas.observe(this) {
-                    vmSpecificationViewModel.getDatas("")
-                    vmSpecificationViewModel.specificationDatas.observe(this) {
-                        ddlChannelDetailList.clear()
-                        dbChannelDetailList.forEach {
-                            ddlChannelDetailList.add(
-                                DdlNormalModel(
-                                    it.name,
-                                    it.imgUrl,
-                                    it.id
-                                )
-                            )
-                        }
 
-                        spinnerChannelDetail.onItemSelectedListener =
-                            object : AdapterView.OnItemSelectedListener {
-                                override fun onItemSelected(
-                                    parent: AdapterView<*>,
-                                    view: View?,
-                                    position: Int,
-                                    id: Long
-                                ) {
-                                    ddlPositionChannelDetail = position
-
-                                    ddlActivityList.clear()
-                                    dbActivityList.filter {
-                                        it.channelDetail.contains(
-                                            ddlChannelDetailList[ddlPositionChannelDetail].id
-                                        )
-                                    }.forEach {
-                                        ddlActivityList.add(
-                                            DdlNormalModel(
-                                                it.name,
-                                                it.imgUrl,
-                                                it.id
-                                            )
-                                        )
-                                    }
-
-                                    spinnerActivity.onItemSelectedListener =
-                                        object : AdapterView.OnItemSelectedListener {
-                                            override fun onItemSelected(
-                                                parent: AdapterView<*>,
-                                                view: View?,
-                                                position: Int,
-                                                id: Long
-                                            ) {
-                                                ddlPositionActivity = position
-
-                                                ddlProductList.clear()
-                                                dbProductList.filter {
-                                                    it.activity == ddlActivityList[ddlPositionActivity].id && it.channelDetail.contains(
-                                                        ddlChannelDetailList[ddlPositionChannelDetail].id
-                                                    )
-                                                }.forEach {
-                                                    ddlProductList.add(
-                                                        DdlNormalModel(
-                                                            it.name,
-                                                            it.imgUrl,
-                                                            it.id
-                                                        )
-                                                    )
-                                                }
-                                                spinnerProduct.onItemSelectedListener =
-                                                    object : AdapterView.OnItemSelectedListener {
-                                                        override fun onItemSelected(
-                                                            parent: AdapterView<*>,
-                                                            view: View?,
-                                                            position: Int,
-                                                            id: Long
-                                                        ) {
-                                                            ddlPositionProduct = position
-
-                                                            ddlSpecificationList.clear()
-                                                            dbSpecificationList.filter {
-                                                                it.product == ddlProductList[ddlPositionProduct].id
-                                                            }.forEach {
-                                                                ddlSpecificationList.add(
-                                                                    DdlNormalModel(
-                                                                        it.title,
-                                                                        it.imgUrl,
-                                                                        it.id
-                                                                    )
-                                                                )
-                                                            }
-                                                            setSpinner(
-                                                                spinnerSpecification,
-                                                                ddlSpecificationList,
-                                                                "specification",
-                                                                0
-                                                            )
-
-                                                            spinnerSpecification.onItemSelectedListener =
-                                                                object :
-                                                                    AdapterView.OnItemSelectedListener {
-                                                                    override fun onItemSelected(
-                                                                        parent: AdapterView<*>,
-                                                                        view: View?,
-                                                                        position: Int,
-                                                                        id: Long
-                                                                    ) {
-                                                                        ddlPositionSpecification =
-                                                                            position
-
-                                                                        val spInfo =
-                                                                            dbSpecificationList.filter { it.id == ddlSpecificationList[ddlPositionSpecification].id }[0]
-                                                                        val priceIndex =
-                                                                            dbProductList.filter { it.id == spInfo.product }[0].channelDetail.indexOf(
-                                                                                ddlChannelDetailList[ddlPositionChannelDetail].id
-                                                                            )
-                                                                        txtSpecTagPrice.text =
-                                                                            dbSpecificationList.filter { it.id == ddlSpecificationList[ddlPositionSpecification].id }[0].price[priceIndex].toString()
-
-                                                                        txtSpecPrice.text =
-                                                                            dbSpecificationList.filter { it.id == ddlSpecificationList[ddlPositionSpecification].id }[0].price[priceIndex].toString()
-
-                                                                        if (nowEditId.isNotEmpty()) {
-                                                                            val lastId =
-                                                                                tempSpecList.indexOfFirst { it.id == nowEditId }
-                                                                            if (lastId != -1) {
-                                                                                tempSpecList[lastId].specification =
-                                                                                    ddlSpecificationList[ddlPositionSpecification].id
-
-                                                                                tempSpecList[lastId].price =
-                                                                                    dbSpecificationList.filter { it.id == ddlSpecificationList[ddlPositionSpecification].id }[0].price[priceIndex].toString()
-                                                                                        .toInt()
-
-                                                                                val layoutManager =
-                                                                                    LinearLayoutManager(
-                                                                                        page
-                                                                                    )
-                                                                                layoutManager.orientation =
-                                                                                    LinearLayoutManager.HORIZONTAL
-                                                                                rvSpecification.layoutManager =
-                                                                                    layoutManager
-                                                                                rvSpecification.adapter =
-                                                                                    TradeDetailEditSpecificationAdapter(
-                                                                                        tempSpecList,
-                                                                                        page
-                                                                                    )
-                                                                            }
-                                                                        }
-//                                                                        setSpec()
-                                                                    }
-
-                                                                    override fun onNothingSelected(
-                                                                        parent: AdapterView<*>
-                                                                    ) {
-                                                                    }
-                                                                }
-                                                        }
-
-                                                        override fun onNothingSelected(parent: AdapterView<*>) {}
-                                                    }
-                                                setSpinner(
-                                                    spinnerProduct,
-                                                    ddlProductList,
-                                                    "product",
-                                                    0
-                                                )
-
-                                                if (ddlProductList.size == 0) {
-                                                    ddlSpecificationList.clear()
-                                                    setSpinner(
-                                                        spinnerSpecification,
-                                                        ddlSpecificationList,
-                                                        "specification",
-                                                        0
-                                                    )
-                                                    txtSpecTagPrice.text = "0"
-                                                }
-                                            }
-
-                                            override fun onNothingSelected(parent: AdapterView<*>) {}
-                                        }
-
-                                    setSpinner(spinnerActivity, ddlActivityList, "activity", 0)
-
-                                    ddlModifyList.clear()
-                                    var sortModifyList = mutableListOf<String>()
-
-                                    dbTradeRuleList.sortedBy { it.id }.filter {
-                                        (it.type == "Modify" || it.type == "Fluctuate") && it.channelDetail.contains(
-                                            ddlChannelDetailList[ddlPositionChannelDetail].id
-                                        ) && (it.transType == ddlTransType[ddlPositionTransType].id || it.transType == "Fluctuate")
-                                    }.forEach {
-                                        ddlModifyList.add(
-                                            DdlNormalModel(
-                                                it.name,
-                                                it.imgUrl,
-                                                it.id
-                                            )
-                                        )
-                                        if (it.default) {
-                                            if (!sortModifyList.contains(it.id))            //排除重複點選
-                                            {
-                                                sortModifyList.add(it.id)
-                                            }
-                                        }
-                                    }
-
-                                    tradeModifyList = sortModifyList
-
-                                    vmTradeViewModel.setSelectedModify()
-
-                                    setSpinner(
-                                        spinnerModify,
-                                        ddlModifyList,
-                                        "traderule",
-                                        0
-                                    )
-
-                                    ddlOtherList.clear()
-                                    var sortOtherList = mutableListOf<String>()
-                                    sortOtherList.clear()
-
-                                    dbTradeRuleList.sortedBy { it.id }.filter {
-                                        (it.type == "Other" || it.type == "Fluctuate") && it.channelDetail.contains(
-                                            ddlChannelDetailList[ddlPositionChannelDetail].id
-                                        ) && (it.transType == ddlTransType[ddlPositionTransType].id || it.transType == "Fluctuate")
-                                    }.forEach {
-                                        ddlOtherList.add(
-                                            DdlNormalModel(
-                                                it.name,
-                                                it.imgUrl,
-                                                it.id
-                                            )
-                                        )
-                                        if (it.default) {
-                                            if (!sortOtherList.contains(it.id))            //排除重複點選
-                                            {
-                                                sortOtherList.add(it.id)
-                                            }
-                                        }
-                                    }
-
-                                    tradeOtherList = sortOtherList
-                                    vmTradeViewModel.setSelectedOther()
-
-                                    spinnerOther.onItemSelectedListener =
-                                        object :
-                                            AdapterView.OnItemSelectedListener {
-                                            override fun onItemSelected(
-                                                parent: AdapterView<*>,
-                                                view: View?,
-                                                position: Int,
-                                                id: Long
-                                            ) {
-                                                ddlPositionOther = position
-                                            }
-
-                                            override fun onNothingSelected(parent: AdapterView<*>) {}
-                                        }
-                                    setSpinner(
-                                        spinnerOther,
-                                        ddlOtherList,
-                                        "traderule",
-                                        0
-                                    )
-                                }
-
-                                override fun onNothingSelected(parent: AdapterView<*>) {}
-                            }
-
-                        val customDropDownAdapter =
-                            CustomDropDownAdapter(
-                                "channeldetail",
-                                this,
-                                ddlChannelDetailList
-                            )
-                        spinnerChannelDetail.adapter = customDropDownAdapter
-
-                        vmTradeRuleViewModel.getDatas("")
-                        vmTradeRuleViewModel.tradeRuleDatas.observe(this) {
-
-                            ddlModifyList.clear()
-                            dbTradeRuleList.sortedBy { it.id }.filter {
-                                (it.type == "Modify" || it.type == "Fluctuate") && it.channelDetail.contains(
-                                    ddlChannelDetailList[ddlPositionChannelDetail].id
-                                ) && (it.transType == ddlTransType[ddlPositionTransType].id || it.transType == "Fluctuate")
-                            }.forEach {
-                                ddlModifyList.add(
-                                    DdlNormalModel(
-                                        it.name,
-                                        it.imgUrl,
-                                        it.id
-                                    )
-                                )
-                            }
-                            spinnerModify.onItemSelectedListener =
-                                object :
-                                    AdapterView.OnItemSelectedListener {
-                                    override fun onItemSelected(
-                                        parent: AdapterView<*>,
-                                        view: View?,
-                                        position: Int,
-                                        id: Long
-                                    ) {
-                                        ddlPositionModify = position
-                                    }
-
-                                    override fun onNothingSelected(parent: AdapterView<*>) {}
-                                }
-                            setSpinner(
-                                spinnerModify,
-                                ddlModifyList,
-                                "traderule",
-                                0
-                            )
-
-                            ddlOtherList.clear()
-                            dbTradeRuleList.sortedBy { it.id }.filter {
-                                (it.type == "Other" || it.type == "Fluctuate") && it.channelDetail.contains(
-                                    ddlChannelDetailList[ddlPositionChannelDetail].id
-                                ) && (it.transType == ddlTransType[ddlPositionTransType].id || it.transType == "Fluctuate")
-                            }.forEach {
-                                ddlOtherList.add(
-                                    DdlNormalModel(
-                                        it.name,
-                                        it.imgUrl,
-                                        it.id
-                                    )
-                                )
-                            }
-
-                            spinnerOther.onItemSelectedListener =
-                                object :
-                                    AdapterView.OnItemSelectedListener {
-                                    override fun onItemSelected(
-                                        parent: AdapterView<*>,
-                                        view: View?,
-                                        position: Int,
-                                        id: Long
-                                    ) {
-                                        ddlPositionOther = position
-                                    }
-
-                                    override fun onNothingSelected(parent: AdapterView<*>) {}
-                                }
-                            setSpinner(
-                                spinnerOther,
-                                ddlOtherList,
-                                "traderule",
-                                0
-                            )
-
-                            setSpec()
-                        }
-                    }
-                }
-            }
+        ddlChannelDetailList.clear()
+        dbChannelDetailList.forEach {
+            ddlChannelDetailList.add(
+                DdlNormalModel(
+                    it.name,
+                    it.imgUrl,
+                    it.id
+                )
+            )
         }
 
-        btnAddModify.setOnClickListener {
-            tradeModifyList.forEach {
-                Log.d("tradeModifyList11111", ":::" + it)
+        spinnerChannelDetail.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    ddlPositionChannelDetail = position
+
+                    ddlActivityList.clear()
+                    dbActivityList.filter {
+                        it.channelDetail.contains(
+                            ddlChannelDetailList[ddlPositionChannelDetail].id
+                        )
+                    }.forEach {
+                        ddlActivityList.add(
+                            DdlNormalModel(
+                                it.name,
+                                it.imgUrl,
+                                it.id
+                            )
+                        )
+                    }
+
+                    spinnerActivity.onItemSelectedListener =
+                        object : AdapterView.OnItemSelectedListener {
+                            override fun onItemSelected(
+                                parent: AdapterView<*>,
+                                view: View?,
+                                position: Int,
+                                id: Long
+                            ) {
+                                ddlPositionActivity = position
+
+                                ddlProductList.clear()
+                                dbProductList.filter {
+                                    it.activity == ddlActivityList[ddlPositionActivity].id && it.channelDetail.contains(
+                                        ddlChannelDetailList[ddlPositionChannelDetail].id
+                                    )
+                                }.forEach {
+                                    ddlProductList.add(
+                                        DdlNormalModel(
+                                            it.name,
+                                            it.imgUrl,
+                                            it.id
+                                        )
+                                    )
+                                }
+                                spinnerProduct.onItemSelectedListener =
+                                    object : AdapterView.OnItemSelectedListener {
+                                        override fun onItemSelected(
+                                            parent: AdapterView<*>,
+                                            view: View?,
+                                            position: Int,
+                                            id: Long
+                                        ) {
+                                            ddlPositionProduct = position
+
+                                            ddlSpecificationList.clear()
+                                            dbSpecificationList.filter {
+                                                it.product == ddlProductList[ddlPositionProduct].id
+                                            }.forEach {
+                                                ddlSpecificationList.add(
+                                                    DdlNormalModel(
+                                                        it.title,
+                                                        it.imgUrl,
+                                                        it.id
+                                                    )
+                                                )
+                                            }
+                                            setSpinner(
+                                                spinnerSpecification,
+                                                ddlSpecificationList,
+                                                "specification",
+                                                0
+                                            )
+
+                                            spinnerSpecification.onItemSelectedListener =
+                                                object :
+                                                    AdapterView.OnItemSelectedListener {
+                                                    override fun onItemSelected(
+                                                        parent: AdapterView<*>,
+                                                        view: View?,
+                                                        position: Int,
+                                                        id: Long
+                                                    ) {
+                                                        ddlPositionSpecification =
+                                                            position
+
+                                                        val spInfo =
+                                                            dbSpecificationList.filter { it.id == ddlSpecificationList[ddlPositionSpecification].id }[0]
+                                                        val priceIndex =
+                                                            dbProductList.filter { it.id == spInfo.product }[0].channelDetail.indexOf(
+                                                                ddlChannelDetailList[ddlPositionChannelDetail].id
+                                                            )
+                                                        txtSpecTagPrice.text =
+                                                            dbSpecificationList.filter { it.id == ddlSpecificationList[ddlPositionSpecification].id }[0].price[priceIndex].toString()
+
+                                                        txtSpecPrice.text =
+                                                            dbSpecificationList.filter { it.id == ddlSpecificationList[ddlPositionSpecification].id }[0].price[priceIndex].toString()
+
+                                                        if (nowEditId.isNotEmpty()) {
+                                                            val lastId =
+                                                                tempSpecList.indexOfFirst { it.id == nowEditId }
+                                                            if (lastId != -1) {
+                                                                tempSpecList[lastId].specification =
+                                                                    ddlSpecificationList[ddlPositionSpecification].id
+
+                                                                tempSpecList[lastId].price =
+                                                                    dbSpecificationList.filter { it.id == ddlSpecificationList[ddlPositionSpecification].id }[0].price[priceIndex].toString()
+                                                                        .toInt()
+
+                                                                val layoutManager =
+                                                                    LinearLayoutManager(
+                                                                        page
+                                                                    )
+                                                                layoutManager.orientation =
+                                                                    LinearLayoutManager.HORIZONTAL
+                                                                rvSpecification.layoutManager =
+                                                                    layoutManager
+                                                                rvSpecification.adapter =
+                                                                    TradeDetailEditSpecificationAdapter(
+                                                                        tempSpecList,
+                                                                        page
+                                                                    )
+                                                            }
+                                                        }
+//                                                                        setSpec()
+                                                    }
+
+                                                    override fun onNothingSelected(
+                                                        parent: AdapterView<*>
+                                                    ) {
+                                                    }
+                                                }
+                                        }
+
+                                        override fun onNothingSelected(parent: AdapterView<*>) {}
+                                    }
+                                setSpinner(
+                                    spinnerProduct,
+                                    ddlProductList,
+                                    "product",
+                                    0
+                                )
+
+                                if (ddlProductList.size == 0) {
+                                    ddlSpecificationList.clear()
+                                    setSpinner(
+                                        spinnerSpecification,
+                                        ddlSpecificationList,
+                                        "specification",
+                                        0
+                                    )
+                                    txtSpecTagPrice.text = "0"
+                                }
+                            }
+
+                            override fun onNothingSelected(parent: AdapterView<*>) {}
+                        }
+
+                    setSpinner(spinnerActivity, ddlActivityList, "activity", 0)
+
+                    ddlModifyList.clear()
+                    var sortModifyList = mutableListOf<String>()
+
+                    dbTradeRuleList.sortedBy { it.id }.filter {
+                        (it.type == "Modify" || it.type == "Fluctuate") && it.channelDetail.contains(
+                            ddlChannelDetailList[ddlPositionChannelDetail].id
+                        ) && (it.transType == ddlTransType[ddlPositionTransType].id || it.transType == "Fluctuate")
+                    }.forEach {
+                        ddlModifyList.add(
+                            DdlNormalModel(
+                                it.name,
+                                it.imgUrl,
+                                it.id
+                            )
+                        )
+                        if (it.default) {
+                            if (!sortModifyList.contains(it.id))            //排除重複點選
+                            {
+                                sortModifyList.add(it.id)
+                            }
+                        }
+                    }
+
+                    tradeModifyList = sortModifyList
+
+                    vmTradeViewModel.setSelectedModify()
+
+                    setSpinner(
+                        spinnerModify,
+                        ddlModifyList,
+                        "traderule",
+                        0
+                    )
+
+                    ddlOtherList.clear()
+                    var sortOtherList = mutableListOf<String>()
+                    sortOtherList.clear()
+
+                    dbTradeRuleList.sortedBy { it.id }.filter {
+                        (it.type == "Other" || it.type == "Fluctuate") && it.channelDetail.contains(
+                            ddlChannelDetailList[ddlPositionChannelDetail].id
+                        ) && (it.transType == ddlTransType[ddlPositionTransType].id || it.transType == "Fluctuate")
+                    }.forEach {
+                        ddlOtherList.add(
+                            DdlNormalModel(
+                                it.name,
+                                it.imgUrl,
+                                it.id
+                            )
+                        )
+                        if (it.default) {
+                            if (!sortOtherList.contains(it.id))            //排除重複點選
+                            {
+                                sortOtherList.add(it.id)
+                            }
+                        }
+                    }
+
+                    tradeOtherList = sortOtherList
+                    vmTradeViewModel.setSelectedOther()
+
+                    spinnerOther.onItemSelectedListener =
+                        object :
+                            AdapterView.OnItemSelectedListener {
+                            override fun onItemSelected(
+                                parent: AdapterView<*>,
+                                view: View?,
+                                position: Int,
+                                id: Long
+                            ) {
+                                ddlPositionOther = position
+                            }
+
+                            override fun onNothingSelected(parent: AdapterView<*>) {}
+                        }
+                    setSpinner(
+                        spinnerOther,
+                        ddlOtherList,
+                        "traderule",
+                        0
+                    )
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {}
             }
+
+        customDropDownAdapter =
+            CustomDropDownAdapter(
+                "channeldetail",
+                this,
+                ddlChannelDetailList
+            )
+        spinnerChannelDetail.adapter = customDropDownAdapter
+
+
+        ddlModifyList.clear()
+        dbTradeRuleList.sortedBy { it.id }.filter {
+            (it.type == "Modify" || it.type == "Fluctuate") && it.channelDetail.contains(
+                ddlChannelDetailList[ddlPositionChannelDetail].id
+            ) && (it.transType == ddlTransType[ddlPositionTransType].id || it.transType == "Fluctuate")
+        }.forEach {
+            ddlModifyList.add(
+                DdlNormalModel(
+                    it.name,
+                    it.imgUrl,
+                    it.id
+                )
+            )
+        }
+        spinnerModify.onItemSelectedListener =
+            object :
+                AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    ddlPositionModify = position
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {}
+            }
+        setSpinner(
+            spinnerModify,
+            ddlModifyList,
+            "traderule",
+            0
+        )
+
+        ddlOtherList.clear()
+        dbTradeRuleList.sortedBy { it.id }.filter {
+            (it.type == "Other" || it.type == "Fluctuate") && it.channelDetail.contains(
+                ddlChannelDetailList[ddlPositionChannelDetail].id
+            ) && (it.transType == ddlTransType[ddlPositionTransType].id || it.transType == "Fluctuate")
+        }.forEach {
+            ddlOtherList.add(
+                DdlNormalModel(
+                    it.name,
+                    it.imgUrl,
+                    it.id
+                )
+            )
+        }
+
+        spinnerOther.onItemSelectedListener =
+            object :
+                AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    ddlPositionOther = position
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {}
+            }
+        setSpinner(
+            spinnerOther,
+            ddlOtherList,
+            "traderule",
+            0
+        )
+        setSpec()
+
+
+
+
+        btnAddModify.setOnClickListener {
             if (ddlModifyList.size > 0) {
                 if (!tradeModifyList.contains(ddlModifyList[ddlPositionModify].id))            //排除重複點選
                 {
@@ -520,10 +512,6 @@ class TradeEditPage : AppCompatActivity() {
                         }
                     }
                 tradeModifyList = sortList
-
-                tradeModifyList.forEach {
-                    Log.d("tradeModifyList", ":::" + it)
-                }
 
                 vmTradeViewModel.setSelectedModify()
             }
@@ -888,7 +876,9 @@ class TradeEditPage : AppCompatActivity() {
                                                                 if (lastId != -1) {
                                                                     tempSpecList[lastId].specification =
                                                                         ddlSpecificationList[ddlPositionSpecification].id
-                                                                    tempSpecList[lastId].price = txtSpecPrice.text.toString().toInt()
+                                                                    tempSpecList[lastId].price =
+                                                                        txtSpecPrice.text.toString()
+                                                                            .toInt()
 
                                                                     val layoutManager =
                                                                         LinearLayoutManager(page)
@@ -921,7 +911,6 @@ class TradeEditPage : AppCompatActivity() {
 
                                 override fun onNothingSelected(parent: AdapterView<*>) {}
                             }
-
 
 
                         var sum = txtSpecTagPrice.text.toString().toInt()
@@ -961,17 +950,16 @@ class TradeEditPage : AppCompatActivity() {
                             PoolTradeEditSpecModifyAdapter(specModifyList, page)
 
 
-
                         val specOtherList = mutableListOf<tempPriceDetail>()
                         if (tradeOtherList.size == data.other.size) {
-                        for (i in 0 until tradeOtherList.size) {
-                            specOtherList.add(
-                                tempPriceDetail(
-                                    price = data.other[i],
-                                    rule = tradeOtherList[i],
+                            for (i in 0 until tradeOtherList.size) {
+                                specOtherList.add(
+                                    tempPriceDetail(
+                                        price = data.other[i],
+                                        rule = tradeOtherList[i],
+                                    )
                                 )
-                            )
-                        }
+                            }
                         }
                         var sumOther = 0
 
@@ -1138,6 +1126,9 @@ class TradeEditPage : AppCompatActivity() {
             setSpec()
         }
 
+        if (selectedTrade.isNotEmpty() && selectedTrade != "null") {
+            setEditPageData(selectedTrade)
+        }
         btnSubmit.setOnClickListener {
             try {
                 btnSubmit.startLoading()
@@ -1149,26 +1140,118 @@ class TradeEditPage : AppCompatActivity() {
                     return@setOnClickListener
                 }
 
-                val tradeId = TimeFormat().TodayDate().yyyyMMddHHmmss()
+                var tradeId = TimeFormat().TodayDate().yyyyMMddHHmmss()
+
+                if (selectedTrade.isNotEmpty() && selectedTrade != "null") {
+                    tradeId = selectedTrade
+                }
 
                 var speList = mutableListOf<String>()
 
-                tempSpecList.filter{it.id!="addOne"}.forEach {
-                    speList.add(it.id)
+                tempSpecList.filter { it.id != "addOne" }.forEach { temp ->
+                    speList.add(temp.id)
 
                     val tradeDetailData = TradeDetailEn(
-                        accountDate = editAccountDate.text.toString(),
-                        id = it.id,
-                        modify = it.modify,
-                        other = it.other,
-                        price = it.price,
+                        accountDate = temp.accountDate,
+                        id = temp.id,
+                        modify = temp.modify,
+                        other = temp.other,
+                        price = temp.price,
                         processDate = editProcessDate.text.toString(),
-                        specification = it.specification,
-                        stockDate = editStockDate.text.toString(),
+                        specification = temp.specification,
+                        stockDate = temp.stockDate,
                         tradeId = tradeId,
                     )
                     vmTradeDetailViewModel.upsertOne(tradeDetailData)
+
+                    if (temp.stockDate >= TimeFormat().TodayDate().yyyyMMdd()) {
+                        vmStockDepositoryViewModel.getDatas("")
+                        vmStockDepositoryViewModel.stockDepositoryDatas.observe(this) {
+
+
+                            val spId = mutableListOf<String>()
+                            val cost = arrayListOf<Int>()
+                            tempSpecList.filter { it.id != "addOne" && it.specification == temp.specification }
+                                .forEach {
+                                    spId.add(it.id)
+                                    cost.add(it.price)
+                                }
+
+
+                            val dbSt =
+                                dbStockDepositoryList.filter { db -> db.id == temp.specification }
+                                    .toMutableList()
+
+                            if (dbSt.size > 0) {
+
+                                val list = dbSt[0].tradeDetailId.toMutableList()
+                                val listCost = arrayListOf<Int>()
+                                val listDbCost = dbSt[0].holdingCost.toMutableList()
+
+                                listDbCost.forEach {
+                                    listCost.add(it)
+                                }
+
+
+                                for (i in 0 until spId.size) {
+                                    for (j in 0 until list.size) {
+                                        if (spId[i] == list[j]) {
+                                            listCost[j] = cost[i]
+                                        }
+                                    }
+                                }
+                                for (i in 0 until spId.size) {
+                                    if (!list.contains(spId[i])) {
+                                        list.add(spId[i])
+                                        listCost.add(cost[i])
+                                    }
+                                }
+
+                                val stockDepositoryData = StockDepositoryEn(
+                                    favorite = dbSt[0].favorite,
+                                    group = dbSt[0].group,
+                                    holdingCost = listCost,
+                                    id = dbSt[0].id,
+                                    imgUrl = dbSt[0].specification,
+                                    member = dbSt[0].member,
+                                    message = dbSt[0].message,
+                                    print = dbSt[0].print,
+                                    specification = dbSt[0].specification,
+                                    tradeDetailId = list.toTypedArray(),
+                                    profit = dbSt[0].profit,
+                                    sign = dbSt[0].sign,
+                                    valuation = dbSt[0].valuation,
+                                )
+
+                                vmStockDepositoryViewModel.upsertOne(stockDepositoryData)
+
+                            } else {
+                                val dbSp =
+                                    dbSpecificationList.first { db -> db.id == temp.specification }
+                                val dbProd = dbProductList.first { db -> db.id == dbSp.product }
+
+                                val stockDepositoryData = StockDepositoryEn(
+                                    favorite = false,
+                                    group = dbProd.group,
+                                    holdingCost = cost,
+                                    id = temp.specification,
+                                    imgUrl = temp.specification,
+                                    member = dbSp.member,
+                                    message = arrayOf(),
+                                    print = false,
+                                    specification = temp.specification,
+                                    tradeDetailId = spId.toTypedArray(),
+                                    profit = 0,
+                                    sign = arrayOf(),
+                                    valuation = 0,
+                                )
+                                vmStockDepositoryViewModel.upsertOne(stockDepositoryData)
+
+                            }
+                        }
+                    }
                 }
+
 
                 val tradeData = TradeEn(
                     channelDetail = ddlChannelDetailList[ddlPositionChannelDetail].id,
@@ -1265,7 +1348,7 @@ class TradeEditPage : AppCompatActivity() {
                     stockDate = "",
                     tradeId = "",
 
-                )
+                    )
             )
         }
 
@@ -1291,6 +1374,92 @@ class TradeEditPage : AppCompatActivity() {
         layoutManager.orientation = LinearLayoutManager.HORIZONTAL
         rvSpecification.layoutManager = layoutManager
         rvSpecification.adapter = TradeDetailEditSpecificationAdapter(tempSpecList, page)
+    }
+
+    private fun setEditPageData(selected: String) {
+
+        val tradeInfo = dbTradeList.filter { it.id == selected }.toMutableList()[0]
+        val tradeDetailInfoList =
+            dbTradeDetailList.filter { it.tradeId == selected }.toMutableList()
+        editProcessDate.setText(tradeInfo.date)
+        editAccountDate.setText(tradeDetailInfoList[0].accountDate)
+        editStockDate.setText(tradeDetailInfoList[0].stockDate)
+
+        spinnerTransType.setSelection(ddlTransType.indexOfFirst { it.id == tradeInfo.transType })
+        tempSpecList.clear()
+        tempSpecList = tradeDetailInfoList
+
+        val vmTradeViewModel =
+            ViewModelProvider(this)[VmTradeViewModel::class.java]
+
+        nowEditId = tempSpecList[0].id
+
+        if (tradeInfo.modifyRule.size > 1 || tradeInfo.modifyRule[0] != "") {
+            tradeModifyList = tradeInfo.modifyRule.toMutableList()
+        }
+        if (tradeInfo.otherRule.size > 1 || tradeInfo.otherRule[0] != "") {
+            tradeOtherList = tradeInfo.otherRule.toMutableList()
+        }
+
+
+        vmTradeViewModel.setSelectedSpecDatas(tempSpecList[0])
+
+        val layoutManager = LinearLayoutManager(this)
+        layoutManager.orientation = LinearLayoutManager.HORIZONTAL
+        val numberOfColumns = 3
+        rvAddPoolModify.layoutManager =
+            GridLayoutManager(this, numberOfColumns)
+        rvAddPoolModify.adapter = PoolTradeEditModifyAdapter(tradeModifyList, page)
+
+        specModifyList.clear()
+
+        for (i in 0 until tradeModifyList.size) {
+            specModifyList.add(
+                tempPriceDetail(
+                    price = tradeDetailInfoList[0].modify[i],
+                    rule = tradeModifyList[i]
+                )
+            )
+        }
+        if (specModifyList.none { it.rule == "sum" }) {
+            specModifyList.add(
+                tempPriceDetail(
+                    price = 0,
+                    rule = "sum"
+                )
+            )
+        }
+
+        val layoutManagerSpec = LinearLayoutManager(this)
+        layoutManagerSpec.orientation = LinearLayoutManager.VERTICAL
+        rvAddPoolSpecModify.layoutManager = layoutManagerSpec
+        rvAddPoolSpecModify.adapter = PoolTradeEditSpecModifyAdapter(specModifyList, page)
+
+        specOtherList.clear()
+
+        for (i in 0 until tradeOtherList.size) {
+            specOtherList.add(
+                tempPriceDetail(
+                    price = tradeDetailInfoList[0].other[i],
+                    rule = tradeOtherList[i]
+                )
+            )
+        }
+        if (specOtherList.none { it.rule == "sum" }) {
+            specOtherList.add(
+                tempPriceDetail(
+                    price = 0,
+                    rule = "sum"
+                )
+            )
+        }
+
+        val layoutOtherManagerSpec = LinearLayoutManager(this)
+        layoutOtherManagerSpec.orientation = LinearLayoutManager.VERTICAL
+        rvAddPoolSpecOther.layoutManager = layoutOtherManagerSpec
+        rvAddPoolSpecOther.adapter = PoolTradeEditSpecOtherAdapter(specOtherList, page)
+
+        setSpec()
     }
 
 }

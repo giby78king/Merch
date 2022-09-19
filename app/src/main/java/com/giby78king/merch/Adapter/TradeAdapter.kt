@@ -3,9 +3,7 @@ package com.giby78king.merch.Adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.giby78king.merch.Holder.ProductDepositoryListViewHolder
 import com.giby78king.merch.Holder.TradeListViewHolder
-import com.giby78king.merch.Model.ProductDepository
 import com.giby78king.merch.Model.Trade
 import com.giby78king.merch.R
 

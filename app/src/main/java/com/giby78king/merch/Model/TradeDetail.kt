@@ -37,14 +37,18 @@ data class TradeDetail(
                     .toTypedArray()
             val modify = arrayListOf<Int>()
             for (i in modifyA.indices) {
-                modify.add(modifyA[i].toInt())
+                if(modifyA[i]!="") {
+                    modify.add(modifyA[i].toInt())
+                }
             }
             val otherA =
                 get("other").toString().replace("[", "").replace("]", "").split(", ")
                     .toTypedArray()
             val other = arrayListOf<Int>()
             for (i in otherA.indices) {
-                other.add(otherA[i].toInt())
+                if(otherA[i]!="") {
+                    other.add(otherA[i].toInt())
+                }
             }
             val price = getLong("price")?.toInt()!!
             val processDate = getString("processDate")!!

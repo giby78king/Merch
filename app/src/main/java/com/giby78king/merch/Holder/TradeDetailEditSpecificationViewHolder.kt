@@ -105,14 +105,14 @@ class TradeDetailEditSpecificationViewHolder(v: View) : RecyclerView.ViewHolder(
                     }
                     tempSpecList.add(
                         0, TradeDetail(
-                            accountDate = editAccountDate.text.toString(),
+                            accountDate = if(editAccountDate.text.toString()=="")  TimeFormat().TodayDate().yyyyMMdd() else editAccountDate.text.toString(),
                             id = specId,
                             modify = modify,
                             other = other,
                             price = txtSpecPrice.text.toString().toInt(),
                             processDate = editProcessDate.text.toString(),
                             specification = ddlSpecificationList[ddlPositionSpecification].id,
-                            stockDate = editStockDate.text.toString(),
+                            stockDate = if(editStockDate.text.toString()=="")  TimeFormat().TodayDate().yyyyMMdd() else editStockDate.text.toString(),
                             tradeId = "",
                         )
                     )
@@ -145,14 +145,14 @@ class TradeDetailEditSpecificationViewHolder(v: View) : RecyclerView.ViewHolder(
                         }
                     }
 
-                    tempSpecList[lastId].accountDate = editAccountDate.text.toString()
+                    tempSpecList[lastId].accountDate = if(editAccountDate.text.toString()=="")  TimeFormat().TodayDate().yyyyMMdd() else editAccountDate.text.toString()
                     tempSpecList[lastId].modify = modify
                     tempSpecList[lastId].other = other
                     tempSpecList[lastId].price = txtSpecPrice.text.toString().toInt()
                     tempSpecList[lastId].processDate = editProcessDate.text.toString()
                     tempSpecList[lastId].specification =
                         ddlSpecificationList[ddlPositionSpecification].id
-                    tempSpecList[lastId].stockDate = editStockDate.text.toString()
+                    tempSpecList[lastId].stockDate = if(editStockDate.text.toString()=="")  TimeFormat().TodayDate().yyyyMMdd() else editStockDate.text.toString()
 
 //todo 點選rv顯示正常
 //                    editProcessDate.setText(data.processDate)

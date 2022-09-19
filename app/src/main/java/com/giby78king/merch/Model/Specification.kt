@@ -29,9 +29,10 @@ data class Specification(
                     .toTypedArray()
             val limit = arrayListOf<Int>()
             for (i in limitA.indices) {
-                limit.add(limitA[i].toInt())
+                if(limitA[i]!="") {
+                    limit.add(limitA[i].toInt())
+                }
             }
-
             val member = get("member").toString().replace("[", "").replace("]", "").split(", ")
                 .toTypedArray()
             val order = getLong("order")?.toInt()!!
@@ -40,7 +41,9 @@ data class Specification(
                     .toTypedArray()
             val price = arrayListOf<Int>()
             for (i in priceA.indices) {
-                price.add(priceA[i].toInt())
+                if(priceA[i]!="") {
+                    price.add(priceA[i].toInt())
+                }
             }
 
             val product = getString("product")!!

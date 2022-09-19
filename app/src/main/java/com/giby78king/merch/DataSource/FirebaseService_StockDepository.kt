@@ -1,51 +1,47 @@
 package com.giby78king.merch.DataSource
 
-import com.giby78king.merch.Model.ProductDepository
-import com.giby78king.merch.Model.ProductDepository.Companion.dbProductDepositoryList
-import com.giby78king.merch.Model.ProductDepository.Companion.toProductDepository
+import com.giby78king.merch.Model.StockDepository
+import com.giby78king.merch.Model.StockDepository.Companion.dbStockDepositoryList
+import com.giby78king.merch.Model.StockDepository.Companion.toStockDepository
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
-object FirebaseService_ProductDepository {
+object FirebaseService_StockDepository {
 
-    private val db = FirebaseFirestore.getInstance().collection("ProductDepository")
-    suspend fun getOne(id: String): ProductDepository {
+    private val db = FirebaseFirestore.getInstance().collection("StockDepository")
+    suspend fun getOne(id: String): StockDepository {
         val data = db.document(id)
             .get()
             .await()
         if (data.getString("id") != null) {
-            return data.toProductDepository()
+            return data.toStockDepository()
         }
-        return ProductDepository(
-            channelDetail = "",
-            cost = 0,
-            date = "",
+        return StockDepository(
             favorite = false,
             group = arrayOf(),
-            holdingAmount = 0,
-            id = "",
+            holdingCost = arrayListOf(),
+            id = "newOne",
             imgUrl = "",
-            member = "",
+            member = arrayOf(),
+            message = arrayOf(),
             print = false,
-            product = "",
             profit = 0,
-            purchaseId = "",
-            saleId = "",
-            sign = false,
+            specification = "",
+            tradeDetailId = arrayOf(),
+            sign = arrayOf(),
             valuation = 0,
-            ym = "",
         )
     }
 
-    suspend fun getDatas(): MutableList<ProductDepository> {
-        dbProductDepositoryList = db
+    suspend fun getDatas(): MutableList<StockDepository> {
+        dbStockDepositoryList = db
 //            .orderBy("number", Query.Direction.DESCENDING)
             .get()
             .await()
-            .documents.mapNotNull { it.toProductDepository() }.sortedBy { it.valuation }
+            .documents.mapNotNull { it.toStockDepository() }.sortedBy { it.valuation }
             .toMutableList()
 
-        return dbProductDepositoryList
+        return dbStockDepositoryList
     }
 
     fun insertData(id: String, data: Map<String, Any>) {

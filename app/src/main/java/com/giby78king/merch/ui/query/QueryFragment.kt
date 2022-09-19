@@ -20,7 +20,7 @@ import com.giby78king.merch.TabViewClass.TabViewPagerAdapter
 import com.giby78king.merch.ViewModel.*
 import com.giby78king.merch.ui.fragment.TabQueryFragment
 import com.giby78king.merch.ui.fragment.TabProductDepositoryFragment
-import com.giby78king.merch.ui.fragment.TopProductDepositoryFragment
+//import com.giby78king.merch.ui.fragment.TopProductDepositoryFragment
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_member_edit_page.*
 import kotlinx.android.synthetic.main.activity_product_select_page.*

@@ -2,6 +2,7 @@ package com.giby78king.merch.ui.trade
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,8 +14,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.giby78king.merch.Adapter.TradeAdapter
 import com.giby78king.merch.Model.Trade
 import com.giby78king.merch.Model.Trade.Companion.dbTradeList
+import com.giby78king.merch.Model.TradeDetail
 import com.giby78king.merch.R
-import com.giby78king.merch.ViewModel.VmTradeViewModel
+import com.giby78king.merch.ViewModel.*
 import com.giby78king.merch.ui.TradeEditPage
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
@@ -35,6 +37,32 @@ class TradeFragment : Fragment() {
         vmTradeViewModel.tradeDatas.observe(viewLifecycleOwner) {
                     setTradeRecyclerView(dbTradeList)
             }
+
+
+        val vmActivitylViewModel =
+            ViewModelProvider(this)[VmActivitylViewModel::class.java]
+        val vmChannelDetailViewModel =
+            ViewModelProvider(this)[VmChannelDetailViewModel::class.java]
+        val vmTradeDetailViewModel =
+            ViewModelProvider(this)[VmTradeDetailViewModel::class.java]
+        val vmTradeRuleViewModel =
+            ViewModelProvider(this)[VmTradeRuleViewModel::class.java]
+        val vmProductViewModel =
+            ViewModelProvider(this)[VmProductViewModel::class.java]
+        val vmSpecificationViewModel =
+            ViewModelProvider(this)[VmSpecificationViewModel::class.java]
+        val vmStockDepositoryViewModel =
+            ViewModelProvider(this)[VmStockDepositoryViewModel::class.java]
+        vmActivitylViewModel.getDatas("")
+        vmChannelDetailViewModel.getDatas("")
+        vmTradeRuleViewModel.getDatas("")
+        vmTradeViewModel.getDatas("")
+        vmTradeDetailViewModel.getDatas("")
+        vmProductViewModel.getDatas("")
+        vmSpecificationViewModel.getDatas("")
+        vmStockDepositoryViewModel.getDatas("")
+
+
 
         val fab = root.findViewById<FloatingActionButton>(R.id.fab)
         fab.setOnClickListener(fabClick)

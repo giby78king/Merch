@@ -1,7 +1,9 @@
 package com.giby78king.merch.Holder
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.res.Resources
+import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
@@ -13,6 +15,8 @@ import com.giby78king.merch.Model.TextAmountSetting
 import com.giby78king.merch.Model.Trade
 
 import com.giby78king.merch.R
+import com.giby78king.merch.ui.ProductEditPage
+import com.giby78king.merch.ui.TradeEditPage
 
 
 class TradeListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
@@ -31,6 +35,18 @@ class TradeListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
         txtDate.text = data.date
         var totalAmount = 0
+
+        itemView.setOnClickListener {
+
+            var intent = Intent(itemView.context, TradeEditPage::class.java)
+
+            val bundle = Bundle()
+            bundle.putString("selectedTrade", data.id)
+            intent.putExtras(bundle)
+
+            itemView.context.startActivity(intent)
+        }
+
 //        data.amount.forEach {
 //            if (it != null) {
 //                totalAmount += it
