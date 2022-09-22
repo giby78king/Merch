@@ -178,22 +178,23 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:paddingTop="10dp"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:background="@drawable/rv_border_specification"
                     android:orientation="vertical">
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rv_list_item_member"
+                        android:id="@+id/rv_list_item_specification"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:clickable="true"
                         android:focusable="true"
                         android:focusableInTouchMode="true" />
-
                 </LinearLayout>
 
             </LinearLayout>

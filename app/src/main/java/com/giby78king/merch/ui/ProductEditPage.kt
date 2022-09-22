@@ -90,7 +90,7 @@ class ProductEditPage : AppCompatActivity() {
         ddlProductTypeList.add(DdlNormalModel("服飾", "", "Clothes"))
         ddlProductTypeList.add(DdlNormalModel("用品", "", "Supplies"))
         val customDropDownAdapter =
-            CustomDropDownAdapter("producttype", this, ddlProductTypeList)
+            CustomDropDownAdapter("producttype", this, "small",ddlProductTypeList)
         spinnerProductType.adapter = customDropDownAdapter
         spinnerProductType.setSelection(ddlPostitionProductType)
         spinnerProductType.setSelection(0)
@@ -185,6 +185,7 @@ class ProductEditPage : AppCompatActivity() {
                                 CustomDropDownAdapter(
                                     "channeldetail",
                                     parent.context,
+                                    "small",
                                     ddlChannelDetailList
                                 )
                             spinnerChannelDetail.adapter = customDropDownAdapter
@@ -196,7 +197,7 @@ class ProductEditPage : AppCompatActivity() {
                     }
 
                 val customDropDownAdapter =
-                    CustomDropDownAdapter("activity", this, ddlActivityList)
+                    CustomDropDownAdapter("activity", this,"small", ddlActivityList)
                 spinnerActivity.adapter = customDropDownAdapter
                 spinnerActivity.setSelection(ddlPositionActivity)
 
@@ -305,6 +306,7 @@ class ProductEditPage : AppCompatActivity() {
                 CustomDropDownAdapter(
                     "group",
                     this,
+                    "small",
                     ddlGroupList
                 )
             spinnerGroup.adapter = customDropDownAdapter

@@ -15,6 +15,7 @@ import com.giby78king.merch.R
 class CustomDropDownAdapter(
     val module: String,
     val context: Context?,
+    val size: String,
     private var dataSource: List<DdlNormalModel>
 ) :
     BaseAdapter() {
@@ -24,10 +25,16 @@ class CustomDropDownAdapter(
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
 
-        val view: View
+        var view: View
         val vh: ItemHolder
         if (convertView == null) {
-            view = inflater.inflate(R.layout.custom_spinner_item, parent, false)
+
+            view = inflater.inflate(R.layout.spinner_item_small, parent, false)
+
+            if(size=="medium") {
+                view = inflater.inflate(R.layout.spinner_item_medium, parent, false)
+            }
+
             vh = ItemHolder(view)
             view?.tag = vh
         } else {

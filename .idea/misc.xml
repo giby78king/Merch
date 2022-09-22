@@ -22,6 +22,7 @@
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/drawable-v24/ic_tag_delete.xml" value="0.313" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/drawable-v24/viewpager_selected_icon.xml" value="0.158" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/drawable-v24/viewpager_unselected_icon.xml" value="0.453" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/drawable/dialog_round.xml" value="0.5035" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/drawable/ic_add.xml" value="0.4045" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/drawable/ic_bot_collection.xml" value="0.319" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/drawable/ic_channeldetail_save_channel.xml" value="0.4035" />
@@ -47,6 +48,7 @@
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/drawable/ic_tag_delete.xml" value="0.313" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/drawable/midboxbackground.xml" value="0.454" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/drawable/productdepository_item_border.xml" value="0.313" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/drawable/rv_border_specification.xml" value="0.5035" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/drawable/style_edit_button.xml" value="0.313" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/drawable/switch_memo_thumb_off.xml" value="0.313" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/drawable/switch_memo_thumb_selector.xml" value="0.395" />
@@ -66,8 +68,11 @@
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/fragment_bot_member.xml" value="0.5536458333333333" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/fragment_bot_productdepository.xml" value="0.3098958333333333" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/fragment_collection.xml" value="0.5536458333333333" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/fragment_dialog_color_table.xml" value="0.5536458333333333" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/fragment_dialog_edit_.xml" value="0.3098958333333333" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/fragment_dialog_location.xml" value="0.5536458333333333" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/fragment_dialog_product_edit_all.xml" value="0.41304347826086957" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/fragment_dialog_tradedetail_specification.xml" value="0.43523550724637683" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/fragment_member.xml" value="0.45226130653266333" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/fragment_query.xml" value="0.5536458333333333" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/fragment_setting.xml" value="0.2689969604863222" />
@@ -94,10 +99,12 @@
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/rv_list_item_trade.xml" value="0.31614583333333335" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/rv_list_item_trade_specification.xml" value="0.4375" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/rv_list_item_trade_specification_selected_traderule_price.xml" value="0.5536458333333333" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/rv_list_item_tradedetail_specification.xml" value="0.5536458333333333" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/rv_list_item_tradeinner.xml" value="0.31614583333333335" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/rv_member_list_item.xml" value="0.1522289766970618" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/rv_merch_list_item.xml" value="0.5536458333333333" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/rv_transaction_class_item.xml" value="0.40520833333333334" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/spinner_item_medium.xml" value="0.5536458333333333" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/layout/tag_delete_item.xml" value="0.5536458333333333" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Merch/app/src/main/res/menu/bottom_nav_menu.xml" value="0.31296296296296294" />
       </map>

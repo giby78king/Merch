@@ -136,6 +136,7 @@ class QueryFragment : Fragment() {
                                         CustomDropDownAdapter(
                                             "activity",
                                             parent.context,
+                                            "small",
                                             Activity.ddlActivityList
                                         )
                                     spinnerActivity.adapter = customDropDownAdapter
@@ -150,7 +151,7 @@ class QueryFragment : Fragment() {
                             }
 
                         val customDropDownAdapter =
-                            CustomDropDownAdapter("channeldetail", context, ChannelDetail.ddlChannelDetailList)
+                            CustomDropDownAdapter("channeldetail", context, "small",ChannelDetail.ddlChannelDetailList)
                         spinnerChannelDetail.adapter = customDropDownAdapter
                         spinnerChannelDetail.setSelection(ddlPositionChannelDetail)
                     }
@@ -220,6 +221,7 @@ class QueryFragment : Fragment() {
                                     CustomDropDownAdapter(
                                         "member",
                                         parent.context,
+                                        "small",
                                         Member.ddlMemberList
                                     )
                                 spinnerMember.adapter = customDropDownAdapter
@@ -233,7 +235,7 @@ class QueryFragment : Fragment() {
                         }
 
                     val customDropDownAdapter =
-                        CustomDropDownAdapter("group", context, Group.ddlGroupList)
+                        CustomDropDownAdapter("group", context,"small", Group.ddlGroupList)
                     spinnerGroup.adapter = customDropDownAdapter
                     spinnerGroup.setSelection(ddlPositionGroup)
 

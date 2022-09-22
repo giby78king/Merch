@@ -149,6 +149,7 @@ class ProductSaveListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
                     CustomDropDownAdapter(
                         "member",
                         parent.context,
+                        "small",
                         ddlMemberList
                     )
                 spinnerMember.adapter = customDropDownAdapter
@@ -159,7 +160,7 @@ class ProductSaveListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         }
 
         val customDropDownAdapter =
-            CustomDropDownAdapter("group", parentView.context, ddlGroupList)
+            CustomDropDownAdapter("group", parentView.context,"small", ddlGroupList)
         spinnerGroup.adapter = customDropDownAdapter
         spinnerGroup.setSelection(ddlGroupPosition)
 

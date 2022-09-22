@@ -1,7 +1,6 @@
 package com.giby78king.merch.ui
 
 import android.app.DatePickerDialog
-import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -10,7 +9,6 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,7 +16,6 @@ import com.giby78king.merch.Adapter.*
 import com.giby78king.merch.Domain.StockDepositoryEn
 import com.giby78king.merch.Domain.TradeDetailEn
 import com.giby78king.merch.Domain.TradeEn
-import com.giby78king.merch.ImgSetting
 import com.giby78king.merch.Model.*
 import com.giby78king.merch.Model.Activity.Companion.dbActivityList
 import com.giby78king.merch.Model.Activity.Companion.ddlActivityList
@@ -51,7 +48,6 @@ import com.giby78king.merch.Model.TradeRule.Companion.dbTradeRuleList
 import com.giby78king.merch.R
 import com.giby78king.merch.TimeFormat
 import com.giby78king.merch.ViewModel.*
-import kotlinx.android.synthetic.main.activity_product_edit_page.*
 import kotlinx.android.synthetic.main.activity_trade_edit_page.*
 import kotlinx.android.synthetic.main.activity_trade_edit_page.btnSubmit
 import kotlinx.android.synthetic.main.activity_trade_edit_page.spinnerActivity
@@ -126,6 +122,7 @@ class TradeEditPage : AppCompatActivity() {
             CustomDropDownAdapter(
                 "channeldetail",
                 this,
+                "medium",
                 ddlTransType
             )
         spinnerTransType.adapter = customDropDownAdapter
@@ -415,6 +412,7 @@ class TradeEditPage : AppCompatActivity() {
             CustomDropDownAdapter(
                 "channeldetail",
                 this,
+                "small",
                 ddlChannelDetailList
             )
         spinnerChannelDetail.adapter = customDropDownAdapter
@@ -843,7 +841,7 @@ class TradeEditPage : AppCompatActivity() {
                                                                     specOtherList[i].price =
                                                                         data.other[i]
                                                                     sum += data.other[i]
-                                                                    sumOther += data.modify[i]
+                                                                    sumOther += data.other[i]
                                                                 }
                                                                 specOtherList[specOtherList.size - 1].price =
                                                                     sumOther
@@ -1084,7 +1082,6 @@ class TradeEditPage : AppCompatActivity() {
                 tempSpecList[lastId].other = other
             }
 
-
             setSpec()
         }
 
@@ -1170,13 +1167,16 @@ class TradeEditPage : AppCompatActivity() {
 
 
                             val spId = mutableListOf<String>()
-                            val cost = arrayListOf<Int>()
+                            val spCost = arrayListOf<Int>()
                             tempSpecList.filter { it.id != "addOne" && it.specification == temp.specification }
                                 .forEach {
                                     spId.add(it.id)
-                                    cost.add(it.price)
+                                    spCost.add(it.price)
                                 }
 
+                            spId.forEach {
+                                Log.d("spIdspId",":::"+it)
+                            }
 
                             val dbSt =
                                 dbStockDepositoryList.filter { db -> db.id == temp.specification }
@@ -1196,14 +1196,14 @@ class TradeEditPage : AppCompatActivity() {
                                 for (i in 0 until spId.size) {
                                     for (j in 0 until list.size) {
                                         if (spId[i] == list[j]) {
-                                            listCost[j] = cost[i]
+                                            listCost[j] = spCost[i]
                                         }
                                     }
                                 }
                                 for (i in 0 until spId.size) {
                                     if (!list.contains(spId[i])) {
                                         list.add(spId[i])
-                                        listCost.add(cost[i])
+                                        listCost.add(spCost[i])
                                     }
                                 }
 
@@ -1233,7 +1233,7 @@ class TradeEditPage : AppCompatActivity() {
                                 val stockDepositoryData = StockDepositoryEn(
                                     favorite = false,
                                     group = dbProd.group,
-                                    holdingCost = cost,
+                                    holdingCost = spCost,
                                     id = temp.specification,
                                     imgUrl = temp.specification,
                                     member = dbSp.member,
@@ -1327,6 +1327,7 @@ class TradeEditPage : AppCompatActivity() {
             CustomDropDownAdapter(
                 module,
                 page,
+                "medium",
                 list
             )
         spinner.adapter = customDropDownAdapter

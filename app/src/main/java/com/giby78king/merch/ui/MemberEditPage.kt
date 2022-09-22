@@ -87,7 +87,7 @@ class MemberEditPage : AppCompatActivity() {
 //            }
 
             val customDropDownAdapter =
-                CustomDropDownAdapter("group", this, ddlGroupList)
+                CustomDropDownAdapter("group", this, "small",ddlGroupList)
             spinnerGroup.adapter = customDropDownAdapter
             spinnerGroup.setSelection(ddlGroupPosition)
 

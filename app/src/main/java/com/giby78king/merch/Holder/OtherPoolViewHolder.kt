@@ -90,7 +90,7 @@ class OtherPoolViewHolder(v: View) : RecyclerView.ViewHolder(v) {
                     }
 
                     val priceFix = specOtherList[index].price
-                    specOtherList[specOtherList.size - 1].price += priceFix
+                    specOtherList[specOtherList.size - 1].price -= priceFix
                     specOtherList.removeAt(index)
 
                     rvAddPoolSpecOther.adapter = PoolTradeEditSpecOtherAdapter(specOtherList, page)

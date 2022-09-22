@@ -68,6 +68,9 @@ class TradeDetailEditSpecificationViewHolder(v: View) : RecyclerView.ViewHolder(
         val editStockDate: EditText = page.findViewById(R.id.editStockDate)
         val editAccountDate: EditText = page.findViewById(R.id.editAccountDate)
 
+        if(data.id== nowEditId) {
+            txtName.setTextColor(Color.parseColor("#FF000000"))
+        }
 
         if (data.id == "addOne") {
             val resources: Resources = itemView.context!!.resources

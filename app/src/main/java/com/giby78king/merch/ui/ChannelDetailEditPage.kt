@@ -85,7 +85,7 @@ class ChannelDetailEditPage : AppCompatActivity() {
             }
 
             val customDropDownAdapter =
-                CustomDropDownAdapter("channel", this, ddlChannelList)
+                CustomDropDownAdapter("channel", this,"small", ddlChannelList)
             spinnerChannel.adapter = customDropDownAdapter
             spinnerChannel.setSelection(ddlChannelPosition)
 

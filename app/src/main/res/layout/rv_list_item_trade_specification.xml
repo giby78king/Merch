@@ -25,14 +25,15 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="10dp">
+                    android:paddingTop="10dp"
+                    android:paddingHorizontal="5dp">
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/imgSpec"
-                        android:adjustViewBounds="true"
-                        android:scaleType="fitXY"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitXY"
                         app:shapeAppearance="@android:color/transparent"
                         app:shapeAppearanceOverlay="@style/roundedCorner" />
 
@@ -51,11 +52,11 @@
                 android:id="@+id/txtName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxHeight="65dp"
+                android:maxHeight="70dp"
                 android:gravity="center_horizontal|center_vertical|center|top"
                 android:text="新增"
                 android:textSize="10sp"
-                android:lineHeight="9sp"
+                android:lineHeight="10sp"
                 android:textColor="#ffffff"
                 android:textStyle="bold" />
 

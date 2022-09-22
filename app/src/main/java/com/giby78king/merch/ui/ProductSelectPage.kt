@@ -130,6 +130,7 @@ class ProductSelectPage : AppCompatActivity() {
                                         CustomDropDownAdapter(
                                             "activity",
                                             parent.context,
+                                            "small",
                                             ddlActivityList
                                         )
                                     spinnerActivity.adapter = customDropDownAdapter
@@ -144,7 +145,7 @@ class ProductSelectPage : AppCompatActivity() {
                             }
 
                         val customDropDownAdapter =
-                            CustomDropDownAdapter("channeldetail", this, ddlChannelDetailList)
+                            CustomDropDownAdapter("channeldetail", this,"small", ddlChannelDetailList)
                         spinnerChannelDetail.adapter = customDropDownAdapter
                         spinnerChannelDetail.setSelection(ddlPositionChannelDetail)
                     }
@@ -214,6 +215,7 @@ class ProductSelectPage : AppCompatActivity() {
                                     CustomDropDownAdapter(
                                         "member",
                                         parent.context,
+                                        "small",
                                         ddlMemberList
                                     )
                                 spinnerMember.adapter = customDropDownAdapter
@@ -227,7 +229,7 @@ class ProductSelectPage : AppCompatActivity() {
                         }
 
                     val customDropDownAdapter =
-                        CustomDropDownAdapter("group", this, Group.ddlGroupList)
+                        CustomDropDownAdapter("group", this,"small", Group.ddlGroupList)
                     spinnerGroup.adapter = customDropDownAdapter
                     spinnerGroup.setSelection(ddlPositionGroup)
 

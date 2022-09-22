@@ -473,7 +473,7 @@
                                             <Spinner
                                                 android:id="@+id/spinnerChannelDetail"
                                                 android:layout_width="match_parent"
-                                                android:layout_height="45dp" />
+                                                android:layout_height="60dp" />
                                         </LinearLayout>
                                     </LinearLayout>
 
@@ -554,7 +554,7 @@
                                             <Spinner
                                                 android:id="@+id/spinnerModify"
                                                 android:layout_width="match_parent"
-                                                android:layout_height="45dp" />
+                                                android:layout_height="60dp" />
 
                                         </LinearLayout>
 
@@ -667,7 +667,7 @@
                                             <Spinner
                                                 android:id="@+id/spinnerOther"
                                                 android:layout_width="match_parent"
-                                                android:layout_height="45dp" />
+                                                android:layout_height="60dp" />
 
                                         </LinearLayout>
 
@@ -929,17 +929,17 @@
                                         <Spinner
                                             android:id="@+id/spinnerActivity"
                                             android:layout_width="match_parent"
-                                            android:layout_height="45dp" />
+                                            android:layout_height="60dp" />
 
                                         <Spinner
                                             android:id="@+id/spinnerProduct"
                                             android:layout_width="match_parent"
-                                            android:layout_height="45dp" />
+                                            android:layout_height="60dp" />
 
                                         <Spinner
                                             android:id="@+id/spinnerSpecification"
                                             android:layout_width="match_parent"
-                                            android:layout_height="45dp" />
+                                            android:layout_height="60dp" />
                                     </LinearLayout>
                                 </LinearLayout>
                             </LinearLayout>

@@ -6,16 +6,17 @@ import android.content.res.Resources
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.giby78king.merch.Adapter.TradeDetailTradeFgAdapter
+import com.giby78king.merch.Model.ChannelDetail.Companion.dbChannelDetailList
 
-import com.giby78king.merch.Model.TextAmountSetting
 import com.giby78king.merch.Model.Trade
+import com.giby78king.merch.Model.TradeDetail
+import com.giby78king.merch.Model.TradeDetail.Companion.dbTradeDetailList
 
 import com.giby78king.merch.R
-import com.giby78king.merch.ui.ProductEditPage
 import com.giby78king.merch.ui.TradeEditPage
 
 
@@ -26,7 +27,8 @@ class TradeListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
     private val txtAmount: TextView = v.findViewById(R.id.txtAmount)
     private val txtChannelDetail: TextView = v.findViewById(R.id.txtChannelDetail)
 
-    private val rv_list_item_member: RecyclerView = v.findViewById(R.id.rv_list_item_member)
+    private val rv_list_item_specification: RecyclerView =
+        v.findViewById(R.id.rv_list_item_specification)
 
     val res: Resources = v.context.resources
 
@@ -34,7 +36,30 @@ class TradeListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
     fun bind(data: Trade) {
 
         txtDate.text = data.date
+        txtChannelDetail.text = dbChannelDetailList.first { it.id == data.channelDetail }.name
+
         var totalAmount = 0
+        var list = mutableListOf<TradeDetail>()
+
+        if (data.tradeDetail.isNotEmpty()) {
+            data.tradeDetail.forEach { tradeDetailId ->
+                val tradeDetailInfo = dbTradeDetailList.firstOrNull { it.id == tradeDetailId }
+                if (tradeDetailInfo != null) {
+                    totalAmount += tradeDetailInfo.price
+                    list.add(tradeDetailInfo)
+                }
+            }
+        }
+
+        txtAmount.text = totalAmount.toString()
+        list = list.sortedByDescending {it.price }.toMutableList()
+
+        val layoutManager = LinearLayoutManager(parentView.context)
+        layoutManager.orientation = LinearLayoutManager.VERTICAL
+        val numberOfColumns = 5
+        rv_list_item_specification.layoutManager =
+            GridLayoutManager(parentView.context, numberOfColumns)
+        rv_list_item_specification.adapter = TradeDetailTradeFgAdapter(list)
 
         itemView.setOnClickListener {
 
@@ -46,40 +71,6 @@ class TradeListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
             itemView.context.startActivity(intent)
         }
-
-//        data.amount.forEach {
-//            if (it != null) {
-//                totalAmount += it
-//            }
-//        }
-//        txtAmount.text = TextAmountSetting().formatAmountNoDollar(totalAmount.toString())
-//        txtChannelDetail.text = data.channelDetail
-//
-//        itemView.setOnClickListener {
-//            Toast.makeText(it.context, "Click", Toast.LENGTH_SHORT).show()
-//        }
-//
-//        var list = mutableListOf<TradeInner>()
-//
-//        var index = 0
-//        data.holdingMember.forEach {
-//            list.add(
-//                TradeInner(
-//                    amount = data.amount[index]!!,
-//                    holdingAmount = data.holdingAmount[index]!!,
-//                    holdingMember = data.holdingMember[index]!!,
-//                    imgUrl = data.imgUrl[index]!!,
-//                    product = data.product[index]!!,
-//                )
-//            )
-//            index++
-//        }
-
-//        val layoutManager = LinearLayoutManager(parentView.context)
-//        layoutManager.orientation = LinearLayoutManager.VERTICAL
-//        val numberOfColumns = 1
-//        rv_list_item_member.layoutManager = GridLayoutManager(parentView.context, numberOfColumns)
-//        rv_list_item_member.adapter = TradeInnerAdapter(list)
 
     }
 }

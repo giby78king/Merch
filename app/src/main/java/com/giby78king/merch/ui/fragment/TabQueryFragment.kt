@@ -102,7 +102,7 @@ class TabQueryFragment : Fragment() {
             })
 
             val customDropDownAdapter =
-                CustomDropDownAdapter("group", this.context, Group.ddlGroupList)
+                CustomDropDownAdapter("group", this.context,"small", Group.ddlGroupList)
             spinnerGroup.adapter = customDropDownAdapter
             spinnerGroup.setSelection(ddlGroupPosition)
         }
@@ -176,7 +176,7 @@ class TabQueryFragment : Fragment() {
             })
 
             val customDropDownAdapter =
-                CustomDropDownAdapter("channel", this.context, Channel.ddlChannelList)
+                CustomDropDownAdapter("channel", this.context,"small", Channel.ddlChannelList)
             spinnerChannel.adapter = customDropDownAdapter
             spinnerChannel.setSelection(ddlChannelPosition)
         }
