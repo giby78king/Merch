@@ -1,6 +1,7 @@
 package com.giby78king.merch.ui
 
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -52,13 +53,18 @@ import kotlinx.android.synthetic.main.activity_trade_edit_page.*
 import kotlinx.android.synthetic.main.activity_trade_edit_page.btnSubmit
 import kotlinx.android.synthetic.main.activity_trade_edit_page.spinnerActivity
 import kotlinx.android.synthetic.main.activity_trade_edit_page.spinnerChannelDetail
+import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.Calendar.getInstance
+import kotlin.coroutines.CoroutineContext
 
 
 class TradeEditPage : AppCompatActivity() {
-
+    private val myScope = object : CoroutineScope {
+        override val coroutineContext: CoroutineContext
+            get() = Job()
+    }
     private lateinit var nowEditText: EditText
     var init = true
     lateinit var page: TradeEditPage
@@ -629,7 +635,6 @@ class TradeEditPage : AppCompatActivity() {
                     tradeModifyList.clear()
                     specModifyList.forEach {
                         if (it.rule != "sum") {
-                            Log.d("tradeModifyList.add(it.rule)", "::" + it.rule)
                             modify.add(it.price)
                             tradeModifyList.add(it.rule)
                         }
@@ -1126,44 +1131,76 @@ class TradeEditPage : AppCompatActivity() {
         if (selectedTrade.isNotEmpty() && selectedTrade != "null") {
             setEditPageData(selectedTrade)
         }
+
+        vmStockDepositoryViewModel.getDatas("")
+        vmTradeDetailViewModel.getDatas("")
+
         btnSubmit.setOnClickListener {
             try {
                 btnSubmit.startLoading()
-
                 if (editProcessDate.text.toString() == "") {
                     Toast.makeText(applicationContext, "交易日不得為空！！", Toast.LENGTH_SHORT)
                         .show()
                     btnSubmit.loadingFailed()
                     return@setOnClickListener
                 }
+                myScope.launch {
+                    var tradeId = TimeFormat().TodayDate().yyyyMMddHHmmss()
 
-                var tradeId = TimeFormat().TodayDate().yyyyMMddHHmmss()
+                    if (selectedTrade.isNotEmpty() && selectedTrade != "null") {
+                        tradeId = selectedTrade
+                    }
 
-                if (selectedTrade.isNotEmpty() && selectedTrade != "null") {
-                    tradeId = selectedTrade
-                }
+                    val dbT =
+                        dbTradeList.filter { db -> db.id == tradeId }
+                            .toMutableList()
+                    if (dbT.size > 0) {
+                        dbT[0].tradeDetail.forEach { td ->
+                            withContext(Dispatchers.Default) {
+                                val en = TradeDetailEn.getOne(td)
+                                en.delete()
 
-                var speList = mutableListOf<String>()
+                                val tdList = dbTradeDetailList.filter { it.id == td }
+                                if (tdList.isNotEmpty() && tdList[0].specification!="") {
+                                    val en = StockDepositoryEn.getOne(tdList[0].specification)
+                                    val index = en.tradeDetailId.indexOfFirst { it == td }
 
-                tempSpecList.filter { it.id != "addOne" }.forEach { temp ->
-                    speList.add(temp.id)
+                                    if (index != -1) {
+                                        en.holdingCost.removeAt(index)
+                                        val list = en.tradeDetailId.toMutableList()
+                                        list.removeAt(index)
+                                        en.tradeDetailId = list.toTypedArray()
 
-                    val tradeDetailData = TradeDetailEn(
-                        accountDate = temp.accountDate,
-                        id = temp.id,
-                        modify = temp.modify,
-                        other = temp.other,
-                        price = temp.price,
-                        processDate = editProcessDate.text.toString(),
-                        specification = temp.specification,
-                        stockDate = temp.stockDate,
-                        tradeId = tradeId,
-                    )
-                    vmTradeDetailViewModel.upsertOne(tradeDetailData)
+                                        en.save()
+                                    }
+                                }
+                            }
+                        }
+                    }
 
-                    if (temp.stockDate >= TimeFormat().TodayDate().yyyyMMdd()) {
-                        vmStockDepositoryViewModel.getDatas("")
-                        vmStockDepositoryViewModel.stockDepositoryDatas.observe(this) {
+
+                    var speList = mutableListOf<String>()
+                    tempSpecList.filter { it.id != "addOne" }.forEach { temp ->
+
+                        speList.add(temp.id)
+
+                        val tradeDetailData = TradeDetailEn(
+                            accountDate = temp.accountDate,
+                            id = temp.id,
+                            modify = temp.modify,
+                            other = temp.other,
+                            price = temp.price,
+                            processDate = editProcessDate.text.toString(),
+                            specification = temp.specification,
+                            stockDate = temp.stockDate,
+                            tradeId = tradeId,
+                        )
+
+                        withContext(Dispatchers.Default) {
+                            vmTradeDetailViewModel.upsertOne(tradeDetailData)
+                        }
+
+                        if (temp.stockDate >= TimeFormat().TodayDate().yyyyMMdd()) {
 
 
                             val spId = mutableListOf<String>()
@@ -1174,10 +1211,6 @@ class TradeEditPage : AppCompatActivity() {
                                     spCost.add(it.price)
                                 }
 
-                            spId.forEach {
-                                Log.d("spIdspId",":::"+it)
-                            }
-
                             val dbSt =
                                 dbStockDepositoryList.filter { db -> db.id == temp.specification }
                                     .toMutableList()
@@ -1185,6 +1218,8 @@ class TradeEditPage : AppCompatActivity() {
                             if (dbSt.size > 0) {
 
                                 val list = dbSt[0].tradeDetailId.toMutableList()
+                                list.remove("")
+
                                 val listCost = arrayListOf<Int>()
                                 val listDbCost = dbSt[0].holdingCost.toMutableList()
 
@@ -1192,6 +1227,7 @@ class TradeEditPage : AppCompatActivity() {
                                     listCost.add(it)
                                 }
 
+                                spId.sortedBy { it }
 
                                 for (i in 0 until spId.size) {
                                     for (j in 0 until list.size) {
@@ -1202,7 +1238,10 @@ class TradeEditPage : AppCompatActivity() {
                                 }
                                 for (i in 0 until spId.size) {
                                     if (!list.contains(spId[i])) {
-                                        list.add(spId[i])
+
+                                        if(spId[i]!=""){
+                                            list.add(spId[i])
+                                        }
                                         listCost.add(spCost[i])
                                     }
                                 }
@@ -1222,9 +1261,9 @@ class TradeEditPage : AppCompatActivity() {
                                     sign = dbSt[0].sign,
                                     valuation = dbSt[0].valuation,
                                 )
-
-                                vmStockDepositoryViewModel.upsertOne(stockDepositoryData)
-
+                                withContext(Dispatchers.Default) {
+                                    vmStockDepositoryViewModel.upsertOne(stockDepositoryData)
+                                }
                             } else {
                                 val dbSp =
                                     dbSpecificationList.first { db -> db.id == temp.specification }
@@ -1245,30 +1284,31 @@ class TradeEditPage : AppCompatActivity() {
                                     sign = arrayOf(),
                                     valuation = 0,
                                 )
-                                vmStockDepositoryViewModel.upsertOne(stockDepositoryData)
-
+                                withContext(Dispatchers.Default) {
+                                    vmStockDepositoryViewModel.upsertOne(stockDepositoryData)
+                                }
                             }
+
                         }
                     }
+
+                    val tradeData = TradeEn(
+                        channelDetail = ddlChannelDetailList[ddlPositionChannelDetail].id,
+                        date = editProcessDate.text.toString(),
+                        id = tradeId,
+                        modifyRule = tradeModifyList.toTypedArray(),
+                        otherRule = tradeOtherList.toTypedArray(),
+                        tradeDetail = speList.toTypedArray(),
+                        transType = ddlTransType[ddlPositionTransType].id,
+                        ym = editProcessDate.text.toString().substring(0, 6),
+                    )
+                    vmTradeViewModel.upsertOne(tradeData)
                 }
-
-
-                val tradeData = TradeEn(
-                    channelDetail = ddlChannelDetailList[ddlPositionChannelDetail].id,
-                    date = editProcessDate.text.toString(),
-                    id = tradeId,
-                    modifyRule = tradeModifyList.toTypedArray(),
-                    otherRule = tradeOtherList.toTypedArray(),
-                    tradeDetail = speList.toTypedArray(),
-                    transType = ddlTransType[ddlPositionTransType].id,
-                    ym = editProcessDate.text.toString().substring(0, 6),
-                )
-                vmTradeViewModel.upsertOne(tradeData)
-
                 btnSubmit.loadingSuccessful()
 
                 btnSubmit.animationEndAction = {
-                    btnSubmit.reset()
+                    val intent = Intent(this, MainActivity::class.java)
+                    this.startActivity(intent)
                 }
 
             } catch (ex: Exception) {

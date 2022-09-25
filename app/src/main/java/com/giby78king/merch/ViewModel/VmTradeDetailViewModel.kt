@@ -38,13 +38,13 @@ class VmTradeDetailViewModel : ViewModel() {
             FirebaseService_TradeDetail.getDatas()
             when (selection) {
                 "editTradeDetailId" -> {
-                    _tradeDetailDatas.value = dbTradeDetailList
+                    _tradeDetailDatas.value = dbTradeDetailList.toMutableList()
                 }
                 "UpsertTradeDetail" -> {
-                    _upsertTradeDatas.value = dbTradeDetailList
+                    _upsertTradeDatas.value = dbTradeDetailList.toMutableList()
                 }
                 else -> {
-                    _tradeDetailDatas.value = dbTradeDetailList
+                    _tradeDetailDatas.value = dbTradeDetailList.toMutableList()
                 }
             }
         }

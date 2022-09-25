@@ -1,8 +1,7 @@
 package com.giby78king.merch.Domain
 
-import com.giby78king.merch.DataSource.FirebaseService_Product
-import com.giby78king.merch.DataSource.FirebaseService_Trade
 import com.giby78king.merch.DataSource.FirebaseService_TradeDetail
+import com.giby78king.merch.Model.TradeDetail
 
 data class TradeDetailEn(
     var accountDate: String,
@@ -15,6 +14,24 @@ data class TradeDetailEn(
     var stockDate: String,
     val tradeId: String,
 ) {
+    companion object {
+        suspend fun getOne(id: String): TradeDetailEn {
+            val data = FirebaseService_TradeDetail.getOne(id)
+            val en: TradeDetailEn
+            en = TradeDetailEn(
+                accountDate = data.accountDate,
+                id = data.id,
+                modify = data.modify,
+                other = data.other,
+                price = data.price,
+                processDate = data.processDate,
+                specification = data.specification,
+                stockDate = data.stockDate,
+                tradeId = data.tradeId,
+            )
+            return en
+        }
+    }
     suspend fun <T> updateOne(data: T) {
         data as TradeDetailEn
         val dbData: HashMap<String, Any> = hashMapOf()

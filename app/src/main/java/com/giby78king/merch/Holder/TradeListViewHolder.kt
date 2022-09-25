@@ -43,7 +43,7 @@ class TradeListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
         if (data.tradeDetail.isNotEmpty()) {
             data.tradeDetail.forEach { tradeDetailId ->
-                val tradeDetailInfo = dbTradeDetailList.firstOrNull { it.id == tradeDetailId }
+                val tradeDetailInfo = dbTradeDetailList.toMutableList().firstOrNull { it.id == tradeDetailId }
                 if (tradeDetailInfo != null) {
                     totalAmount += tradeDetailInfo.price
                     list.add(tradeDetailInfo)

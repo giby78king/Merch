@@ -1,6 +1,7 @@
 package com.giby78king.merch.Domain
 
 import com.giby78king.merch.DataSource.FirebaseService_StockDepository
+import com.giby78king.merch.DataSource.FirebaseService_TradeDetail
 
 data class StockDepositoryEn(
     val favorite: Boolean,
@@ -12,11 +13,33 @@ data class StockDepositoryEn(
     val message: Array<String>,
     val print: Boolean,
     val specification: String,
-    val tradeDetailId: Array<String>,
+    var tradeDetailId: Array<String>,
     val profit: Int,
     val sign: Array<String>,
     val valuation: Int,
 ) {
+    companion object {
+        suspend fun getOne(id: String): StockDepositoryEn {
+            val data = FirebaseService_StockDepository.getOne(id)
+            val en: StockDepositoryEn
+            en = StockDepositoryEn(
+                favorite = data.favorite,
+                group = data.group,
+                holdingCost = data.holdingCost,
+                id = data.id,
+                imgUrl = data.imgUrl,
+                member = data.member,
+                message = data.message,
+                print = data.print,
+                specification = data.specification,
+                tradeDetailId = data.tradeDetailId,
+                profit= data.profit,
+                sign = data.sign,
+                valuation= data.valuation,
+            )
+            return en
+        }
+    }
     suspend fun <T> updateOne(data: T) {
         data as StockDepositoryEn
         val dbData: HashMap<String, Any> = hashMapOf()
