@@ -32,13 +32,6 @@ class TradeFragment : Fragment() {
         root = inflater.inflate(R.layout.fragment_trade, container, false)
         val vmTradeViewModel =
             ViewModelProvider(this)[VmTradeViewModel::class.java]
-
-        vmTradeViewModel.getDatas("")
-        vmTradeViewModel.tradeDatas.observe(viewLifecycleOwner) {
-                    setTradeRecyclerView(dbTradeList)
-            }
-
-
         val vmActivitylViewModel =
             ViewModelProvider(this)[VmActivitylViewModel::class.java]
         val vmChannelDetailViewModel =
@@ -56,12 +49,19 @@ class TradeFragment : Fragment() {
         vmActivitylViewModel.getDatas("")
         vmChannelDetailViewModel.getDatas("")
         vmTradeRuleViewModel.getDatas("")
-        vmTradeViewModel.getDatas("")
         vmTradeDetailViewModel.getDatas("")
         vmProductViewModel.getDatas("")
         vmSpecificationViewModel.getDatas("")
         vmStockDepositoryViewModel.getDatas("")
 
+
+        vmTradeViewModel.getDatas("")
+        vmTradeViewModel.tradeDatas.observe(viewLifecycleOwner) {
+            vmSpecificationViewModel.getDatas("")
+            vmSpecificationViewModel.specificationDatas.observe(viewLifecycleOwner) {
+                setTradeRecyclerView(dbTradeList)
+            }
+        }
 
 
         val fab = root.findViewById<FloatingActionButton>(R.id.fab)
@@ -69,6 +69,7 @@ class TradeFragment : Fragment() {
 
         return root
     }
+
     private fun setTradeRecyclerView(list: MutableList<Trade>) {
         val rvSetting =
             root.findViewById<RecyclerView>(R.id.rv_list_item_trade)
@@ -79,6 +80,7 @@ class TradeFragment : Fragment() {
         rvSetting.layoutManager = GridLayoutManager(context, numberOfColumns)
         rvSetting.adapter = TradeAdapter(list)
     }
+
     private val fabClick =
         View.OnClickListener {
             startActivity(Intent().setClass(this.requireActivity(), TradeEditPage::class.java))

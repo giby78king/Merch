@@ -199,6 +199,7 @@ class ChannelDetailEditPage : AppCompatActivity() {
                     id = formatId,
                     imgUrl = formatId,
                     name = editName.text.toString(),
+                    order = dbChannelDetailList.size
                 )
                 vmChannelDetailViewModel.upsertOne(channelDetailData)
 

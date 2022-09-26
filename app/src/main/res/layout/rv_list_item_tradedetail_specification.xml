@@ -3,7 +3,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="70dp"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingBottom="5dp">
 
     <LinearLayout
         android:layout_width="70dp"
@@ -30,10 +31,10 @@
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/imgSpec"
-                        android:adjustViewBounds="true"
-                        android:scaleType="fitXY"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitXY"
                         app:shapeAppearance="@android:color/transparent"
                         app:shapeAppearanceOverlay="@style/roundedCorner" />
 
@@ -47,7 +48,17 @@
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:orientation="vertical">
-
+            <TextView
+                android:id="@+id/txtAmount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxHeight="70dp"
+                android:gravity="center_horizontal|center_vertical|center|top"
+                android:text="金額"
+                android:textSize="10sp"
+                android:textColor="#4286f4"
+                android:lineHeight="10sp"
+                android:textStyle="bold" />
             <TextView
                 android:id="@+id/txtName"
                 android:layout_width="match_parent"

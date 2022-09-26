@@ -7,6 +7,7 @@ data class ChannelDetailEn(
     val id: String,
     val imgUrl: String,
     val name: String,
+    val order: Int,
 ) {
     suspend fun <T> updateOne(data: T) {
         data as ChannelDetailEn
@@ -15,26 +16,22 @@ data class ChannelDetailEn(
         dbData["id"] = data.id
         dbData["imgUrl"] = data.imgUrl
         dbData["name"] = data.name
+        dbData["order"] = data.order
         FirebaseService_ChannelDetail.updateData(id, dbData)
     }
 
     suspend fun save() {
         val data = FirebaseService_ChannelDetail.getOne(id)
+        val dbData = hashMapOf(
+            "channel" to channel,
+            "id" to id,
+            "imgUrl" to imgUrl,
+            "name" to name,
+            "order" to order
+        )
         if (data.id == "newOne") {
-            val dbData = hashMapOf(
-                "channel" to channel,
-                "id" to id,
-                "imgUrl" to imgUrl,
-                "name" to name,
-            )
             FirebaseService_ChannelDetail.insertData(id, dbData)
         } else {
-            val dbData = hashMapOf(
-                "channel" to channel,
-                "id" to id,
-                "imgUrl" to imgUrl,
-                "name" to name,
-            )
             FirebaseService_ChannelDetail.updateData(id, dbData)
         }
     }

@@ -504,20 +504,29 @@ class TradeEditPage : AppCompatActivity() {
                 if (!tradeModifyList.contains(ddlModifyList[ddlPositionModify].id))            //排除重複點選
                 {
                     tradeModifyList.add(ddlModifyList[ddlPositionModify].id)
-                }
 
-                var sortList = mutableListOf<String>()
-                dbTradeRuleList.filter { it.type == "Modify" || it.type == "Fluctuate" }
-                    .sortedBy { it.id }.toMutableList().forEach { chd ->
-                        tradeModifyList.forEach { act ->
-                            if (act == chd.id) {
-                                sortList.add(act)
+                    var sortList = mutableListOf<String>()
+                    var index = 0
+                    dbTradeRuleList.filter { it.type == "Modify" || it.type == "Fluctuate" }
+                        .sortedBy { it.id }.toMutableList().forEach { chd ->
+                            tradeModifyList.forEach { act ->
+                                if (act == chd.id) {
+                                    if (act == ddlModifyList[ddlPositionModify].id) {
+                                        tempSpecList.filter { it.id != "addOne" }.forEach {
+                                            it.modify.add(index, 0)
+                                        }
+                                    }
+                                    sortList.add(act)
+                                    index++
+                                }
                             }
                         }
-                    }
-                tradeModifyList = sortList
 
-                vmTradeViewModel.setSelectedModify()
+
+                    tradeModifyList = sortList
+
+                    vmTradeViewModel.setSelectedModify()
+                }
             }
         }
 
@@ -558,19 +567,26 @@ class TradeEditPage : AppCompatActivity() {
                 if (!tradeOtherList.contains(ddlOtherList[ddlPositionOther].id))            //排除重複點選
                 {
                     tradeOtherList.add(ddlOtherList[ddlPositionOther].id)
-                }
 
-                var sortList = mutableListOf<String>()
-                dbTradeRuleList.filter { it.type == "Other" || it.type == "Fluctuate" }
-                    .sortedBy { it.id }.toMutableList().forEach { chd ->
-                        tradeOtherList.forEach { act ->
-                            if (act == chd.id) {
-                                sortList.add(act)
+                    var sortList = mutableListOf<String>()
+                    var index = 0
+                    dbTradeRuleList.filter { it.type == "Other" || it.type == "Fluctuate" }
+                        .sortedBy { it.id }.toMutableList().forEach { chd ->
+                            tradeOtherList.forEach { act ->
+                                if (act == chd.id) {
+                                    if (act == ddlOtherList[ddlPositionOther].id) {
+                                        tempSpecList.filter { it.id != "addOne" }.forEach {
+                                            it.other.add(index, 0)
+                                        }
+                                    }
+                                    sortList.add(act)
+                                    index++
+                                }
                             }
                         }
-                    }
-                tradeOtherList = sortList
-                vmTradeViewModel.setSelectedOther()
+                    tradeOtherList = sortList
+                    vmTradeViewModel.setSelectedOther()
+                }
             }
         }
 
@@ -737,9 +753,7 @@ class TradeEditPage : AppCompatActivity() {
 
                                     ddlProductList.clear()
                                     dbProductList.filter {
-                                        it.activity == ddlActivityList[ddlPositionActivity].id && it.channelDetail.contains(
-                                            ddlChannelDetailList[ddlPositionChannelDetail].id
-                                        )
+                                        it.activity == ddlActivityList[ddlPositionActivity].id
                                     }.forEach {
                                         ddlProductList.add(
                                             DdlNormalModel(
@@ -1144,6 +1158,25 @@ class TradeEditPage : AppCompatActivity() {
                     btnSubmit.loadingFailed()
                     return@setOnClickListener
                 }
+                if (editPrice.text.toString() !="" && editPrice.text.toString() != txtTotalSpecPrice.text.toString()) {
+                    Toast.makeText(applicationContext, "總金額不符！！", Toast.LENGTH_SHORT)
+                        .show()
+                    btnSubmit.loadingFailed()
+                    return@setOnClickListener
+                }
+                if (editModify.text.toString() !="" && editModify.text.toString() != txtTotalSpecModify.text.toString()) {
+                    Toast.makeText(applicationContext, "總調整不符！！", Toast.LENGTH_SHORT)
+                        .show()
+                    btnSubmit.loadingFailed()
+                    return@setOnClickListener
+                }
+                if (editOther.text.toString() !="" && editOther.text.toString() != txtTotalSpecOther.text.toString()) {
+                    Toast.makeText(applicationContext, "總額外不符！！", Toast.LENGTH_SHORT)
+                        .show()
+                    btnSubmit.loadingFailed()
+                    return@setOnClickListener
+                }
+
                 myScope.launch {
                     var tradeId = TimeFormat().TodayDate().yyyyMMddHHmmss()
 
@@ -1161,7 +1194,7 @@ class TradeEditPage : AppCompatActivity() {
                                 en.delete()
 
                                 val tdList = dbTradeDetailList.filter { it.id == td }
-                                if (tdList.isNotEmpty() && tdList[0].specification!="") {
+                                if (tdList.isNotEmpty() && tdList[0].specification != "") {
                                     val en = StockDepositoryEn.getOne(tdList[0].specification)
                                     val index = en.tradeDetailId.indexOfFirst { it == td }
 
@@ -1170,8 +1203,10 @@ class TradeEditPage : AppCompatActivity() {
                                         val list = en.tradeDetailId.toMutableList()
                                         list.removeAt(index)
                                         en.tradeDetailId = list.toTypedArray()
-
-                                        en.save()
+                                        withContext(Dispatchers.Default) {
+                                            en.save()
+                                            vmStockDepositoryViewModel.getDatas("")
+                                        }
                                     }
                                 }
                             }
@@ -1206,6 +1241,7 @@ class TradeEditPage : AppCompatActivity() {
                             val spId = mutableListOf<String>()
                             val spCost = arrayListOf<Int>()
                             tempSpecList.filter { it.id != "addOne" && it.specification == temp.specification }
+                                .sortedBy { it.price }
                                 .forEach {
                                     spId.add(it.id)
                                     spCost.add(it.price)
@@ -1227,8 +1263,6 @@ class TradeEditPage : AppCompatActivity() {
                                     listCost.add(it)
                                 }
 
-                                spId.sortedBy { it }
-
                                 for (i in 0 until spId.size) {
                                     for (j in 0 until list.size) {
                                         if (spId[i] == list[j]) {
@@ -1238,8 +1272,7 @@ class TradeEditPage : AppCompatActivity() {
                                 }
                                 for (i in 0 until spId.size) {
                                     if (!list.contains(spId[i])) {
-
-                                        if(spId[i]!=""){
+                                        if (spId[i] != "") {
                                             list.add(spId[i])
                                         }
                                         listCost.add(spCost[i])
@@ -1265,6 +1298,7 @@ class TradeEditPage : AppCompatActivity() {
                                     vmStockDepositoryViewModel.upsertOne(stockDepositoryData)
                                 }
                             } else {
+
                                 val dbSp =
                                     dbSpecificationList.first { db -> db.id == temp.specification }
                                 val dbProd = dbProductList.first { db -> db.id == dbSp.product }

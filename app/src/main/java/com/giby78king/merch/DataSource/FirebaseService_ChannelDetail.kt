@@ -22,6 +22,8 @@ object FirebaseService_ChannelDetail {
             id = "newOne",
             imgUrl = "",
             name = "",
+            order = 0,
+            type = "",
         )
     }
 

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.giby78king.merch.Adapter.TradeDetailTradeFgAdapter
 import com.giby78king.merch.Model.ChannelDetail.Companion.dbChannelDetailList
+import com.giby78king.merch.Model.TextAmountSetting
 
 import com.giby78king.merch.Model.Trade
 import com.giby78king.merch.Model.TradeDetail
@@ -51,8 +52,8 @@ class TradeListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
             }
         }
 
-        txtAmount.text = totalAmount.toString()
-        list = list.sortedByDescending {it.price }.toMutableList()
+        txtAmount.text = TextAmountSetting().formatAmount(totalAmount.toString())
+        list = list.sortedBy {it.price }.toMutableList()
 
         val layoutManager = LinearLayoutManager(parentView.context)
         layoutManager.orientation = LinearLayoutManager.VERTICAL

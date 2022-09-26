@@ -7,6 +7,8 @@ data class ChannelDetail(
     var id: String,
     val imgUrl: String,
     val name: String,
+    val order: Int,
+    val type: String,
 ) {
 
     companion object {
@@ -20,12 +22,16 @@ data class ChannelDetail(
             val id = getString("id")!!
             val imgUrl = getString("imgUrl")!!
             val name = getString("name")!!
+            val order = if(getLong("order")==null) 0 else getLong("order")?.toInt()!!
+            val type = getString("type")!!
 
             return ChannelDetail(
                 channel,
                 id,
                 imgUrl,
                 name,
+                order,
+                type
             )
         }
     }

@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.giby78king.merch.ImgSetting
 import com.giby78king.merch.Model.Specification
+import com.giby78king.merch.Model.TextAmountSetting
 import com.giby78king.merch.Model.TradeDetail
 import com.giby78king.merch.R
 
@@ -19,6 +20,7 @@ class TradeDetailTradeFgListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
     private val parentView = v
 
     private val txtName: TextView = v.findViewById(R.id.txtName)
+    private val txtAmount: TextView = v.findViewById(R.id.txtAmount)
     private val imgSpec: ImageView = v.findViewById(R.id.imgSpec)
 
 
@@ -41,6 +43,8 @@ class TradeDetailTradeFgListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         if (Specification.dbSpecificationList.filter { it.id == data.specification }.isNotEmpty()) {
             txtName.text =
                 Specification.dbSpecificationList.filter { it.id == data.specification }[0].title
+            txtAmount.text =
+                TextAmountSetting().formatAmount(data.price.toString())
         }
 
         itemView.setOnClickListener {
