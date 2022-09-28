@@ -153,8 +153,10 @@ class TradeDetailEditSpecificationViewHolder(v: View) : RecyclerView.ViewHolder(
                     tempSpecList[lastId].other = other
                     tempSpecList[lastId].price = txtSpecPrice.text.toString().toInt()
                     tempSpecList[lastId].processDate = editProcessDate.text.toString()
-                    tempSpecList[lastId].specification =
-                        ddlSpecificationList[ddlPositionSpecification].id
+                    if(ddlSpecificationList.size>0) {
+                        tempSpecList[lastId].specification =
+                            ddlSpecificationList[ddlPositionSpecification].id
+                    }
                     tempSpecList[lastId].stockDate = if(editStockDate.text.toString()=="")  TimeFormat().TodayDate().yyyyMMdd() else editStockDate.text.toString()
 
 //todo 點選rv顯示正常

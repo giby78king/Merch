@@ -175,18 +175,30 @@ class TradeEditPage : AppCompatActivity() {
                     ddlPositionChannelDetail = position
 
                     ddlActivityList.clear()
-                    dbActivityList.filter {
-                        it.channelDetail.contains(
-                            ddlChannelDetailList[ddlPositionChannelDetail].id
-                        )
-                    }.forEach {
-                        ddlActivityList.add(
-                            DdlNormalModel(
-                                it.name,
-                                it.imgUrl,
-                                it.id
+                    if (dbChannelDetailList.first { it.id == ddlChannelDetailList[ddlPositionChannelDetail].id }.type == "Fluctuate") {
+                        dbActivityList.forEach {
+                            ddlActivityList.add(
+                                DdlNormalModel(
+                                    it.name,
+                                    it.imgUrl,
+                                    it.id
+                                )
                             )
-                        )
+                        }
+                    } else {
+                        dbActivityList.filter {
+                            it.channelDetail.contains(
+                                ddlChannelDetailList[ddlPositionChannelDetail].id
+                            )
+                        }.forEach {
+                            ddlActivityList.add(
+                                DdlNormalModel(
+                                    it.name,
+                                    it.imgUrl,
+                                    it.id
+                                )
+                            )
+                        }
                     }
 
                     spinnerActivity.onItemSelectedListener =
@@ -201,9 +213,7 @@ class TradeEditPage : AppCompatActivity() {
 
                                 ddlProductList.clear()
                                 dbProductList.filter {
-                                    it.activity == ddlActivityList[ddlPositionActivity].id && it.channelDetail.contains(
-                                        ddlChannelDetailList[ddlPositionChannelDetail].id
-                                    )
+                                    it.activity == ddlActivityList[ddlPositionActivity].id
                                 }.forEach {
                                     ddlProductList.add(
                                         DdlNormalModel(
@@ -260,36 +270,70 @@ class TradeEditPage : AppCompatActivity() {
                                                             dbProductList.filter { it.id == spInfo.product }[0].channelDetail.indexOf(
                                                                 ddlChannelDetailList[ddlPositionChannelDetail].id
                                                             )
-                                                        txtSpecTagPrice.text =
-                                                            dbSpecificationList.filter { it.id == ddlSpecificationList[ddlPositionSpecification].id }[0].price[priceIndex].toString()
+                                                        if (priceIndex == -1) {
+                                                            val tempPrice =
+                                                                dbSpecificationList.filter { it.id == ddlSpecificationList[ddlPositionSpecification].id }[0].price[0]
+                                                            txtSpecTagPrice.text =
+                                                                tempPrice.toString()
+                                                            txtSpecPrice.text = tempPrice.toString()
 
-                                                        txtSpecPrice.text =
-                                                            dbSpecificationList.filter { it.id == ddlSpecificationList[ddlPositionSpecification].id }[0].price[priceIndex].toString()
+                                                            if (nowEditId.isNotEmpty()) {
+                                                                val lastId =
+                                                                    tempSpecList.indexOfFirst { it.id == nowEditId }
+                                                                if (lastId != -1) {
+                                                                    tempSpecList[lastId].specification =
+                                                                        ddlSpecificationList[ddlPositionSpecification].id
 
-                                                        if (nowEditId.isNotEmpty()) {
-                                                            val lastId =
-                                                                tempSpecList.indexOfFirst { it.id == nowEditId }
-                                                            if (lastId != -1) {
-                                                                tempSpecList[lastId].specification =
-                                                                    ddlSpecificationList[ddlPositionSpecification].id
+                                                                    tempSpecList[lastId].price =
+                                                                        tempPrice
 
-                                                                tempSpecList[lastId].price =
-                                                                    dbSpecificationList.filter { it.id == ddlSpecificationList[ddlPositionSpecification].id }[0].price[priceIndex].toString()
-                                                                        .toInt()
+                                                                    val layoutManager =
+                                                                        LinearLayoutManager(
+                                                                            page
+                                                                        )
+                                                                    layoutManager.orientation =
+                                                                        LinearLayoutManager.HORIZONTAL
+                                                                    rvSpecification.layoutManager =
+                                                                        layoutManager
+                                                                    rvSpecification.adapter =
+                                                                        TradeDetailEditSpecificationAdapter(
+                                                                            tempSpecList,
+                                                                            page
+                                                                        )
+                                                                }
+                                                            }
+                                                        } else {
+                                                            txtSpecTagPrice.text =
+                                                                dbSpecificationList.filter { it.id == ddlSpecificationList[ddlPositionSpecification].id }[0].price[priceIndex].toString()
 
-                                                                val layoutManager =
-                                                                    LinearLayoutManager(
-                                                                        page
-                                                                    )
-                                                                layoutManager.orientation =
-                                                                    LinearLayoutManager.HORIZONTAL
-                                                                rvSpecification.layoutManager =
-                                                                    layoutManager
-                                                                rvSpecification.adapter =
-                                                                    TradeDetailEditSpecificationAdapter(
-                                                                        tempSpecList,
-                                                                        page
-                                                                    )
+                                                            txtSpecPrice.text =
+                                                                dbSpecificationList.filter { it.id == ddlSpecificationList[ddlPositionSpecification].id }[0].price[priceIndex].toString()
+
+                                                            if (nowEditId.isNotEmpty()) {
+                                                                val lastId =
+                                                                    tempSpecList.indexOfFirst { it.id == nowEditId }
+                                                                if (lastId != -1) {
+                                                                    tempSpecList[lastId].specification =
+                                                                        ddlSpecificationList[ddlPositionSpecification].id
+
+                                                                    tempSpecList[lastId].price =
+                                                                        dbSpecificationList.filter { it.id == ddlSpecificationList[ddlPositionSpecification].id }[0].price[priceIndex].toString()
+                                                                            .toInt()
+
+                                                                    val layoutManager =
+                                                                        LinearLayoutManager(
+                                                                            page
+                                                                        )
+                                                                    layoutManager.orientation =
+                                                                        LinearLayoutManager.HORIZONTAL
+                                                                    rvSpecification.layoutManager =
+                                                                        layoutManager
+                                                                    rvSpecification.adapter =
+                                                                        TradeDetailEditSpecificationAdapter(
+                                                                            tempSpecList,
+                                                                            page
+                                                                        )
+                                                                }
                                                             }
                                                         }
 //                                                                        setSpec()
@@ -723,18 +767,31 @@ class TradeEditPage : AppCompatActivity() {
                         ddlPositionChannelDetail = position
 
                         ddlActivityList.clear()
-                        dbActivityList.filter {
-                            it.channelDetail.contains(
-                                ddlChannelDetailList[ddlPositionChannelDetail].id
-                            )
-                        }.forEach {
-                            ddlActivityList.add(
-                                DdlNormalModel(
-                                    it.name,
-                                    it.imgUrl,
-                                    it.id
+
+                        if (dbChannelDetailList.first { it.id == ddlChannelDetailList[ddlPositionChannelDetail].id }.type == "Fluctuate") {
+                            dbActivityList.forEach {
+                                ddlActivityList.add(
+                                    DdlNormalModel(
+                                        it.name,
+                                        it.imgUrl,
+                                        it.id
+                                    )
                                 )
-                            )
+                            }
+                        } else {
+                            dbActivityList.filter {
+                                it.channelDetail.contains(
+                                    ddlChannelDetailList[ddlPositionChannelDetail].id
+                                )
+                            }.forEach {
+                                ddlActivityList.add(
+                                    DdlNormalModel(
+                                        it.name,
+                                        it.imgUrl,
+                                        it.id
+                                    )
+                                )
+                            }
                         }
 
                         setSpinner(spinnerActivity, ddlActivityList, "activity", 0)
@@ -752,16 +809,33 @@ class TradeEditPage : AppCompatActivity() {
                                     ddlPositionActivity = position
 
                                     ddlProductList.clear()
-                                    dbProductList.filter {
-                                        it.activity == ddlActivityList[ddlPositionActivity].id
-                                    }.forEach {
-                                        ddlProductList.add(
-                                            DdlNormalModel(
-                                                it.name,
-                                                it.imgUrl,
-                                                it.id
+                                    if (dbChannelDetailList.first { it.id == ddlChannelDetailList[ddlPositionChannelDetail].id }.type == "Fluctuate") {
+                                        dbProductList.filter {
+                                            it.activity == ddlActivityList[ddlPositionActivity].id
+                                        }.forEach {
+                                            ddlProductList.add(
+                                                DdlNormalModel(
+                                                    it.name,
+                                                    it.imgUrl,
+                                                    it.id
+                                                )
                                             )
-                                        )
+                                        }
+                                    }
+                                    else {
+                                        dbProductList.filter {
+                                            it.activity == ddlActivityList[ddlPositionActivity].id && it.channelDetail.contains(
+                                                ddlChannelDetailList[ddlPositionChannelDetail].id
+                                            )
+                                        }.forEach {
+                                            ddlProductList.add(
+                                                DdlNormalModel(
+                                                    it.name,
+                                                    it.imgUrl,
+                                                    it.id
+                                                )
+                                            )
+                                        }
                                     }
 
                                     setSpinner(
@@ -834,17 +908,27 @@ class TradeEditPage : AppCompatActivity() {
                                                                 dbProductList.filter { it.id == spInfo.product }[0].channelDetail.indexOf(
                                                                     ddlChannelDetailList[ddlPositionChannelDetail].id
                                                                 )
-                                                            txtSpecTagPrice.text =
-                                                                dbSpecificationList.filter { it.id == ddlSpecificationList[ddlPositionSpecification].id }[0].price[priceIndex].toString()
+                                                            var tempPrice = 0
+                                                            if (priceIndex == -1) {
+                                                                tempPrice =
+                                                                    dbSpecificationList.filter { it.id == ddlSpecificationList[ddlPositionSpecification].id }[0].price[0]
+                                                                txtSpecTagPrice.text =
+                                                                    tempPrice.toString()
+                                                                txtSpecPrice.text =
+                                                                    tempPrice.toString()
+                                                            } else {
+                                                                tempPrice=
+                                                                    dbSpecificationList.filter { it.id == ddlSpecificationList[ddlPositionSpecification].id }[0].price[priceIndex]
+
+                                                                txtSpecTagPrice.text = tempPrice.toString()
+                                                            }
 
                                                             var sum = 0
                                                             var sumModify = 0
                                                             var sumOther = 0
 
                                                             if (data.other.size > 0 || data.modify.size > 0) {
-                                                                sum =
-                                                                    dbSpecificationList.filter { it.id == ddlSpecificationList[ddlPositionSpecification].id }[0].price[priceIndex].toString()
-                                                                        .toInt()
+                                                                sum = tempPrice
 
                                                                 for (i in 0 until data.modify.size) {
                                                                     specModifyList[i].price =
@@ -879,12 +963,12 @@ class TradeEditPage : AppCompatActivity() {
                                                                     }
                                                                 }
 
-                                                                txtSpecPrice.text = sum.toString()
-                                                            } else {
                                                                 txtSpecPrice.text =
-                                                                    dbSpecificationList.filter { it.id == ddlSpecificationList[ddlPositionSpecification].id }[0].price[priceIndex].toString()
-                                                            }
+                                                                    sum.toString()
 
+                                                            } else {
+                                                                txtSpecPrice.text = tempPrice.toString()
+                                                            }
 
 
                                                             if (nowEditId.isNotEmpty()) {
@@ -1158,19 +1242,19 @@ class TradeEditPage : AppCompatActivity() {
                     btnSubmit.loadingFailed()
                     return@setOnClickListener
                 }
-                if (editPrice.text.toString() !="" && editPrice.text.toString() != txtTotalSpecPrice.text.toString()) {
+                if (editPrice.text.toString() != "" && editPrice.text.toString() != txtTotalSpecPrice.text.toString()) {
                     Toast.makeText(applicationContext, "總金額不符！！", Toast.LENGTH_SHORT)
                         .show()
                     btnSubmit.loadingFailed()
                     return@setOnClickListener
                 }
-                if (editModify.text.toString() !="" && editModify.text.toString() != txtTotalSpecModify.text.toString()) {
+                if (editModify.text.toString() != "" && editModify.text.toString() != txtTotalSpecModify.text.toString()) {
                     Toast.makeText(applicationContext, "總調整不符！！", Toast.LENGTH_SHORT)
                         .show()
                     btnSubmit.loadingFailed()
                     return@setOnClickListener
                 }
-                if (editOther.text.toString() !="" && editOther.text.toString() != txtTotalSpecOther.text.toString()) {
+                if (editOther.text.toString() != "" && editOther.text.toString() != txtTotalSpecOther.text.toString()) {
                     Toast.makeText(applicationContext, "總額外不符！！", Toast.LENGTH_SHORT)
                         .show()
                     btnSubmit.loadingFailed()
