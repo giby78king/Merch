@@ -50,7 +50,7 @@ class SpecModifyPoolViewHolder(v: View) : RecyclerView.ViewHolder(v) {
             val data = ddlModifyList.filter { it.id == item.rule }[0]
 
             txtName.text = data.name
-
+            Log.d("item.rule",":::"+data.id)
             ImgSetting().setImage("traderule", res, imgChannelDetail, data.id)
 
 //            itemView.setOnLongClickListener {

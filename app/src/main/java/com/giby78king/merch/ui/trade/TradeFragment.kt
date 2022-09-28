@@ -30,6 +30,7 @@ class TradeFragment : Fragment() {
     ): View {
 
         root = inflater.inflate(R.layout.fragment_trade, container, false)
+
         val vmTradeViewModel =
             ViewModelProvider(this)[VmTradeViewModel::class.java]
         val vmActivitylViewModel =
@@ -46,6 +47,7 @@ class TradeFragment : Fragment() {
             ViewModelProvider(this)[VmSpecificationViewModel::class.java]
         val vmStockDepositoryViewModel =
             ViewModelProvider(this)[VmStockDepositoryViewModel::class.java]
+
         vmActivitylViewModel.getDatas("")
         vmChannelDetailViewModel.getDatas("")
         vmTradeRuleViewModel.getDatas("")

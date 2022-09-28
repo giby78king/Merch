@@ -374,7 +374,6 @@ class TradeEditPage : AppCompatActivity() {
 
                     ddlModifyList.clear()
                     var sortModifyList = mutableListOf<String>()
-
                     dbTradeRuleList.sortedBy { it.id }.filter {
                         (it.type == "Modify" || it.type == "Fluctuate") && it.channelDetail.contains(
                             ddlChannelDetailList[ddlPositionChannelDetail].id
@@ -458,6 +457,10 @@ class TradeEditPage : AppCompatActivity() {
                 override fun onNothingSelected(parent: AdapterView<*>) {}
             }
 
+        if (selectedTrade.isNotEmpty() && selectedTrade != "null") {
+            setEditPageData(selectedTrade)
+        }
+
         customDropDownAdapter =
             CustomDropDownAdapter(
                 "channeldetail",
@@ -469,10 +472,11 @@ class TradeEditPage : AppCompatActivity() {
 
 
         ddlModifyList.clear()
+
         dbTradeRuleList.sortedBy { it.id }.filter {
             (it.type == "Modify" || it.type == "Fluctuate") && it.channelDetail.contains(
-                ddlChannelDetailList[ddlPositionChannelDetail].id
-            ) && (it.transType == ddlTransType[ddlPositionTransType].id || it.transType == "Fluctuate")
+                ddlChannelDetailList[ddlPositionChannelDetail].id)
+             && (it.transType == ddlTransType[ddlPositionTransType].id || it.transType == "Fluctuate")
         }.forEach {
             ddlModifyList.add(
                 DdlNormalModel(
@@ -539,9 +543,6 @@ class TradeEditPage : AppCompatActivity() {
             0
         )
         setSpec()
-
-
-
 
         btnAddModify.setOnClickListener {
             if (ddlModifyList.size > 0) {
@@ -821,8 +822,7 @@ class TradeEditPage : AppCompatActivity() {
                                                 )
                                             )
                                         }
-                                    }
-                                    else {
+                                    } else {
                                         dbProductList.filter {
                                             it.activity == ddlActivityList[ddlPositionActivity].id && it.channelDetail.contains(
                                                 ddlChannelDetailList[ddlPositionChannelDetail].id
@@ -917,10 +917,11 @@ class TradeEditPage : AppCompatActivity() {
                                                                 txtSpecPrice.text =
                                                                     tempPrice.toString()
                                                             } else {
-                                                                tempPrice=
+                                                                tempPrice =
                                                                     dbSpecificationList.filter { it.id == ddlSpecificationList[ddlPositionSpecification].id }[0].price[priceIndex]
 
-                                                                txtSpecTagPrice.text = tempPrice.toString()
+                                                                txtSpecTagPrice.text =
+                                                                    tempPrice.toString()
                                                             }
 
                                                             var sum = 0
@@ -967,7 +968,8 @@ class TradeEditPage : AppCompatActivity() {
                                                                     sum.toString()
 
                                                             } else {
-                                                                txtSpecPrice.text = tempPrice.toString()
+                                                                txtSpecPrice.text =
+                                                                    tempPrice.toString()
                                                             }
 
 
@@ -1091,12 +1093,42 @@ class TradeEditPage : AppCompatActivity() {
                         rvAddPoolSpecOther.adapter =
                             PoolTradeEditSpecOtherAdapter(specOtherList, page)
 
+                        ddlModifyList.clear()
+
+                        dbTradeRuleList.sortedBy { it.id }.filter {
+                            (it.type == "Modify" || it.type == "Fluctuate") && it.channelDetail.contains(
+                                ddlChannelDetailList[ddlPositionChannelDetail].id)
+                                    && (it.transType == ddlTransType[ddlPositionTransType].id || it.transType == "Fluctuate")
+                        }.forEach {
+                            ddlModifyList.add(
+                                DdlNormalModel(
+                                    it.name,
+                                    it.imgUrl,
+                                    it.id
+                                )
+                            )
+                        }
+                        spinnerModify.onItemSelectedListener =
+                            object :
+                                AdapterView.OnItemSelectedListener {
+                                override fun onItemSelected(
+                                    parent: AdapterView<*>,
+                                    view: View?,
+                                    position: Int,
+                                    id: Long
+                                ) {
+                                    ddlPositionModify = position
+                                }
+
+                                override fun onNothingSelected(parent: AdapterView<*>) {}
+                            }
                         setSpinner(
                             spinnerModify,
                             ddlModifyList,
                             "traderule",
                             0
                         )
+
 
                         ddlOtherList.clear()
                         var sortOtherList = mutableListOf<String>()
@@ -1226,16 +1258,18 @@ class TradeEditPage : AppCompatActivity() {
             setSpec()
         }
 
-        if (selectedTrade.isNotEmpty() && selectedTrade != "null") {
-            setEditPageData(selectedTrade)
-        }
-
         vmStockDepositoryViewModel.getDatas("")
         vmTradeDetailViewModel.getDatas("")
 
         btnSubmit.setOnClickListener {
             try {
                 btnSubmit.startLoading()
+                if (ddlSpecificationList.size == 0 || ddlSpecificationList[0].id == "") {
+                    Toast.makeText(applicationContext, "通路不擁有該項產品！！", Toast.LENGTH_SHORT)
+                        .show()
+                    btnSubmit.loadingFailed()
+                    return@setOnClickListener
+                }
                 if (editProcessDate.text.toString() == "") {
                     Toast.makeText(applicationContext, "交易日不得為空！！", Toast.LENGTH_SHORT)
                         .show()
@@ -1553,13 +1587,18 @@ class TradeEditPage : AppCompatActivity() {
 
         nowEditId = tempSpecList[0].id
 
+        tradeModifyList.clear()
         if (tradeInfo.modifyRule.size > 1 || tradeInfo.modifyRule[0] != "") {
             tradeModifyList = tradeInfo.modifyRule.toMutableList()
         }
+        tradeOtherList.clear()
         if (tradeInfo.otherRule.size > 1 || tradeInfo.otherRule[0] != "") {
             tradeOtherList = tradeInfo.otherRule.toMutableList()
         }
+        ddlPositionChannelDetail =
+            dbChannelDetailList.indexOfFirst { it.id == tradeInfo.channelDetail }
 
+        spinnerChannelDetail.setSelection(ddlPositionChannelDetail)
 
         vmTradeViewModel.setSelectedSpecDatas(tempSpecList[0])
 
@@ -1572,13 +1611,17 @@ class TradeEditPage : AppCompatActivity() {
 
         specModifyList.clear()
 
-        for (i in 0 until tradeModifyList.size) {
-            specModifyList.add(
-                tempPriceDetail(
-                    price = tradeDetailInfoList[0].modify[i],
-                    rule = tradeModifyList[i]
-                )
-            )
+        if (tradeModifyList.size > 0 && tradeModifyList[0] != "") {
+            for (i in 0 until tradeModifyList.size) {
+                if (tradeDetailInfoList[0].modify.size > 0) {
+                    specModifyList.add(
+                        tempPriceDetail(
+                            price = tradeDetailInfoList[0].modify[i],
+                            rule = tradeModifyList[i]
+                        )
+                    )
+                }
+            }
         }
         if (specModifyList.none { it.rule == "sum" }) {
             specModifyList.add(
@@ -1588,21 +1631,23 @@ class TradeEditPage : AppCompatActivity() {
                 )
             )
         }
-
         val layoutManagerSpec = LinearLayoutManager(this)
         layoutManagerSpec.orientation = LinearLayoutManager.VERTICAL
         rvAddPoolSpecModify.layoutManager = layoutManagerSpec
         rvAddPoolSpecModify.adapter = PoolTradeEditSpecModifyAdapter(specModifyList, page)
 
         specOtherList.clear()
-
-        for (i in 0 until tradeOtherList.size) {
-            specOtherList.add(
-                tempPriceDetail(
-                    price = tradeDetailInfoList[0].other[i],
-                    rule = tradeOtherList[i]
-                )
-            )
+        if (tradeOtherList.size > 0 && tradeOtherList[0] != "") {
+            for (i in 0 until tradeOtherList.size) {
+                if (tradeDetailInfoList[0].other.size > 0) {
+                    specOtherList.add(
+                        tempPriceDetail(
+                            price = tradeDetailInfoList[0].other[i],
+                            rule = tradeOtherList[i]
+                        )
+                    )
+                }
+            }
         }
         if (specOtherList.none { it.rule == "sum" }) {
             specOtherList.add(

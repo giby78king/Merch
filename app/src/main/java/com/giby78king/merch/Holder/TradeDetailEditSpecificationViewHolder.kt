@@ -133,7 +133,6 @@ class TradeDetailEditSpecificationViewHolder(v: View) : RecyclerView.ViewHolder(
                 val lastId = tempSpecList.indexOfFirst { it.id == nowEditId }
                 if (lastId != -1) {
 
-
                     val modify = arrayListOf<Int>()
                     val other = arrayListOf<Int>()
 
